@@ -1,0 +1,71 @@
+<odoo>
+  <template id="fas_report_purchaseorder" inherit_id="purchase.report_purchaseorder_document">
+    <xpath expr="//t/div/div[3]/div[2]" position="replace">
+                <div t-if="o.partner_ref" class="col-xs-3">
+                    <strong>Peachtree Reference:</strong>
+                    <p t-field="o.partner_ref"/>
+		</div>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+    </xpath>
+    <xpath expr="//h2" position="replace">
+	<h2><center><span t-field="o.name"/></center></h2>
+
+    </xpath>
+    <xpath expr="//t/div/table/thead/tr/th[2]" position="replace">
+    </xpath>
+    <xpath expr="//t/div/table/tbody/tr/td[2]" position="replace">
+    </xpath>
+    <xpath expr="//t/div/div[4]" position="replace">
+      <div class="clearfix">
+            <div class="row">
+                <div class="col-xs-4 pull-right">
+                    <table class="table table-condensed">
+                        <tr class="border-black">
+                        </tr>
+                        <tr class="border-black">
+                            <td><strong>Total</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.amount_total"
+                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+      </div>
+    </xpath>
+      <xpath expr="//t/div" position="inside">
+
+         <div class="footer">
+           <table width="100%">
+               <tr>
+                   <td align="center"><strong>Prepared By</strong></td>
+                   <td align="center"><strong>Checked By</strong></td>
+                   <td align="center"><strong>Approved By</strong></td>
+                   <td align="center"><strong>Conforme</strong></td>
+                </tr>
+                <tr>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                </tr>
+                <tr>
+                </tr>
+                <tr>
+                   <td align="center"><u><span t-field="o.prepared_by_id"/></u></td>
+                   <td align="center"><u><span t-field="o.checked_by"/></u></td>
+                   <td align="center"><u><span t-field="o.approved_by"/></u></td>
+                   <td align="center"><u>______________</u></td>
+                </tr>
+                <tr>
+                   <td align="center"><span t-field="o.prepared_by_desig"/></td>
+                   <td align="center"><span t-field="o.checked_by_desig"/></td>
+                   <td align="center"><span t-field="o.approved_by_desig"/></td>
+                   <td align="center"></td>
+                </tr>
+           </table>
+         </div>
+     </xpath>
+  </template>
+</odoo>

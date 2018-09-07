@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top level Sales - Parts Menu -->
+    <menuitem id="sale.sale_order_menu"
+        name="Quotations &amp; Orders"
+        parent="sale.sale_menu_root"
+        sequence="2"/>
+    <!-- Sales Quotation Action Window and Menu Item -->
+    <record id="act_window_parts_sale_quotation" model="ir.actions.act_window">
+        <field name="name">Sales Quotation - Parts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>        
+        <field name="domain">[('so_type','=','parts'),('state', 'in', ('sent','draft'))]</field>
+        <field name="context">{'default_so_type': 'parts'}</field>
+    </record>
+    <menuitem id="sale.menu_sale_quotations"
+        name="Sales Quotation"        
+        parent="sale.sale_order_menu"
+        action="act_window_parts_sale_quotation"
+        sequence="1"/>
+    <!-- End-of-Sales Quotation Action Window and Menu Item -->
+
+    <!-- Sales Orders Action Window and Menu Item -->
+    <record id="act_window_parts_sale_order" model="ir.actions.act_window">
+        <field name="name">Sales Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>        
+        <field name="domain">[('so_type','=','parts'),('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+        <field name="context">{'default_so_type': 'parts'}</field>
+    </record>
+    <menuitem parent="sale.sale_order_menu"
+        name="Sales Order"
+        action="act_window_parts_sale_order"
+        id="sale.menu_sale_order"
+        sequence="2"/>
+    <!-- End-of-Sales Orders Action Window and Menu Item -->
+</odoo>

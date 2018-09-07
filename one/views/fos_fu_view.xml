@@ -1,0 +1,131 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="view_view_fas_fu_list">
+      <field name="name">FOTON Units List</field>
+      <field name="model">view.fas.fu</field>
+      <field name="arch" type="xml">
+        <tree create="false" delete="false" edit="false">
+          <field name="name"/>
+          <field name="description"/>
+          <field name="fmpi_fu_local_name_id"/>
+          <field name="engine_number"/>
+          <field name="chassis_number"/>
+	        <field name="conduction_sticker"/>
+          <field name="color"/>
+          <field name="plate_number"/>
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_view_fas_fu_form">
+        <field name="name">FOTON Unit</field>
+        <field name="model">view.fas.fu</field>
+        <field name="arch" type="xml">
+            <form create="false" delete="false">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <h1><field name="name" readonly="1"/></h1>
+                    <h2><field name="fmpi_fu_local_name_id" readonly="1"/></h2>
+                    <group>
+                        <group>
+                            <field name="description" readonly="1"/>
+                            <field name="vehicle_type" readonly="1"/>
+                            <field name="body_type" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="engine_number" readonly="1"/>
+                            <field name="chassis_number" readonly="1"/>
+                            <field name="color" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Service History">
+                            <notebook>
+                                <page string="Service">
+                                    <field name="ams_services_ids">
+                                        <tree edit="false" delete="false" create="false" default_order="run_km desc" default_group="run_km">
+                                            <field name="run_km"/>
+                                            <field name="dealer_name"/>
+                                            <field name="customer_name"/>
+                                            <field name="job_type"/>
+                                            <field name="job_product"/>
+                                            <!--<field name="one_charged_to"/>-->
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                        </page>
+                        <page string="L.T.O. Registration">
+                            <group>
+                                <group>
+                                    <field name="plate_number" readonly="1"/>
+                                    <field name="conduction_sticker" readonly="1"/>
+                                    <field name="mv_file_number" readonly="1"/>
+                                    <field name="cr_number" readonly="1"/>
+                                    <field name="cr_date" readonly="1"/>
+                                    <field name="or_number" readonly="1"/>
+                                    <field name="or_date" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="owner_name" readonly="1"/>
+                                    <field name="owner_address" readonly="1"/>
+                                    <field name="owner_contact_details" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Costs">
+                            <group>
+                                <field name="po_line_id"/>
+                                <field name="po_amount"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_view_fas_fu_search">
+        <field name="name">Search Foton Units</field>
+        <field name="model">view.fas.fu</field>
+        <field name="arch" type="xml">
+            <search string="FOTON Units">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="conduction_sticker"/>
+                <field name="engine_number"/>
+                <field name="chassis_number"/>
+                <field name="plate_number"/>
+                <filter string="Active Units" name="state1" domain="[('state','=','avail')]"/>
+                <filter string="Sold Units" name="state2" domain="[('state','=','sold')]"/>
+                <filter string="Allocated Units" name="state3" domain="[('state','=','alloc')]"/>
+                <filter name="group_state" string="Status" context="{'group_by':'state'}"/>
+                <filter name="group_classification" string="Local Name" icon="terp-partner" context="{'group_by':'fmpi_fu_local_name_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    
+    <record model="ir.actions.act_window" id="act_window_view_fas_fu">
+        <field name="name">FOTON Units</field>
+        <field name="res_model">view.fas.fu</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_view_fas_fu_list"/>
+        <field name="context">{'search_default_group_state': 1, 'search_default_group_classification': 1}</field>
+    </record>
+
+    <menuitem name="FOTON Units" 
+      id="fos_dealers_units_top_menu" 
+      sequence="200"
+      web_icon="one,static/img/foton.png"
+      />
+    <menuitem name="FOTON Units" 
+      id="fos_dealers_units_menu_item" 
+      parent="fos_dealers_units_top_menu"
+      action="act_window_view_fas_fu" sequence="10" 
+      web_icon="one,static/img/truck.jpg"/>
+  </data>
+</odoo>

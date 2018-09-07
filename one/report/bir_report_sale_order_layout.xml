@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="fas_report_sale_order_layout" inherit_id="sale.report_saleorder_document">
+    <xpath expr="//t/div[@class='page']/div[@class='clearfix']" position="replace">
+    </xpath>
+    <xpath expr="//div/t[2]" position="replace">
+       <h4><b>Parts</b></h4>
+            <t t-foreach="doc.order_lines_layouted()" t-as="page">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Unit Price</th>
+                            <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                            <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc. Amount</th>
+                            <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
+                        </tr>
+                   </thead>
+                   <tbody class="sale_tbody">
+                        <t t-foreach="page" t-as="layout_category">
+
+                            <t t-if="layout_category_size > 1 or page_size > 1" groups="sale.group_sale_layout">
+                                <tr class="active">
+                                    <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                        <t t-esc="layout_category['name']"/>
+                                    </td>
+                                </tr>
+                            </t>
+
+                            <!-- Lines associated -->
+                            <t t-foreach="layout_category['lines']" t-as="l">
+                             <t t-if="l.product_id.type == 'product'">
+                                <tr>
+                                    <td><span t-field="l.name"/></td>
+                                    <td class="text-right">
+                                        <span t-field="l.product_uom_qty"/>
+                                        <span t-field="l.product_uom" groups="product.group_uom"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                        <span t-field="l.discount"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                        <span t-field="l.discount"/>
+                                    </td>
+                                    <td class="text-right" groups="sale.group_show_price_total">
+                                        <span t-field="l.price_total"
+                                            t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                             </t>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </t>  
+      <div class="clearfix">
+         <div class="row">
+           <div class="col-xs-4 pull-right">
+               <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                  <tr class="border-black" style="border-bottom:1px solid #dddddd;"/>
+                  <tr class="border-black">
+                   <td><strong>Parts Total</strong></td>
+                    <td class="text-right">
+                      <span style="font-size: 100%" t-field="doc.parts_total"
+                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                    </td>
+                  </tr>
+                </table>
+           </div>
+        </div>
+      </div>
+                   <h4><b>Labor</b></h4>
+            <t t-foreach="doc.order_lines_layouted()" t-as="page">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Unit Price</th>
+                            <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                            <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc. Amount</th>
+                            <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
+                        </tr>
+                   </thead>
+                   <tbody class="sale_tbody">
+                        <t t-foreach="page" t-as="layout_category">
+
+                            <t t-if="layout_category_size > 1 or page_size > 1" groups="sale.group_sale_layout">
+                                <tr class="active">
+                                    <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                        <t t-esc="layout_category['name']"/>
+                                    </td>
+                                </tr>
+                            </t>
+
+                            <!-- Lines associated -->
+                            <t t-foreach="layout_category['lines']" t-as="l">
+                             <t t-if="l.product_id.type == 'service'">
+                                <tr>
+                                    <td><span t-field="l.name"/></td>
+                                    <td class="text-right">
+                                        <span t-field="l.product_uom_qty"/>
+                                        <span t-field="l.product_uom" groups="product.group_uom"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                        <span t-field="l.discount"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                        <span t-field="l.discount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_total"
+                                            t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                             </t>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </t>     
+      <div class="clearfix">
+         <div class="row">
+           <div class="col-xs-4 pull-right">
+               <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                  <tr class="border-black" style="border-bottom:1px solid #dddddd;">
+                  </tr>
+                  <tr class="border-black">
+                    <td><strong>Labor Total</strong></td>
+                    <td class="text-right">
+                      <span style="font-size: 100%" t-field="doc.labor_total"
+                         t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                    </td>
+                  </tr>
+                </table>
+           </div>
+        </div>
+      </div>
+                <tr>
+                   <td><br/><br/></td>
+                </tr>
+      <div class="clearfix">
+         <div class="row">
+           <div class="col-xs-4 pull-right">
+               <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                  <tr class="border-black" style="border-bottom:1px solid #dddddd;">
+                  </tr>
+                  <tr class="border-black">
+                    <td><strong>Grand Total</strong></td>
+                    <td class="text-right">
+                      <span t-field="doc.amount_total"
+                        t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                    </td>
+                  </tr>
+                </table>
+           </div>
+         </div>
+      </div>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+      <h2 align="center">
+        <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+          <span t-if="doc.state not in ['draft','sent'] and doc.so_type in ['service']">Service Order # </span>
+          <span t-if="doc.state not in ['draft','sent'] and doc.so_type not in ['service']">Sales Order # </span>
+          <span t-if="doc.state in ['draft','sent'] and doc.so_type in ['service']">Repair Estimate # </span>
+          <span t-if="doc.state in ['draft','sent'] and doc.so_type not in ['service']">Sales Quotation # </span>
+        </t>
+        <t t-if="env.context.get('proforma', False) or is_pro_forma">
+          <span>Pro-Forma Invoice # </span>
+        </t>
+        <span t-field="doc.name"/>
+      </h2>
+      <hr/>
+      <table class="table">
+        <tbody>
+          <tr/>
+          <tr>
+            <td width="10%"><strong>Charged to:</strong></td>
+            <td width="90%"> 
+              <t t-esc="doc.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+              <t t-esc="doc.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="doc.partner_id.vat"/>
+            </td>
+          </tr>
+        </tbody>
+    </table>      
+            <table border="0">
+                  <tr>
+               <td width="40%"><strong>Local Name: </strong><span t-field="doc.fu_local_name_id"/></td>
+                <td width="40%"><strong>Conduction Sticker: </strong><span t-field="doc.fu_conduction_sticker"/></td>
+              </tr>
+              <tr>
+                <td width="40%"><strong>Body Type: </strong><span t-field="doc.fu_body_type"/></td>
+                <td width="40%"><strong>Area: </strong><span t-field="doc.fas_area_id"/></td>
+                  </tr>
+              <tr>
+                <td width="40%"><strong>Chassis Number: </strong><span t-field="doc.fu_chassis_number"/></td>
+                <td width="40%"><strong>Run KM: </strong><span t-field="doc.run_km"/></td>
+              </tr>
+              <tr>
+                <td width="40%"><strong>Engine Number: </strong><span t-field="doc.fu_engine_number"/></td>
+                <td width="40%"><strong>Job Type: </strong><span t-field="doc.job_type"/></td>
+              </tr>
+            </table>
+    </xpath>
+    <xpath expr="//t/t/div/div[2]" position="replace">
+    </xpath>
+    <xpath expr="//div" position="after">
+         <div class="footer">
+           <table width="100%">
+               <tr>
+                   <td align="center"><strong>Prepared By</strong></td>
+                   <td align="center"><strong>Reviewed By</strong></td>
+                   <td align="center"><strong>Approved By</strong></td>
+                   <td align="center"><strong>Conforme</strong></td>
+                </tr>
+                <tr>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                </tr>
+                <tr>
+                </tr>
+                <tr>
+                   <td align="center"><u><span t-field="doc.prepared_by_id"/></u></td>
+                   <td align="center"><u><span t-field="doc.checked_by"/></u></td>
+                   <td align="center"><u><span t-field="doc.approved_by"/></u></td>
+                   <td align="center"><u>______________</u></td>
+                </tr>
+                <tr>
+                   <td align="center"><span t-field="doc.prepared_by_desig"/></td>
+                   <td align="center"><span t-field="doc.checked_by_desig"/></td>
+                   <td align="center"><span t-field="doc.approved_by_desig"/></td>
+                   <td align="center"></td>
+                </tr>
+           </table>
+         </div>
+    </xpath>
+  </template>
+</odoo>

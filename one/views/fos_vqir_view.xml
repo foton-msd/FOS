@@ -1,0 +1,270 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_vqir_tree">
+            <field name="name">V.Q.I.R. List</field>
+            <field name="model">fos.vqir</field>
+            <field name="arch" type="xml">
+                <tree default_order="name desc">
+                    <field name="name"/>
+                    <field name="vqir_type"/>
+                    <field name="vqir_date"/>
+                    <field name="ss_name"/>
+                    <field name="reps_name"/>
+                    <field name="fos_fu_id"/>
+                    <field name="fu_local_name"/>
+                    <field name="fu_chassis_number"/>
+                    <field name="fu_engine_number"/>
+                    <field name="fu_plate_number"/>
+                    <field name="vqir_state"/>
+                </tree>
+            </field>
+        </record>
+    
+        <record model="ir.ui.view" id="vqir_form">
+            <field name="name">V.Q.I.R.</field>
+            <field name="model">fos.vqir</field>
+            <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="vqir_state" widget="statusbar"/>
+                    <button name="action_cancel" vqir_state="draft"  type="object" string="Cancel"
+                        attrs="{'invisible': [('vqir_state', 'not in', ('declined','draft'))]}"
+                        confirm="Are you sure to Cancel?"/>
+                    <button name="action_submit" vqir_state="submit" type="object" string="Submit"
+                        attrs="{'invisible': [('vqir_state', 'not in', ('declined','draft'))]}"
+                        confirm="Are you sure to Submit?"/>
+                </header>
+    	        <sheet>                    
+                    <h1><field name="name"/></h1>
+                    <group>
+                        <group>
+                            <field name="vqir_type" string="Type" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        </group>
+                        <group>
+                            <field name="vqir_date" string="Date" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        </group>
+                    </group>
+
+                    <group string="Unit Information">
+                        <group>
+                            <field name="fos_fu_id" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"
+                                options="{'no_open': True, 'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"/>
+                            <field name="fu_local_name"/>
+                            <field name="fu_description"/>
+                            <field name="fu_chassis_number"/>
+                            <field name="fu_engine_number"/>
+                        </group>
+                        <group>
+                            <field name="fu_body_type"/>
+                            <field name="fu_color"/>
+                            <field name="fu_conduction_sticker"/>
+                            <field name="fu_plate_number"/>
+                            <field name="fu_owner_name"/>
+                            <field name="fu_owner_address"/>
+                        </group>
+                    </group>
+
+                    <group string="Service Station">
+                        <group>
+                            <field name="ss_name" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                            <field name="ss_street1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                            <field name="ss_street2" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                            <field name="ss_city" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        </group>
+                    <group>
+                        <field name="ss_phone" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="ss_mobile" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="ss_fax" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="ss_email" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                </group>
+
+                <group string="User's Info">
+                    <group>
+                        <field name="users_name" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="users_street1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="users_street2" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="users_city" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                    <group>
+                        <field name="users_phone" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="users_mobile" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="users_fax" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="users_email" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                </group>
+
+                <group string="Reporter's Name">
+                    <group>
+                        <field name="reps_name" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="reps_street1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="reps_street2" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="reps_city" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                    <group>
+                        <field name="reps_phone" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="reps_mobile" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="reps_fax" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="reps_email" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                </group>
+
+                <group string="Trouble Report">
+                    <group>
+                        <field name="date_occur" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="vqir_city" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>                
+                        <field name="driver_name" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>                
+                    </group>
+                    <group>
+                        <field name="place_of_incident" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="km_1st_trouble" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                        <field name="run_km" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                </group>
+
+           <group string="Parts &amp; Jobs">
+              <field name="fos_vqir_parts_and_jobs_line" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}">
+                 <tree mode="tree,kanban">
+                   <field name="si_number"/>
+                   <field name="si_date"/>
+                   <field name="parts_number"/>
+                   <field name="parts_desc"/>
+                   <field name="parts_qty"/>
+                   <field name="parts_cost"/>
+                   <field name="parts_with_fee"/>
+                   <field name="parts_total"/>
+                   <field name="job_code"/>
+                   <field name="job_code_desc"/>
+                   <field name="job_qty"/>
+                   <field name="job_cost"/>
+                   <field name="job_total"/>
+                   <field name="job_parts_total"/>
+                   <field name="remarks"/>
+                 </tree>
+                 <form string="Trouble Parts and Jobs">
+                   <sheet>
+                     <h3><field name="name"/></h3>
+                     <group>
+                       <group>
+                         <field name="si_number"/>
+                         <field name="si_date"/>
+                         <field name="parts_number"/>
+                         <field name="parts_desc"/>
+                         <field name="parts_qty"/>
+                         <field name="parts_cost"/>
+                         <field name="parts_with_fee"/>
+                       </group>
+                       <group>
+                         <field name="parts_total"/>
+                         <field name="job_code"/>                         
+                         <field name="job_code_desc"/>
+                         <field name="job_qty"/>
+                         <field name="job_cost"/>
+                         <field name="job_total"/>
+                         <field name="job_parts_total"/>
+                       </group>
+                     </group>
+                     <field name="remarks" nolabel="1"/>
+                   </sheet>
+                 </form>
+                </field>
+            </group>
+            <group class="oe_subtotal_footer oe_right">
+               <div class="oe_subtotal_footer_separator oe_inline">
+               <label for="pj_total"/>
+               </div>
+               <field name="pj_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+               </group>          
+                <group>
+                    <group string="Trouble explanation">
+                        <field name="trouble_explanation" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                    <group string="Trouble cause analysis">
+                        <field name="trouble_cause_analysis" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                </group>
+
+                <group>
+                    <group string="Disposal measures">
+                        <field name="disposal_measures" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                    <group string="Proposal/Requirement for improvement">
+                        <field name="proposal_for_improvement" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+                    </group>
+                </group>
+                <group string="Images">
+                    <field name="fos_vqir_images_line" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}">
+                         <field name="image_small"/>
+                         <field name="remarks"/>
+                      <tree mode="kanban,tree">
+                         <field name="image" widget="image" class="oe_avatar"/>
+                         <field name="remarks"/>
+                      </tree>
+                     <form>
+                      <sheet>
+                        <h1><field name="name"/></h1>
+                        <field name="image" widget="image"/>
+                        <field name="remarks" nolabel="1"/>
+                      </sheet>
+                     </form>
+                    </field>
+                </group>
+                <group string="Status Logs">
+                    <field name="vqir_state_logs" readonly="1" nolabel="1"/>
+                </group>
+            </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="vqir_search">
+      <field name="name">Search VQIR</field>
+      <field name="model">fos.vqir</field>
+      <field name="arch" type="xml">
+        <search string="V.Q.I.R.">
+          <field name="name"/>
+          <field name="fos_fu_id"/>
+          <filter string="Draft" name="drafts" domain="[('vqir_state','=', 'draft')]"/>
+        </search>
+      </field>
+    </record>
+    <record model="ir.actions.act_window" id="vqir_action_window">
+      <field name="name">V.Q.I.R.</field>
+      <field name="res_model">fos.vqir</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_vqir_tree"/>
+      <field name="search_view_id" ref="vqir_search"/>
+      <field name="context">{"search_default_drafts":1}</field>      
+    </record>
+
+    <record model="ir.sequence" id="fos_vqir_seq">
+      <field name="name">VQIR Number</field>
+      <field name="code">fos.vqir.seq</field>
+      <field name="prefix">VQIR#</field>
+      <field name="padding">6</field>
+    </record>
+
+    <record model="ir.sequence" id="fos_vqir_images_seq">
+      <field name="name">VQIR Image ID</field>
+      <field name="code">fos.vqir.images.seq</field>
+      <field name="prefix">VIMG#</field>
+      <field name="padding">6</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_window_vqir">
+      <field name="name">V.Q.I.R.</field>
+      <field name="res_model">fos.vqir</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_vqir_tree"/>
+ 
+      <field name="search_view_id" ref="vqir_search"/>
+      <field name="context">{"search_default_drafts":1}</field>
+
+    </record>
+
+    <menuitem name="V.Q.I.R." id="menu_vqir" 
+        parent="menu_top_service"
+        sequence="1"
+	    action="act_window_vqir"/>
+    </data>
+</odoo>

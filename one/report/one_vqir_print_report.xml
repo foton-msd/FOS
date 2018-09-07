@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <template id="one.fos_vqir_print_template">
+   <t t-call="web.html_container">
+   <t t-foreach="docs" t-as="o">
+    <t t-call="web.external_layout">
+     <div class="page">
+     <div class="oe_structure"/>
+       <table width="100%">
+         <tr>
+           <td colspan="13">
+             <h2><b><center>Vehicle Quality Information Report</center></b></h2>
+             <h4><b><center><t t-esc="o.name" /></center></b></h4>
+           </td>
+         </tr>
+         <tr>
+           <td colspan="3"><b>Service Station Name</b></td>
+           <td colspan="6"> <t t-esc="o.ss_name" /></td>
+           <td colspan="2"><b>Type</b></td>
+           <td colspan="2"><t t-esc="o.vqir_type" /></td>
+         </tr>
+         <tr>
+           <td colspan="3" rowspan="3" valign="top"><b>Vehicle Information</b></td>
+           <td colspan="3"><b>Foton Number</b></td>
+           <td colspan="3"><t t-esc="o.fos_fu_id.name" /></td>
+           <td colspan="2"><b>Chassis Number</b></td>
+           <td colspan="2"><t t-esc="o.fos_fu_id.chassis_number" /></td>
+         </tr>
+         <tr>
+           <td colspan="3"><b>Local Name</b></td>
+           <td colspan="3"><t t-esc="o.fu_local_name" /></td>
+           <td colspan="2"><b>Engine Number</b></td>
+           <td colspan="2"><t t-esc="o.fu_engine_number" /></td>
+         </tr>
+         <tr>
+           <td colspan="3"><b>Body Type</b></td>
+           <td colspan="3"><t t-esc="o.fu_body_type" /></td>
+           <td colspan="2"><b>Conduction Sticker</b></td>
+           <td colspan="2"><t t-esc="o.fu_conduction_sticker" /></td>
+         </tr>
+         <tr>
+           <td colspan="3" rowspan="3" valign="top"><b>User Information</b></td>
+           <td colspan="3"><b>User's Name</b></td>
+           <td colspan="3"><t t-esc="o.users_name" /></td>
+           <td colspan="2"><b>Vehicle Purchasing Date</b></td>
+           <td colspan="2"><t t-esc="o.fu_body_type" /></td>
+         </tr>
+         <tr>
+           <td colspan="3"><b>Address</b></td>
+           <td colspan="3"><t t-esc="o.users_street1" /></td>
+           <td colspan="2"><b>Run Kilometer</b></td>
+           <td colspan="2"><t t-esc="o.run_km" /></td>
+         </tr>
+         <tr>
+           <td colspan="3"><b>Tel No.</b></td>
+           <td colspan="3"><t t-esc="o.users_mobile" /></td>
+           <td colspan="2"><b>Kilometer of first trouble happened</b></td>
+           <td colspan="2"><t t-esc="o.km_1st_trouble" /></td>
+         </tr>
+         <tr>
+           <td colspan="3" rowspan="2" valign="top"><b>Trouble Report</b></td>
+           <td colspan="3"><b>Trouble Happening Place</b></td>
+           <td colspan="3"><t t-esc="o.place_of_incident" /></td>
+           <td colspan="2"><b>Trouble Happening Date</b></td>
+           <td colspan="2"><t t-esc="o.date_occur" /></td>
+         </tr>
+         <tr>
+           <td colspan="3"><b>Reporter's Name</b></td>
+           <td colspan="3"><t t-esc="o.reps_name" /></td>
+           <td colspan="2"><b>Tel. Nos.</b></td>
+           <td colspan="2"><t t-esc="o.reps_mobile" /></td>
+         </tr>
+         <tr>
+           <td colspan="3" valign="top"><b>Trouble Explanation</b></td>
+           <td width="77%" height="54" colspan="10"><t t-esc="o.trouble_explanation" /></td>
+         </tr>
+         <tr>
+           <td colspan="3" valign="top"><b>Trouble Cause Analysis</b></td>
+           <td width="77%" height="54" colspan="10"><t t-esc="o.trouble_cause_analysis" /></td>
+         </tr>
+         <tr>
+           <td colspan="3" valign="top"><b>Disposal Measures</b></td>
+           <td width="77%" height="54" colspan="10"><t t-esc="o.disposal_measures" /></td>
+         </tr>
+         <tr>
+           <td colspan="3" valign="top"><b>Proposal Requirement / Improvement</b></td>
+           <td width="77%" height="54" colspan="10"><t t-esc="o.proposal_for_improvement" /></td>
+         </tr>
+        </table> 
+        <h3><b>Parts Details</b></h3>
+        <table width="100%">
+            <tr>
+              <th>S.I. Number</th>
+              <th>S.I. Date</th>
+              <th>Parts Description</th>
+              <th class="text-center">Parts Quantity</th>
+              <th class="text-center">Unit PricePrice</th>
+              <th class="text-center">W/ 10% HF</th>
+              <th class="text-center">Parts Total</th>
+              <th>Remarks</th>
+                <t t-foreach="docs.fos_vqir_parts_and_jobs_line" t-as="pj">
+                  <tr t-if="pj.parts_number">
+                      <td><span t-field="pj.si_number"/></td>
+                      <td><span t-field="pj.si_date"/></td>
+                      <td><span t-field="pj.parts_desc"/></td>
+                      <td class="text-right"><span t-field="pj.parts_qty"/></td>
+                      <td class="text-right"><span t-field="pj.parts_cost"/></td>
+                      <td class="text-right"><span t-field="pj.parts_with_fee"/></td>
+                      <td class="text-center"><span t-field="pj.parts_total"/></td>
+                      <td width="10%"><span t-field="pj.remarks"/></td>
+                  </tr>
+                  </t>
+            </tr>
+        </table>
+         <div class="clearfix">
+         <div class="row" name="total">
+           <div class="col-xs-4 pull-right">
+               <table class="table table-condensed" style="min-width: 100px;max-width: 200px;">
+                  <tr class="border-black" style="border-bottom:1px solid #dddddd;">
+                  </tr>
+                  <tr class="border-black">
+                    <td><strong>Parts Total</strong></td>
+                    <td class="text-right">
+                    <td><span t-field="o.pj_parts_total"/></td>
+                    </td>
+                  </tr>
+                </table>
+           </div>
+         </div>
+        </div>
+        <h3><b>Job Details</b></h3>
+        <table width="100%">
+            <tr>
+              <th>Job Code</th>
+              <th>Job Description</th>
+              <th class="text-center">Job Qty</th>
+              <th class="text-center">Job Cost</th>
+              <th class="text-center">Job Total</th>
+              <th>Remarks</th>
+                <t t-foreach="docs.fos_vqir_parts_and_jobs_line" t-as="pj">
+                  <tr t-if="pj.job_code">
+                      <td><span t-field="pj.job_code"/></td>
+                      <td><span t-field="pj.job_code_desc"/></td>
+                      <td class="text-right"><span t-field="pj.job_qty"/></td>
+                      <td class="text-right"><span t-field="pj.job_cost"/></td>
+                      <td class="text-center"><span t-field="pj.job_total"/></td>
+                      <td><span t-field="pj.remarks"/></td>
+                  </tr>
+                  </t>
+            </tr>
+        </table>
+        <div class="clearfix">
+         <div class="row" name="total">
+           <div class="col-xs-4 pull-right">
+               <table class="table table-condensed" style="min-width: 100px;max-width: 200px;">
+                  <tr class="border-black" style="border-bottom:1px solid #dddddd;">
+                  </tr>
+                  <tr class="border-black">
+                    <td><strong>Job Total</strong></td>
+                    <td class="text-right">
+                      <span style="font-size: 100%" t-field="o.pj_job_total"/>
+                    </td>
+                  </tr>
+                </table>
+           </div>
+         </div>
+        </div>
+                <tr>
+                   <td><br/><br/></td>
+                </tr>
+      <div class="clearfix">
+         <div class="row" name="total">
+           <div class="col-xs-4 pull-right">
+               <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                  <tr class="border-black" style="border-bottom:1px solid #dddddd;">
+                  </tr>
+                  <tr class="border-black">
+                    <td><strong>Grand Total</strong></td>
+                    <td class="text-right">
+                      <span style="font-size: 150%" t-field="o.pj_total"/>
+                    </td>
+                  </tr>
+                </table>
+           </div>
+         </div>
+      </div>
+     </div>
+	 <div class="footer">
+	 <table width="100%">
+		<tr>
+		   <td>___________________</td>
+		   <td>___________________</td>
+    </tr>
+		<tr>
+		   <td>Prepared By<br/></td>
+		   <td>Approved By<br/></td>
+    </tr>
+	 </table>
+	 </div>
+     </t>
+    </t>
+   </t>
+   </template>
+   <report id="one.fos_vqir_print"
+     name="one.fos_vqir_print_template"
+     file="one.fos_vqir_print_template"
+     model="fos.vqir"
+     report_type="qweb-html"
+     string="V.Q.I.R"
+     menu="True"/>
+</odoo>

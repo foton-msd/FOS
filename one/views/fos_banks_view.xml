@@ -1,0 +1,46 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="fos_banks_list">
+      <field name="name">Banks</field>
+      <field name="model">fos.banks</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- explicit form view definition -->
+    <record model="ir.ui.view" id="fos_banks_form">
+      <field name="name">Banks</field>
+      <field name="model">fos.banks</field>
+      <field name="arch" type="xml">
+        <form>
+          <field name="name"/>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="fos_banks_search">
+      <field name="name">Search Banks</field>
+      <field name="model">fos.banks</field>
+      <field name="arch" type="xml">
+        <search string="Banks">
+          <field name="name"/>
+        </search>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="fos_banks_action_window">
+      <field name="name">Banks</field>
+      <field name="res_model">fos.banks</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+        
+    <menuitem name="Banks" id="fos_banks_menu"
+	    parent="fos_sales_units_config" action="fos_banks_action_window"
+	    sequence="3" groups="one.msd_administrators"/>
+  </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="fos_purchase_order_line_import_form">
+        <field name="name">Importing Purchase Order Lines...</field>
+        <field name="model">purchase.order.line.import</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <span>Please select MS Excel (XLS) file to read...</span>
+                </group>
+                <group>
+                    <field name="xlsfile" widget="file" filename="filename" required="1"/>
+                </group> 
+                <footer> 
+                    <button string="Cancel" special="cancel" class="oe_highlight"/>
+                    <button name="begin_import" string="Import" type="object" class="oe_highlight" 
+                      confirm="Uploading Order Lines may tike a while. Please be patient."/>                 
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

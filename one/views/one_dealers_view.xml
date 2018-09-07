@@ -1,0 +1,82 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="view_one_dealers_tree">
+      <field name="name">Dealers List</field>
+      <field name="model">one.dealers</field>
+      <field name="arch" type="xml">
+        <tree create="false" edit="false" delete="false">
+          <field name="code"/>
+          <field name="name"/>
+          <field name="street1"/>
+          <field name="street2"/>
+	  <field name="city"/>
+          <field name="province"/>
+	  <field name="phone"/>
+	  <field name="fax"/>
+	  <field name="mobile"/>
+	  <field name="email"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_one_dealers_form">
+      <field name="name">Dealer</field>
+      <field name="model">one.dealers</field>
+      <field name="arch" type="xml">
+        <form create="false" edit="false" delete="false">
+	  <sheet>
+	    <label for="name" class="oe_edit_only"/>
+            <h1><field name="name"/></h1>
+	    <label for="code" class="oe_edit_only"/>
+            <h3><field name="code"/></h3>
+	    <notebook>
+              <page string="Contact Information">
+	        <group>
+                  <field name="street1"/>
+                  <field name="street2" string=""/>
+                  <field name="city"/>
+                  <field name="province"/>
+                  <field name="zip"/>
+                  <field name="phone"/>
+                  <field name="fax"/>
+                  <field name="mobile"/>
+                  <field name="email"/>
+                </group>
+	      </page>	      
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_one_dealer_search">
+      <field name="name">Search Dealer</field>
+      <field name="model">one.dealers</field>
+      <field name="arch" type="xml">
+        <search string="Dealers">
+          <field name="code"/>
+          <field name="name"/>
+          <field name="street1"/>
+          <field name="street2"/>
+          <field name="city"/>
+          <field name="province"/>
+          <filter string="Dealers" name="type_dealer" icon="terp-personal" domain="[('type','=','Dealer')]"/>
+          <filter name="group_type" string="Type" icon="terp-partner" context="{'group_by':'type'}"/>
+        </search>
+      </field>
+    </record>
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="act_window_one_dealers">
+      <field name="name">Dealers</field>
+      <field name="res_model">one.dealers</field>
+      <field name="view_mode">tree,form</field>
+      <!--<field name="domain">[('type', '=', 'Dealer')]</field>-->
+      <field name="context">{"search_default_group_type":1,"search_default_type_dealer":1}</field>
+    </record>
+
+    <!-- actions -->
+    <menuitem name="Dealers" id="menu_one_dealers" parent="menu_fmpi_config"
+        action="act_window_one_dealers" sequence="1" groups="msd_administrators"/>
+  </data>
+</odoo>

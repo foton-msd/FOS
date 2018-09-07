@@ -1,0 +1,22 @@
+<odoo>
+    <data>        
+        <menuitem name="Warranty" id="menu_top_service" sequence="199"
+            web_icon="one,static/img/service.png"
+            groups="msd_administrators"/>	
+        <menuitem name="F.M.P.I." id="menu_top_foton" sequence="200"
+            web_icon="one,static/img/foton.png" groups="msd_administrators"/>
+        <menuitem name="Configuration" id="menu_fmpi_config" parent="menu_top_foton" sequence="10" 
+            groups="msd_administrators"/>
+        <menuitem name="Taks" id="menu_tasks_fu" parent="menu_top_foton" sequence="2" 
+            groups="msd_administrators"/>
+        <menuitem name="Reports" id="menu_reports_fu" parent="menu_top_foton" sequence="3" 
+            groups="msd_administrators"/>
+        <menuitem name="Configuration" id="menu_config_fu" parent="menu_top_foton" sequence="4" 
+            groups="msd_administrators"/>
+        <menuitem name="Accounting"
+            id="account.menu_finance"
+            groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"
+            web_icon="account_invoicing,static/description/icon.png"
+            sequence="40"/>
+    </data>
+</odoo>
