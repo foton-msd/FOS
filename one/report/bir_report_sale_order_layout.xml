@@ -44,7 +44,7 @@
                                         <span t-field="l.discount"/>
                                     </td>
                                     <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
-                                        <span t-field="l.discount"/>
+                                        <span t-field="l.discount_amount"/>
                                     </td>
                                     <td class="text-right" groups="sale.group_show_price_total">
                                         <span t-field="l.price_total"
@@ -113,7 +113,7 @@
                                         <span t-field="l.discount"/>
                                     </td>
                                     <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
-                                        <span t-field="l.discount"/>
+                                        <span t-field="l.discount_amount"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-field="l.price_total"

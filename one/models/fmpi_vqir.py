@@ -80,7 +80,10 @@ class FMPIVqir(models.Model):
   fu_owner_name = fields.Char(string="Owner Name", related="fos_fu_id.owner_name", readonly=True)
   fu_owner_address = fields.Char(string="Address", related="fos_fu_id.owner_address", readonly=True)
   fu_color = fields.Char(string="Color", related="fos_fu_id.color", readonly=True)
-  pj_total = fields.Float(string="Total", readonly=True)
+  pj_total = fields.Float(string="Total", compute="_getPJTotal", readonly=True)
+  pj_parts_total = fields.Float(string="Total", compute="_getPJPartsTotal", readonly=True)
+  pj_job_total = fields.Float(string="Total", compute="_getPJJobTotal", readonly=True)
+
   # parts and jobs
   fmpi_vqir_parts_and_jobs_line = fields.One2many(string="Parts & Jobs", comodel_name="fmpi.vqir.parts.and.jobs", inverse_name="fmpi_vqir_id", readonly=True, ondelete="cascade")
   # images
@@ -189,5 +192,23 @@ class FMPIVqir(models.Model):
     """,(self.vqir_state_logs, str(self.dealer_vqir_id)))
     conn.commit()
     conn.close()
+
+  @api.multi
+  def _getPJTotal(self):
+    for line in self.fmpi_vqir_parts_and_jobs_line:
+      self.pj_total += line.parts_total + line.job_total
+    return self.pj_total
+
+  @api.multi
+  def _getPJPartsTotal(self):
+    for line in self.fmpi_vqir_parts_and_jobs_line:
+      self.pj_parts_total += line.parts_total
+    return self.pj_parts_total
+
+  @api.multi
+  def _getPJJobTotal(self):
+    for line in self.fmpi_vqir_parts_and_jobs_line:
+      self.pj_job_total += line.job_total
+    return self.pj_job_total
 
 FMPIVqir()

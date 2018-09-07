@@ -137,6 +137,6 @@
      file="one.report_invoice_template"
      model="account.invoice"
      report_type="qweb-html"
-     string="Invoice Test"
+     string="Invoice"
      menu="True"/>
 </odoo>

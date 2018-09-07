@@ -88,6 +88,7 @@
             <field name="su_fu_chassis_number"/>
 	          <field name="su_fu_conduction_sticker"/>
             <field name="su_fu_color"/>
+            <field name="su_fu_plate_number"/>
           </group>
           <group string="Payment Info" attrs="{'invisible': [('so_type','!=','units')]}">
             <field name="fos_payment_mode_id" attrs="{'readonly': [('state','not in','draft')], 'required': [('so_type','=','units')]}"
@@ -122,7 +123,8 @@
              attrs="{'invisible': [('so_type','!=','service')]}"/>
           <field name="fu_chassis_number" attrs="{'invisible': [('so_type','!=','service')]}"/>
           <field name="fu_engine_number" attrs="{'invisible': [('so_type','!=','service')]}"/>
-          <field name="fu_conduction_sticker" attrs="{'invisible': [('so_type','!=','service')]}"/> 
+          <field name="fu_conduction_sticker" attrs="{'invisible': [('so_type','!=','service')]}"/>
+          <field name="fu_plate_number" attrs="{'invisible': [('so_type','!=','service')]}"/>
         </xpath>
         <xpath expr="//field[@name='note']" position="after">
           <group string="Signatories" col="3">
@@ -186,7 +188,7 @@
               <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
                 attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
               <field name="discount" groups="sale.group_discount_per_so_line"/>
-              <field name="discount_amount"/>
+              <field name="discount_amount" groups="sale.group_discount_per_so_line"/>
               <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
               <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
               <field name="qty_delivered_updateable" invisible="1"/>
@@ -203,42 +205,42 @@
     <record model="ir.sequence" id="fos_spso_seq">
       <field name="name">Parts Sales Order</field>
       <field name="code">fos.spso.seq</field>
-      <field name="prefix">SP-SO-%(y)s-%(month)s-</field>
+      <field name="prefix">PARTS-SO-%(y)s-%(month)s-</field>
       <field name="padding">6</field>
     </record>
 
     <record model="ir.sequence" id="fos_spsq_seq">
       <field name="name">Parts Sales Quotation</field>
       <field name="code">fos.spsq.seq</field>
-      <field name="prefix">SP-SQ-%(y)s-%(month)s-</field>
+      <field name="prefix">PARTS-SQ-%(y)s-%(month)s-</field>
       <field name="padding">6</field>
     </record>
 
     <record model="ir.sequence" id="fos_svre_seq">
       <field name="name">Repair Estimate</field>
       <field name="code">fos.svre.seq</field>
-      <field name="prefix">SV-RE-%(y)s-%(month)s-</field>
+      <field name="prefix">SERVICE-RE-%(y)s-%(month)s-</field>
       <field name="padding">6</field>
     </record>
 
     <record model="ir.sequence" id="fos_svso_seq">
       <field name="name">Service Order</field>
       <field name="code">fos.svso.seq</field>
-      <field name="prefix">SV-SO-%(y)s-%(month)s-</field>
+      <field name="prefix">SERVICE-RO-%(y)s-%(month)s-</field>
       <field name="padding">6</field>
     </record>
 
     <record model="ir.sequence" id="fos_susq_seq">
       <field name="name">Unit Sales Quotation</field>
       <field name="code">fos.susq.seq</field>
-      <field name="prefix">SU-SQ-%(y)s-%(month)s-</field>
+      <field name="prefix">UNIT-SQ-%(y)s-%(month)s-</field>
       <field name="padding">6</field>
     </record>
 
     <record model="ir.sequence" id="fos_suso_seq">
       <field name="name">Unit Sales Order</field>
       <field name="code">fos.suso.seq</field>
-      <field name="prefix">SU-SO-%(y)s-%(month)s-</field>
+      <field name="prefix">UNIT-SO-%(y)s-%(month)s-</field>
       <field name="padding">6</field>
     </record>
 

@@ -22,23 +22,23 @@
         <field name="name">FOTON Unit</field>
         <field name="model">view.fas.fu</field>
         <field name="arch" type="xml">
-            <form create="false" delete="false">
+            <form create="false" delete="false" edit="false">
                 <header>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <h1><field name="name" readonly="1"/></h1>
-                    <h2><field name="fmpi_fu_local_name_id" readonly="1"/></h2>
+                    <h1><field name="name"/></h1>
+                    <h2><field name="fmpi_fu_local_name_id"/></h2>
                     <group>
                         <group>
-                            <field name="description" readonly="1"/>
-                            <field name="vehicle_type" readonly="1"/>
-                            <field name="body_type" readonly="1"/>
+                            <field name="description"/>
+                            <field name="vehicle_type"/>
+                            <field name="body_type"/>
                         </group>
                         <group>
-                            <field name="engine_number" readonly="1"/>
-                            <field name="chassis_number" readonly="1"/>
-                            <field name="color" readonly="1"/>
+                            <field name="engine_number"/>
+                            <field name="chassis_number"/>
+                            <field name="color"/>
                         </group>
                     </group>
                     <notebook>
@@ -46,7 +46,7 @@
                             <notebook>
                                 <page string="Service">
                                     <field name="ams_services_ids">
-                                        <tree edit="false" delete="false" create="false" default_order="run_km desc" default_group="run_km">
+                                        <tree endit="false" delete="false" create="false" default_order="run_km desc" default_group="run_km">
                                             <field name="run_km"/>
                                             <field name="dealer_name"/>
                                             <field name="customer_name"/>
@@ -61,25 +61,19 @@
                         <page string="L.T.O. Registration">
                             <group>
                                 <group>
-                                    <field name="plate_number" readonly="1"/>
-                                    <field name="conduction_sticker" readonly="1"/>
-                                    <field name="mv_file_number" readonly="1"/>
-                                    <field name="cr_number" readonly="1"/>
-                                    <field name="cr_date" readonly="1"/>
-                                    <field name="or_number" readonly="1"/>
-                                    <field name="or_date" readonly="1"/>
+                                    <field name="plate_number"/>
+                                    <field name="conduction_sticker"/>
+                                    <field name="mv_file_number"/>
+                                    <field name="cr_number"/>
+                                    <field name="cr_date"/>
+                                    <field name="or_number"/>
+                                    <field name="or_date"/>
                                 </group>
                                 <group>
-                                    <field name="owner_name" readonly="1"/>
-                                    <field name="owner_address" readonly="1"/>
-                                    <field name="owner_contact_details" readonly="1"/>
+                                    <field name="owner_name"/>
+                                    <field name="owner_address"/>
+                                    <field name="owner_contact_details"/>
                                 </group>
-                            </group>
-                        </page>
-                        <page string="Costs">
-                            <group>
-                                <field name="po_line_id"/>
-                                <field name="po_amount"/>
                             </group>
                         </page>
                     </notebook>

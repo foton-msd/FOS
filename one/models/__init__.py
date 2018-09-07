@@ -33,4 +33,5 @@ from . import fos_payment_mode
 from . import fos_repair_order
 from . import fos_payment_terms
 from . import fos_banks
+from . import fos_account_payment
 

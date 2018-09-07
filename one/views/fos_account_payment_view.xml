@@ -1,0 +1,17 @@
+<odoo>
+  <data>
+    <record id="view_account_payment_form" model="ir.ui.view">
+      <field name="name">fos.account.payment.form</field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//group" position="after">
+        <group>
+          <field name="note" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+        </group>  
+        </xpath>
+
+      </field>
+    </record>
+  </data>
+</odoo>

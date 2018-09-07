@@ -37,7 +37,4 @@ class FotonUnits(models.Model):
   #one_bt_log_ids = fields.One2many(string="Body Type Logs", comodel_name="one.fu.bt.logs", inverse_name="one_fu_id")
   ams_services_ids = fields.One2many(string="Service History", comodel_name="ams.service.records", inverse_name="one_fu_id")
   active_on_dealer = fields.Boolean(string="Active")
-  po_line_id = fields.Many2one(string="Order Line", comodel_name="purchase.order.line")
-  po_number = fields.Char(string="P.O. Number", related="po_line_id.order_id.name")
-  po_amount = fields.Float(string="Unit Cost", related="po_line_id.price_unit")
 FotonUnits()

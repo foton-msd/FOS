@@ -44,6 +44,7 @@
     'views/fos_payment_terms_view.xml',
     'views/fos_banks_view.xml',
     'views/fos_payment_modes_view.xml',
+    'views/fos_account_payment_view.xml',
     # reports
     'report/bir_report_sale_order_layout.xml',
     'report/fas_sales_parts_report.xml',
@@ -60,7 +61,8 @@
     'report/fas_report_payment_receipt_document.xml',
     'report/fas_report_picking_document.xml',
     'report/fas_report_purchase_order.xml',
-    'report/parts_sales_report_1_view.xml',            
+    'report/parts_sales_report_1_view.xml',
+    'report/fos_sale_report.xml',          
     'security/ir.model.access.csv',
     ],
   'application': 'True',

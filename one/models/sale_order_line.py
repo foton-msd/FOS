@@ -18,20 +18,20 @@ class FasSaleOrderLine(models.Model):
     selection=[('warranty','Warranty'),
       ('customer','Customer'),
       ('internal','internal')])
-  discount_amount = fields.Float(string="Discount (Amount)", digits=dp.get_precision('Product Price'))
+  discount_amount = fields.Float(string="Discount (Amount)", digits=dp.get_precision('Discount'))
   part_number = fields.Many2one(string="Part Number", comodel_name="product.product")
   parts_and_jobs = fields.Many2one(string="Parts & Labor", comodel_name="product.product")
   units_and_addons = fields.Many2one(string="Units & Addons", comodel_name="product.product")
   
   @api.onchange("discount_amount")  
   def DiscountAmountChanged(self):    
-    if self.price_unit:      
-      self.discount = (self.discount_amount / (self.price_unit * self.product_uom_qty)) * 100
-  
-  @api.onchange("discount")  
-  def DiscountPercentChanged(self):
     if self.price_unit:
-      self.discount_amount = (self.product_uom_qty * self.price_unit) - self.price_total
+      self.discount = (self.discount_amount / (self.price_unit * self.product_uom_qty)) * 100    
+
+  @api.onchange("discount")  
+  def DiscountPercentChanged(self):    
+    if self.price_unit:
+      self.discount_amount = (self.product_uom_qty * self.price_unit) * (self.discount / 100)
 
   @api.onchange("part_number")
   @api.depends("product_id")

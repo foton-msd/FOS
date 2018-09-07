@@ -42,14 +42,15 @@
            <td colspan="3" rowspan="3" valign="top"><b>User Information</b></td>
            <td colspan="3"><b>User's Name</b></td>
            <td colspan="3"><t t-esc="o.users_name" /></td>
-           <td colspan="2"><b>Vehicle Purchasing Date</b></td>
-           <td colspan="2"><t t-esc="o.fu_body_type" /></td>
+           <td colspan="2"><b>Run Kilometer</b></td>
+           <td colspan="2"><t t-esc="o.run_km" /></td>
+
          </tr>
          <tr>
            <td colspan="3"><b>Address</b></td>
            <td colspan="3"><t t-esc="o.users_street1" /></td>
-           <td colspan="2"><b>Run Kilometer</b></td>
-           <td colspan="2"><t t-esc="o.run_km" /></td>
+           <td colspan="2"></td>
+           <td colspan="2"></td>
          </tr>
          <tr>
            <td colspan="3"><b>Tel No.</b></td>
@@ -192,8 +193,8 @@
 		   <td>___________________</td>
     </tr>
 		<tr>
-		   <td>Prepared By<br/></td>
-		   <td>Approved By<br/></td>
+		   <td>Prepared By</td>
+		   <td>Approved By</td>
     </tr>
 	 </table>
 	 </div>
