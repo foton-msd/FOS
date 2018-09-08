@@ -79,9 +79,9 @@
           <attribute name="attrs">{'invisible': [('so_type','=','units')]}</attribute>
         </xpath>
         <xpath expr="//form/sheet/group" position="inside">
-          <group string="Unit Info" attrs="{'invisible': [('so_type','!=','units')]}">
+          <group string="Unit Info" attrs="{'invisible': ['|',('so_type','!=','units'),('state','in',['draft','sent'])]}">
             <field name="su_fu_id" 
-              attrs="{'readonly': [('state','not in','draft')], 'required': [('so_type','=','units')]}"
+              attrs="{'readonly': [('state','!=','sale')], 'required': [('so_type','=','units')]}"
               options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
             <field name="su_fu_local_name_id"/>
             <field name="su_fu_engine_number"/>
@@ -90,29 +90,29 @@
             <field name="su_fu_color"/>
             <field name="su_fu_plate_number"/>
           </group>
-          <group string="Payment Info" attrs="{'invisible': [('so_type','!=','units')]}">
-            <field name="fos_payment_mode_id" attrs="{'readonly': [('state','not in','draft')], 'required': [('so_type','=','units')]}"
+          <group string="Payment Info" attrs="{'invisible': ['|',('so_type','!=','units'),('state','in',['draft','sent'])]}">
+            <field name="fos_payment_mode_id" attrs="{'readonly': [('state','!=','sale')], 'required': [('so_type','=','units')]}"
               options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}" widget="many2one"/>        
             <field name="payment_mode_name" invisible="1"/>
             <field name="fos_bank_id" 
-              attrs="{'readonly': [('state','not in','draft')], 'required': [('payment_mode_name','in',('Bank','bank','BANK')),('so_type','=','units')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"
+              attrs="{'readonly': [('state','!=','sale')], 'required': [('payment_mode_name','in',('Bank','bank','BANK')),('so_type','=','units')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"
               options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}" widget="many2one"/>                            
             <field name="unit_si_amount"/>
             <field name="unit_si_date"/>
-            <field name="dp_percentage" attrs="{'readonly': [('state','not in','draft')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
-            <field name="dp_amount" attrs="{'readonly': [('state','not in','draft')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
-            <field name="af" attrs="{'readonly': [('state','not in','draft')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
+            <field name="dp_percentage" attrs="{'readonly': [('state','!=','sale')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
+            <field name="dp_amount" attrs="{'readonly': [('state','!=','sale')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
+            <field name="af" attrs="{'readonly': [('state','!=','sale')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
             <field name="fos_payment_term_id" attrs="{'readonly': [('state','not in','draft')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
-            <field name="insurance_company" attrs="{'readonly': [('state','not in','draft')]}"/>                            
+            <field name="insurance_company" attrs="{'readonly': [('state','!=','sale')]}"/>                            
           </group>                            
-          <group string="Sales Info" attrs="{'invisible': [('so_type','!=','units')]}">
+          <group string="Sales Info" attrs="{'invisible': ['|',('so_type','!=','units'),('state','in',['draft','sent'])]}">
             <field name="date_released"/>
-            <field name="user_id" string="Sales Executive" attrs="{'readonly': [('state','not in','draft')]}"
+            <field name="user_id" string="Sales Executive" attrs="{'readonly': [('state','!=','sale')]}"
               options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"/>
-            <field name="source_of_awareness" attrs="{'readonly': [('state','not in','draft')]}"/>
-            <field name="venue_of_marketing_activity" attrs="{'readonly': [('state','not in','draft')]}"/>
-            <field name="source_of_sale" attrs="{'readonly': [('state','not in','draft')]}"/>
-            <field name="promo" attrs="{'readonly': [('state','not in','draft')]}"/>
+            <field name="source_of_awareness" attrs="{'readonly': [('state','!=','sale')]}"/>
+            <field name="venue_of_marketing_activity" attrs="{'readonly': [('state','!=','sale')]}"/>
+            <field name="source_of_sale" attrs="{'readonly': [('state','!=','sale')]}"/>
+            <field name="promo" attrs="{'readonly': [('state','!=','sale')]}"/>
           </group>
         </xpath>
         <xpath expr="//field[@name='partner_shipping_id']" position="after">
