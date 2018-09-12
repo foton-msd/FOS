@@ -56,6 +56,7 @@
     'report/fos_repair_order_report.xml',
     'report/one_vqir_print_report.xml',
     'report/fmpi_vqir_print_report.xml',
+    'report/fas_report_payment_voucher.xml',
 
     'report/fas_report_delivery_document.xml',
     'report/fas_report_payment_receipt_document.xml',
