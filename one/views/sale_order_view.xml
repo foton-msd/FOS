@@ -81,7 +81,7 @@
         <xpath expr="//form/sheet/group" position="inside">
           <group string="Unit Info" attrs="{'invisible': ['|',('so_type','!=','units'),('state','in',['draft','sent'])]}">
             <field name="su_fu_id" 
-              attrs="{'readonly': [('state','!=','sale')], 'required': [('so_type','=','units')]}"
+              attrs="{'readonly': [('state','!=','sale')], 'required': [('so_type','=','units'),('state','=','sale')]}"
               options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
             <field name="su_fu_local_name_id"/>
             <field name="su_fu_engine_number"/>
@@ -91,7 +91,7 @@
             <field name="su_fu_plate_number"/>
           </group>
           <group string="Payment Info" attrs="{'invisible': ['|',('so_type','!=','units'),('state','in',['draft','sent'])]}">
-            <field name="fos_payment_mode_id" attrs="{'readonly': [('state','!=','sale')], 'required': [('so_type','=','units')]}"
+            <field name="fos_payment_mode_id" attrs="{'readonly': [('state','!=','sale')], 'required': [('so_type','=','units'),('state','=','sale')]}"
               options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}" widget="many2one"/>        
             <field name="payment_mode_name" invisible="1"/>
             <field name="fos_bank_id" 

@@ -110,7 +110,7 @@ class FasSaleOrder(models.Model):
       self._action_confirm()
       if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
         self.action_done()
-      if self.so_type == 'units':        
+      if self.so_type == 'units' and self.su_fu_id:        
         self.env.cr.execute(""" UPDATE one_fu SET state = 'alloc' WHERE id = %s""" %(self.su_fu_id.id))
         
       if self.so_type == 'service':
