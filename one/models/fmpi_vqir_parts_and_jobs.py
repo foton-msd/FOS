@@ -16,6 +16,7 @@ class FMPIPartsandJobs(models.Model):
   parts_qty = fields.Float(string="Quantity", readonly=True)
   parts_cost = fields.Float(string="U/Price", readonly=True)
   parts_with_fee = fields.Boolean(string="With 10% handling fee", readonly=True)
+  parts_hf_amount = fields.Float(string="HF Amount")
   parts_total = fields.Float(string="Parts Net Total", readonly=True)
   job_code = fields.Char(string="Job Code", readonly=True)
   job_code_desc = fields.Char(string="Job Desc", readonly=True)
@@ -24,5 +25,5 @@ class FMPIPartsandJobs(models.Model):
   job_total = fields.Float(string="Job Total", readonly=True)
   job_parts_total = fields.Float(string="Sub Total", readonly=True)
   remarks = fields.Text(string="Remarks", readonly=True)
-
+  
 FMPIPartsandJobs()
