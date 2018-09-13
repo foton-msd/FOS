@@ -16,6 +16,7 @@ class FasPartsandJobs(models.Model):
   parts_qty = fields.Float(string="Quantity")
   parts_cost = fields.Float(string="U/Price")
   parts_with_fee = fields.Boolean(string="With 10% handling fee")
+  parts_hf_amount = fields.Float(string="HF Amount", compute="HFAmount", readonly=True)
   parts_total = fields.Float(string="Parts Net Total", compute='_getPartsTotal', readonly=True)
   job_code = fields.Char(string="Job Code")
   job_code_desc = fields.Char(string="Job Desc")
@@ -23,8 +24,7 @@ class FasPartsandJobs(models.Model):
   job_cost = fields.Float(string="Job Cost")
   job_total = fields.Float(string="Job Total", compute="_getJobTotal", readonly=True)
   job_parts_total = fields.Float(string="Total", compute="_getJobPartsTotal", readonly=True)
-  remarks = fields.Text(string="Remarks")
-
+  
   @api.onchange("job_qty","job_cost")
   def job_total_changed(self):
     self._getJobTotal()
@@ -49,5 +49,13 @@ class FasPartsandJobs(models.Model):
     self.parts_net = self.parts_total
     if self.parts_with_fee:
       self.parts_total = self.parts_total * 1.1
+
+  @api.one
+  @api.depends("parts_hf_amount")
+  def HFAmount(self):
+    self.parts_hf_amount = 0
+    if self.parts_with_fee:   
+      self.parts_hf_amount = (self.parts_cost * self.parts_qty) * 0.1
+    return
 
 FasPartsandJobs()
