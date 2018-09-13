@@ -86,6 +86,7 @@ class FosVqir(models.Model):
   pj_total = fields.Float(string="Total", compute="_getPJTotal", readonly=True)
   pj_parts_total = fields.Float(string="Total", compute="_getPJPartsTotal", readonly=True)
   pj_job_total = fields.Float(string="Total", compute="_getPJJobTotal", readonly=True)
+  remarks = fields.Text(string="Remarks")
   # parts and jobs
   fos_vqir_parts_and_jobs_line = fields.One2many(string="Parts & Jobs", comodel_name="fos.vqir.parts.and.jobs", inverse_name="fos_vqir_id", ondelete="cascade")
   # images
@@ -143,7 +144,7 @@ class FosVqir(models.Model):
       proposal_for_improvement, driver_name, ss_name, ss_street1, ss_street2, ss_city, ss_phone, 
       ss_mobile, ss_fax, ss_email, users_name, users_street1, users_street2, users_city, users_phone, 
       users_mobile, users_fax, users_email, date_released, reps_name, reps_street1, reps_street2, 
-      reps_city, reps_phone, reps_mobile, reps_fax, reps_email, fos_fu_id, dealer_id, dealer_vqir_id, 
+      reps_city, reps_phone, reps_mobile, reps_fax, reps_email, remarks, fos_fu_id, dealer_id, dealer_vqir_id, 
       dealer_host, dealer_db, dealer_port, dealer_pgu, dealer_pgp, vqir_state_logs) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
       %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
       %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s);
@@ -192,7 +193,8 @@ class FosVqir(models.Model):
       self.reps_phone or None, 
       self.reps_mobile or None, 
       self.reps_fax or None, 
-      self.reps_email or None, 
+      self.reps_email or None,
+      self.remarks or None,
       self.fos_fu_id.id or None, 
       self.company_id.dealer_id.id, 
       self.id, 
@@ -207,8 +209,8 @@ class FosVqir(models.Model):
       cursor.execute("""INSERT INTO fmpi_vqir_parts_and_jobs (
         name, fmpi_vqir_id, si_number, si_date, parts_number, parts_desc, 
         parts_qty, parts_cost, parts_with_fee, parts_total, job_code, 
-        job_code_desc, job_qty, job_cost, job_total, job_parts_total, 
-        remarks) VALUES (%s,(SELECT id FROM fmpi_vqir ORDER BY id DESC LIMIT 1),
+        job_code_desc, job_qty, job_cost, job_total, job_parts_total) 
+        VALUES (%s,(SELECT id FROM fmpi_vqir ORDER BY id DESC LIMIT 1),
         %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);""",
         (ji.name or None, 
         ji.si_number or None, 
@@ -224,19 +226,18 @@ class FosVqir(models.Model):
         ji.job_qty or None, 
         ji.job_cost or None, 
         ji.job_total or None, 
-        ji.job_parts_total or None, 
-        ji.remarks or None))
+        ji.job_parts_total or None))
     for img in self.fos_vqir_images_line:
       cursor.execute("""
           INSERT INTO fmpi_vqir_images (
             name, fmpi_vqir_id, image_variant, image, image_medium, 
-            image_small, remarks) VALUES (
+            image_small, image_remarks) VALUES (
               %s, (SELECT id FROM fmpi_vqir ORDER BY id DESC LIMIT 1),
               %s, %s, %s, %s, %s);
         """,(
           img.name or None, img.image_variant or None, 
           img.image or None, img.image_medium or None,
-          img.image_small or None, img.remarks or None
+          img.image_small or None, img.image_remarks or None
         ))
     conn.commit()
     conn.close()
