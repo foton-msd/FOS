@@ -20,6 +20,6 @@ class FMPIVqirImages(models.Model):
 	  help="Small-sized image of the product. It is automatically "
 	  "resized as a 64x64px image, with aspect ratio preserved. "
 	  "Use this field anywhere a small image is required.")
-  remarks = fields.Text(string="Remarks", readonly=True)
+  image_remarks = fields.Text(string="Remarks", readonly=True)
 
 FMPIVqirImages()
