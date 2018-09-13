@@ -84,6 +84,7 @@ class FMPIVqir(models.Model):
   pj_parts_total = fields.Float(string="Total", compute="_getPJPartsTotal", readonly=True)
   pj_job_total = fields.Float(string="Total", compute="_getPJJobTotal", readonly=True)
   remarks = fields.Text(string="Remarks", readonly=True)
+  
   # parts and jobs
   fmpi_vqir_parts_and_jobs_line = fields.One2many(string="Parts & Jobs", comodel_name="fmpi.vqir.parts.and.jobs", inverse_name="fmpi_vqir_id", readonly=True, ondelete="cascade")
   # images
