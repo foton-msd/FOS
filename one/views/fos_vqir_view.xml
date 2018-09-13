@@ -139,7 +139,6 @@
                    <field name="job_cost"/>
                    <field name="job_total"/>
                    <field name="job_parts_total"/>
-                   <field name="remarks"/>
                  </tree>
                  <form string="Trouble Parts and Jobs">
                    <sheet>
@@ -164,7 +163,6 @@
                          <field name="job_parts_total"/>
                        </group>
                      </group>
-                     <field name="remarks" nolabel="1"/>
                    </sheet>
                  </form>
                 </field>
@@ -174,7 +172,9 @@
                <label for="pj_total"/>
                </div>
                <field name="pj_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-               </group>          
+               </group>
+               <field name="remarks" class="oe_inline" placeholder="Add your remarks" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
+               <div class="oe_clear"/>        
                 <group>
                     <group string="Trouble explanation">
                         <field name="trouble_explanation" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
@@ -195,16 +195,16 @@
                 <group string="Images">
                     <field name="fos_vqir_images_line" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}">
                          <field name="image_small"/>
-                         <field name="remarks"/>
+                         <field name="image_remarks"/>
                       <tree mode="kanban,tree">
                          <field name="image" widget="image" class="oe_avatar"/>
-                         <field name="remarks"/>
+                         <field name="image_remarks"/>
                       </tree>
                      <form>
                       <sheet>
                         <h1><field name="name"/></h1>
                         <field name="image" widget="image"/>
-                        <field name="remarks" nolabel="1"/>
+                        <field name="image_remarks" nolabel="1"/>
                       </sheet>
                      </form>
                     </field>
