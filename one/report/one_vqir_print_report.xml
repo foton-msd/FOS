@@ -87,7 +87,7 @@
            <td width="77%" height="54" colspan="10"><t t-esc="o.proposal_for_improvement" /></td>
          </tr>
         </table> 
-        <h3><b>Parts Details</b></h3>
+        <h4><strong>Parts Details</strong></h4>
         <table width="100%">
             <tr>
               <th>S.I. Number</th>
@@ -97,7 +97,6 @@
               <th class="text-center">Unit PricePrice</th>
               <th class="text-center">W/ 10% HF</th>
               <th class="text-center">Parts Total</th>
-              <th>Remarks</th>
                 <t t-foreach="docs.fos_vqir_parts_and_jobs_line" t-as="pj">
                   <tr t-if="pj.parts_number">
                       <td><span t-field="pj.si_number"/></td>
@@ -105,9 +104,8 @@
                       <td><span t-field="pj.parts_desc"/></td>
                       <td class="text-right"><span t-field="pj.parts_qty"/></td>
                       <td class="text-right"><span t-field="pj.parts_cost"/></td>
-                      <td class="text-right"><span t-field="pj.parts_with_fee"/></td>
-                      <td class="text-center"><span t-field="pj.parts_total"/></td>
-                      <td width="10%"><span t-field="pj.remarks"/></td>
+                      <td class="text-right"><span t-field="pj.parts_hf_amount"/></td>
+                      <td class="text-right"><span t-field="pj.parts_total"/></td>
                   </tr>
                   </t>
             </tr>
@@ -115,20 +113,20 @@
          <div class="clearfix">
          <div class="row" name="total">
            <div class="col-xs-4 pull-right">
-               <table class="table table-condensed" style="min-width: 100px;max-width: 200px;">
+               <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
                   <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                   </tr>
                   <tr class="border-black">
                     <td><strong>Parts Total</strong></td>
                     <td class="text-right">
-                    <td><span t-field="o.pj_parts_total"/></td>
+                      <span style="font-size: 100%" t-field="o.pj_parts_total"/>
                     </td>
                   </tr>
                 </table>
            </div>
          </div>
         </div>
-        <h3><b>Job Details</b></h3>
+        <h4><strong>Job Details</strong></h4>
         <table width="100%">
             <tr>
               <th>Job Code</th>
@@ -136,15 +134,13 @@
               <th class="text-center">Job Qty</th>
               <th class="text-center">Job Cost</th>
               <th class="text-center">Job Total</th>
-              <th>Remarks</th>
                 <t t-foreach="docs.fos_vqir_parts_and_jobs_line" t-as="pj">
                   <tr t-if="pj.job_code">
                       <td><span t-field="pj.job_code"/></td>
                       <td><span t-field="pj.job_code_desc"/></td>
                       <td class="text-right"><span t-field="pj.job_qty"/></td>
                       <td class="text-right"><span t-field="pj.job_cost"/></td>
-                      <td class="text-center"><span t-field="pj.job_total"/></td>
-                      <td><span t-field="pj.remarks"/></td>
+                      <td class="text-right"><span t-field="pj.job_total"/></td>
                   </tr>
                   </t>
             </tr>
@@ -152,7 +148,7 @@
         <div class="clearfix">
          <div class="row" name="total">
            <div class="col-xs-4 pull-right">
-               <table class="table table-condensed" style="min-width: 100px;max-width: 200px;">
+               <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
                   <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                   </tr>
                   <tr class="border-black">
@@ -166,7 +162,7 @@
          </div>
         </div>
                 <tr>
-                   <td><br/><br/></td>
+                   <td></td>
                 </tr>
       <div class="clearfix">
          <div class="row" name="total">
@@ -185,7 +181,9 @@
          </div>
       </div>
      </div>
-  
+          <p><strong>Remarks</strong></p>
+            <p t-field="o.remarks" />
+
 	 <div class="footer">
 	 <table width="100%">
 		<tr>
