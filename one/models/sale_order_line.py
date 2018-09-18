@@ -22,7 +22,8 @@ class FasSaleOrderLine(models.Model):
   part_number = fields.Many2one(string="Part Number", comodel_name="product.product")
   parts_and_jobs = fields.Many2one(string="Parts & Labor", comodel_name="product.product")
   units_and_addons = fields.Many2one(string="Units & Addons", comodel_name="product.product")
-  
+  part_desc = fields.Text(string="Parts Description", related="product_id.product_tmpl_id.description_sale", readonly=True)
+
   @api.onchange("discount_amount")  
   def DiscountAmountChanged(self):    
     if self.price_unit:
