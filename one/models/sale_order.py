@@ -266,6 +266,10 @@ class FasSaleOrder(models.Model):
     return self.env.ref('one.report_so_parts').report_action(self)
 
   @api.multi
+  def print_so_parts_quote(self):
+    return self.env.ref('one.report_so_parts_quote').report_action(self)
+
+  @api.multi
   def print_so_units(self):
     return self.env.ref('one.report_so_units').report_action(self)  
 
