@@ -124,12 +124,13 @@ class FosVqir(models.Model):
 
   @api.multi
   def action_submit(self):
-    vqir_state_logs = "Document:" + self.name + "\n" + \
-      "Submitted by: " + self.env.user.name + "\n" + \
+    vqir_state_logs = "Document:" + (self.name or 'Empty Document') + "\n" + \
+      "Submitted by: " + (self.env.user.name or 'No User Name specified') + "\n" + \
       "Submitted at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
-      "--------------------------------------------------\n"
+      "--------------------------------------------------\n"    
     self.write({'vqir_state': 'submit',
-      'vqir_state_logs': vqir_state_logs + (self.vqir_state_logs or '')})  
+      'vqir_state_logs': vqir_state_logs + str(self.vqir_state_logs or '')})  
+    logger.info("State Logs:" + vqir_state_logs + str(self.vqir_state_logs or ''))
     # set connection parameters to FMPI
     conn_string = "host='" + self.company_id.fmpi_host + \
       "' dbname='"+ self.company_id.fmpi_pgn + \
@@ -139,17 +140,27 @@ class FosVqir(models.Model):
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
     # set upload string (SQL)
-    cursor.execute("""INSERT INTO fmpi_vqir (name, vqir_date, preapproved_date, preclaim_number, 
-      payment_receipt, vqir_type, vqir_service_type, vqir_state, date_occur, vqir_city, place_of_incident, 
-      km_1st_trouble, run_km, part, person, others, trouble_explanation, trouble_cause_analysis, disposal_measures,
-      proposal_for_improvement, driver_name, ss_name, ss_street1, ss_street2, ss_city, ss_phone, 
-      ss_mobile, ss_fax, ss_email, users_name, users_street1, users_street2, users_city, users_phone, 
-      users_mobile, users_fax, users_email, date_released, reps_name, reps_street1, reps_street2, 
-      reps_city, reps_phone, reps_mobile, reps_fax, reps_email, remarks, fos_fu_id, dealer_id, dealer_vqir_id, 
-      dealer_host, dealer_db, dealer_port, dealer_pgu, dealer_pgp, vqir_state_logs) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s);
-      """,(self.name or None, 
+    cursor.execute("""INSERT INTO fmpi_vqir (
+      name, vqir_date, preapproved_date, preclaim_number, payment_receipt, 
+      vqir_type, vqir_service_type, vqir_state, date_occur, vqir_city, 
+      place_of_incident, km_1st_trouble, run_km, part, person, 
+      others, trouble_explanation, trouble_cause_analysis, disposal_measures, proposal_for_improvement, 
+      driver_name, ss_name, ss_street1, ss_street2, ss_city, 
+      ss_phone, ss_mobile, ss_fax, ss_email, users_name, 
+      users_street1, users_street2, users_city, users_phone, users_mobile, 
+      users_fax, users_email, date_released, reps_name, reps_street1, 
+      reps_street2, reps_city, reps_phone, reps_mobile, reps_fax, 
+      reps_email, remarks, fos_fu_id, dealer_id, dealer_vqir_id, 
+      dealer_host, dealer_db, dealer_port, dealer_pgu, dealer_pgp, 
+      vqir_state_logs) VALUES (
+      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+      %s,%s,%s,%s, %s, %s);
+      """,(
+      self.name or None, 
       self.vqir_date or None, 
       self.preapproved_date or None, 
       self.preclaim_number or None, 
@@ -208,11 +219,11 @@ class FosVqir(models.Model):
     # vqir jobs and parts
     for ji in self.fos_vqir_parts_and_jobs_line:
       cursor.execute("""INSERT INTO fmpi_vqir_parts_and_jobs (
-        name, fmpi_vqir_id, si_number, si_date, parts_number, parts_desc, 
-        parts_qty, parts_cost, parts_with_fee, parts_total, job_code, 
-        job_code_desc, job_qty, job_cost, job_total, job_parts_total) 
+        name, fmpi_vqir_id, si_number, si_date, parts_number, 
+        parts_desc, parts_qty, parts_cost, parts_with_fee, parts_total, 
+        job_code, job_code_desc, job_qty, job_cost) 
         VALUES (%s,(SELECT id FROM fmpi_vqir ORDER BY id DESC LIMIT 1),
-        %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);""",
+        %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);""",
         (ji.name or None, 
         ji.si_number or None, 
         ji.si_date or None, 
@@ -225,9 +236,7 @@ class FosVqir(models.Model):
         ji.job_code or None, 
         ji.job_code_desc or None, 
         ji.job_qty or None, 
-        ji.job_cost or None, 
-        ji.job_total or None, 
-        ji.job_parts_total or None))
+        ji.job_cost or None))
     for img in self.fos_vqir_images_line:
       cursor.execute("""
           INSERT INTO fmpi_vqir_images (
