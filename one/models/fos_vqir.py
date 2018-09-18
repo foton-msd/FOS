@@ -91,10 +91,11 @@ class FosVqir(models.Model):
   fos_vqir_parts_and_jobs_line = fields.One2many(string="Parts & Jobs", comodel_name="fos.vqir.parts.and.jobs", inverse_name="fos_vqir_id", ondelete="cascade")
   # images
   fos_vqir_images_line = fields.One2many(string="Images", comodel_name="fos.vqir.images", inverse_name="fos_vqir_id", ondelete="cascade")  
-  company_id = fields.Many2one(string="Company", comodel_name="res.company", required=True, copy=True)
+  company_id = fields.Many2one(string="Company", comodel_name="res.company", required=False)
 
   @api.model
   def create(self, vals):
+    vals['company_id'] = self.env.user.company_id.id
     vals['name'] = self.env['ir.sequence'].next_by_code('fos.vqir.seq')
     result = super(FosVqir, self).create(vals)
     return result
