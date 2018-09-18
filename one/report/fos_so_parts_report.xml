@@ -113,6 +113,22 @@
                     </tbody>
                 </table>
             </t>
+            <div class="clearfix">
+                <div class="row">
+                    <div class="col-xs-4 pull-right">
+                    <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                        <tr class="border-black" style="border-bottom:1px solid #dddddd;"/>
+                        <tr class="border-black">
+                        <td><strong>Total</strong></td>
+                            <td class="text-right">
+                            <span style="font-size: 100%" t-field="doc.amount_total"
+                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                            </td>
+                        </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <p><strong>Remarks</strong></p>
             <p t-field="doc.note" />
             <p t-if="doc.payment_term_id.note">
