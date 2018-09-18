@@ -51,6 +51,7 @@
     'report/fas_sales_service_report.xml',
     'report/fos_report_invoice_document.xml',
     'report/fos_so_parts_report.xml',
+    'report/fos_so_parts_quote_report.xml',
     'report/fos_so_units_report.xml',
     'report/fos_so_service_report.xml',
     'report/fos_repair_order_report.xml',
