@@ -55,7 +55,10 @@
                 string="Print S.O Service" type="object"/>
              <button name="print_so_parts" class="oe_highlight"
                 attrs="{'invisible': [('so_type','!=','parts')]}"
-                string="Print S.O Parts" type="object"/>    
+                string="Print S.O Parts" type="object"/>   
+             <button name="print_so_parts_quote" class="oe_highlight"
+                attrs="{'invisible': [('so_type','!=','parts'),('state','!=','draft')]}"
+                string="Print Parts Quotation" type="object"/> 
              <button name="print_so_units" class="oe_highlight"
                 attrs="{'invisible': [('so_type','!=','units')]}"
                 string="Print S.O Units" type="object"/>             
