@@ -254,6 +254,13 @@
       <field name="padding">6</field>
     </record>
 
+    <record model="ir.sequence" id="nonf_nfre_seq">
+      <field name="name">Repair Estimate</field>
+      <field name="code">nonf.nfre.seq</field>
+      <field name="prefix">NF-SERVICE-RE-%(y)s-%(month)s-</field>
+      <field name="padding">6</field>
+    </record>
+
     <record model="ir.sequence" id="fos_susq_seq">
       <field name="name">Unit Sales Quotation</field>
       <field name="code">fos.susq.seq</field>
