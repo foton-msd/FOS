@@ -298,6 +298,8 @@ class FasSaleOrder(models.Model):
       vals['name'] = self.env['ir.sequence'].next_by_code('fos.svre.seq')
     elif vals['so_type'] == "units":
       vals['name'] = self.env['ir.sequence'].next_by_code('fos.susq.seq')
+    elif vals['so_type'] == "service2":
+      vals['name'] = self.env['ir.sequence'].next_by_code('nonf.nfre.seq')
     return super(FasSaleOrder, self).create(vals)
 
 FasSaleOrder()
