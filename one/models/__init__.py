@@ -34,7 +34,11 @@ from . import fos_repair_order
 from . import fos_payment_terms
 from . import fos_banks
 from . import fos_account_payment
+<<<<<<< HEAD
 
 from . import nonf_makers
 from . import nonf_units
 from . import nonf_ro
+=======
+from . import fos_payment_register
+>>>>>>> f77e949688ab25fd8c26741a14c0686e04003f2a

@@ -24,5 +24,17 @@
        </xpath>
       </field>
     </record>  
+    <record id="fos_view_account_register_payments_form" model="ir.ui.view">
+      <field name="name">fos.account.register.payments.form</field>
+      <field name="model">account.register.payments</field>
+      <field name="inherit_id" ref="account.view_account_payment_from_invoices"/>
+      <field name="arch" type="xml">
+       <xpath expr="//group/group[2]" position="after">
+        <group>
+          <field name="note"/>
+        </group>
+       </xpath>
+      </field>
+    </record>  
   </data>
 </odoo>
