@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Repair Estimates Menu, Action and Tree -->
+    <record id="nonf_repair_estimates_act_window" model="ir.actions.act_window">
+        <field name="name">Repair Estimates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('so_type','=','service2'),('state','in',('sent','draft'))]</field>
+        <field name="context">{'default_so_type': 'service2'}</field>
+    </record>
+    <menuitem id="nonf_repair_estimates_menu"
+        name="Repair Estimates"
+        action="nonf_repair_estimates_act_window"
+        parent="fos_service_nonf_tasks_menu"
+        sequence="2"/>
+    <!-- End-of-Repair Estimates Menu, Action and Tree -->
+
+    <!-- Service Order Menu, Action and Tree -->
+    <record id="nonf_service_order_act_window" model="ir.actions.act_window">
+        <field name="name">Service Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>        
+        <field name="domain">[('so_type','=','service2'),('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+        <field name="context">{'default_so_type': 'service2'}</field>
+    </record>
+    <menuitem id="nonf_service_order_menu"
+        name="Service Order"
+        action="nonf_service_order_act_window"
+        parent="fos_service_nonf_tasks_menu"
+        sequence="3"/>
+    <!-- End-of-Service Order Menu, Action and Tree -->
+
+</odoo>

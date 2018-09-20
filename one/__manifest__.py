@@ -45,6 +45,13 @@
     'views/fos_banks_view.xml',
     'views/fos_payment_modes_view.xml',
     'views/fos_account_payment_view.xml',
+    # non-FOTON Servicing
+    'views/nonf_menus_view.xml',
+    'views/nonf_units_view.xml',
+    'views/nonf_makers_view.xml',
+    'views/nonf_ro_view.xml',
+    'views/nonf_sales_service_view.xml',
+    'wizards/nonf_cancel_ro_view.xml', 
     # reports
     'report/bir_report_sale_order_layout.xml',
     'report/fas_sales_parts_report.xml',

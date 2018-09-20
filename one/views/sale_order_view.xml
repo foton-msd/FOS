@@ -119,6 +119,7 @@
           </group>
         </xpath>
         <xpath expr="//field[@name='partner_shipping_id']" position="after">
+          <!-- foton units for service fields -->
           <field name="fu_id" 
             attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('so_type','!=','service')], 'required': [('so_type','=','service')]}"
             options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
@@ -128,6 +129,19 @@
           <field name="fu_engine_number" attrs="{'invisible': [('so_type','!=','service')]}"/>
           <field name="fu_conduction_sticker" attrs="{'invisible': [('so_type','!=','service')]}"/>
           <field name="fu_plate_number" attrs="{'invisible': [('so_type','!=','service')]}"/>
+          <!-- foton units for non-foton service fields -->
+          <field name="nonf_unit_id" 
+            attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('so_type','!=','service2')], 'required': [('so_type','=','service2')]}"
+            options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+          <field name="nonf_maker" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+             attrs="{'invisible': [('so_type','!=','service2')]}"/>
+          <field name="nonf_model" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+             attrs="{'invisible': [('so_type','!=','service2')]}"/>
+          <field name="nonf_chassis_number" attrs="{'invisible': [('so_type','!=','service2')]}"/>
+          <field name="nonf_engine_number" attrs="{'invisible': [('so_type','!=','service2')]}"/>
+          <field name="nonf_conduction_sticker" attrs="{'invisible': [('so_type','!=','service2')]}"/>
+          <field name="nonf_plate_number" attrs="{'invisible': [('so_type','!=','service2')]}"/>
+          <field name="nonf_color" attrs="{'invisible': [('so_type','!=','service2')]}"/>
         </xpath>
         <xpath expr="//field[@name='note']" position="after">
           <group string="Signatories" col="3">
@@ -230,6 +244,13 @@
       <field name="name">Service Order</field>
       <field name="code">fos.svso.seq</field>
       <field name="prefix">SERVICE-RO-%(y)s-%(month)s-</field>
+      <field name="padding">6</field>
+    </record>
+
+    <record model="ir.sequence" id="nonf_svso_seq">
+      <field name="name">Service Order</field>
+      <field name="code">nonf.svso.seq</field>
+      <field name="prefix">NF-SERVICE-RO-%(y)s-%(month)s-</field>
       <field name="padding">6</field>
     </record>
 

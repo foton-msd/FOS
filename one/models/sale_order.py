@@ -10,7 +10,7 @@ class FasSaleOrder(models.Model):
   _inherit = 'sale.order'
   
   so_type = fields.Selection(string="Order Type", required=True, readonly=True, states={'draft': [('readonly', False)]},
-    selection=[('units','Units'),('parts','Parts'),('service','Service'),('addoncost','Add-on Cost')])
+    selection=[('units','Units'),('parts','Parts'),('service','Service'),('service2','Service-NF'),('addoncost','Add-on Cost')])
   run_km = fields.Integer(string="Run KM")
   fas_area_id = fields.Many2one(string="Area", comodel_name="fas.area")
   job_type = fields.Selection(string="Job Type",
@@ -47,7 +47,16 @@ class FasSaleOrder(models.Model):
   su_fu_plate_number = fields.Char(string="Plate Number", related="su_fu_id.plate_number", readonly=True)
   su_fu_color = fields.Char(string="Color", related="su_fu_id.color", readonly=True)
   su_fu_local_name_id = fields.Many2one(string="Local Name", related="su_fu_id.fmpi_fu_local_name_id", comodel_name="one.local.names", readonly=True)
-
+  # unit info fields for non-foton service
+  nonf_unit_id = fields.Many2one(string="Plate Number", comodel_name="nonf.units")
+  nonf_chassis_number = fields.Char(string="Chassis Number", related="nonf_unit_id.chassis_number", readonly=True)
+  nonf_engine_number = fields.Char(string="Engine Number", related="nonf_unit_id.engine_number", readonly=True)
+  nonf_conduction_sticker = fields.Char(string="Conduction Sticker", related="nonf_unit_id.conduction_sticker", readonly=True)
+  nonf_plate_number = fields.Char(string="Plate Number", related="nonf_unit_id.name", readonly=True)
+  nonf_color = fields.Char(string="Color", related="nonf_unit_id.color", readonly=True)
+  nonf_maker = fields.Char(string="Make", related="nonf_unit_id.maker_id.name", readonly=True)
+  nonf_model = fields.Char(string="Model", related="nonf_unit_id.model_id.name", readonly=True)
+  #
   repair_order_id = fields.Many2one(string="Repair Order", comodel_name="fos.repair.orders", copy=False)
   fos_payment_term_id = fields.Many2one(string="Payment Term", comodel_name="fos.payment.terms")
   fos_bank_id = fields.Many2one(string="Bank", comodel_name="fos.banks")
@@ -74,7 +83,9 @@ class FasSaleOrder(models.Model):
   product_total = fields.Float(string="Product Total", compute="getProductTotal", readonly=True)
   labor_total = fields.Float(string="Labor Total", compute="getLaborTotal", readonly=True)
   parts_total = fields.Float(string="Parts Total", compute="getPartsTotal", readonly=True)
-  
+  nonf_ro_id = fields.Many2one(string="Repair Order", comodel_name="nonf.ro", copy=False)
+  nonf_unit_id = fields.Many2one(string="Non-FOTON Units", comodel_name="nonf.units", copy=False)
+
   @api.model
   @api.multi
   def getInvoiceAmount(self):
@@ -100,6 +111,8 @@ class FasSaleOrder(models.Model):
       seq = 'fos.spso.seq'
     elif self.so_type == "units":
       seq = 'fos.suso.seq'
+    elif self.so_type == "service2":
+      seq = 'nonf.svso.seq'
 
     logger.info("Validation Result: " + str(validated))
  
