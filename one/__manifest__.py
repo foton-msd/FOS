@@ -51,7 +51,7 @@
     'views/nonf_makers_view.xml',
     'views/nonf_ro_view.xml',
     'views/nonf_sales_service_view.xml',
-    'wizards/nonf_cancel_ro_view.xml', 
+    #'wizards/nonf_cancel_ro_view.xml', 
     # reports
     'report/bir_report_sale_order_layout.xml',
     'report/fas_sales_parts_report.xml',

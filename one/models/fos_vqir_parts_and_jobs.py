@@ -51,7 +51,6 @@ class FasPartsandJobs(models.Model):
       self.parts_total = self.parts_total * 1.1
 
   @api.one
-  @api.depends("parts_hf_amount")
   def HFAmount(self):
     self.parts_hf_amount = 0
     if self.parts_with_fee:   

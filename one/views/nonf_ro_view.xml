@@ -12,16 +12,12 @@
                             confirm="Click Ok button to confirm your action."
                             string="Confirm R.O." type="object"
                             attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>                        
-                        <!--
+                        
                         <button name="action_cancel"
                             confirm="Click Ok button to confirm your action."
                             string="Cancel R.O." type="object"
                             attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
-                        -->  
-                        <button name="%(action_nonf_ro_cancel)d" string="Cancel" type="action" 
-                            state="draft" class="oe_highlight" groups="one.msd_administrators,one.group_service_advisors"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}" />                        
-                        
+                 
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>

@@ -13,7 +13,7 @@ class FasSaleOrderLine(models.Model):
       ('customer','Customer'),
       ('internal','Internal'),
       ('add-on-costs','Add-On-Costs')])
-  fu_id = fields.Many2one(string="FOTON Number", comodel_name="view.fas.fu")
+  fu_id = fields.Many2one(string="FOTON Number", comodel_name="one.fu")
   one_charged_to = fields.Selection(string="Charged to", 
     selection=[('warranty','Warranty'),
       ('customer','Customer'),

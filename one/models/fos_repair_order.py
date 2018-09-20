@@ -13,7 +13,7 @@ class RepairOrder(models.Model):
     fu_chassis_number = fields.Char(string="Chassis Number", related="fu_id.chassis_number", readonly=True)
     fu_engine_number = fields.Char(string="Engine Number", related="fu_id.engine_number", readonly=True)
     fu_conduction_sticker = fields.Char(string="Conduction Sticker", related="fu_id.conduction_sticker", readonly=True)
-    fu_plate_number = fields.Char(string="Plate Number", related="fu_id.plate_number", readonly=True)
+    fu_plate_number = fields.Char(string="Plate Number", related="fu_id.plate_number", readonly=False)
     fu_local_name = fields.Char(string="Local Name", related="fu_id.fmpi_fu_local_name_id.name", readonly=True)
     service_advisor_id = fields.Many2one(string="Service Advisor", comodel_name="res.users", 
         required=True, domain=lambda self: [( "groups_id", "=", self.env.ref( "one.group_service_advisors" ).id )] )
