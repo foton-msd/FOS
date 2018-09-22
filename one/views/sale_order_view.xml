@@ -53,11 +53,14 @@
             <button name="print_so_service" class="oe_highlight"
                 attrs="{'invisible': ['|',('so_type','!=','service'),('state','!=','sale')]}"
                 string="Print S.O Service" type="object"/>
+            <button name="print_so_service_quote" class="oe_highlight"
+                attrs="{'invisible': ['|',('so_type','!=','service'),('state','!=','draft')]}"
+                string="Print Service Quotation" type="object"/>
              <button name="print_so_parts" class="oe_highlight"
-                attrs="{'invisible': [('so_type','!=','parts')]}"
+                attrs="{'invisible': ['|',('so_type','!=','parts'),('state','!=','sale')]}"
                 string="Print S.O Parts" type="object"/>   
              <button name="print_so_parts_quote" class="oe_highlight"
-                attrs="{'invisible': [('so_type','!=','parts'),('state','!=','draft')]}"
+                attrs="{'invisible': ['|',('so_type','!=','parts'),('state','!=','draft')]}"
                 string="Print Parts Quotation" type="object"/> 
              <button name="print_so_units" class="oe_highlight"
                 attrs="{'invisible': [('so_type','!=','units')]}"
