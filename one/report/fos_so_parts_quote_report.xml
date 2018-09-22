@@ -175,7 +175,7 @@
 </template>
 <report 
     id="one.report_so_parts_quote"
-    string="Parts Sale Order"
+    string="Parts Sales Quotation"
     model="sale.order" 
     report_type="qweb-html"
     file="one.report_so_parts_quote_template"
