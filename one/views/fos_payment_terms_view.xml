@@ -41,7 +41,7 @@
     
     <menuitem id="fos_sales_units_config" 
         name="Configuration"
-        parent="fos_sales_units_root_menu" sequence="5"/>
+        parent="fos_sales_units_root_menu" sequence="10"/>
 
     <menuitem name="Payment Terms" id="fos_payment_terms_menu"
 	    parent="fos_sales_units_config" action="fos_payment_terms_action_window"
