@@ -61,6 +61,7 @@
     'report/fos_so_parts_quote_report.xml',
     'report/fos_so_units_report.xml',
     'report/fos_so_service_report.xml',
+    'report/fos_so_service_report_quote.xml',
     'report/fos_repair_order_report.xml',
     'report/one_vqir_print_report.xml',
     'report/fmpi_vqir_print_report.xml',
