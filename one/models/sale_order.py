@@ -289,6 +289,10 @@ class FasSaleOrder(models.Model):
   @api.multi
   def print_so_service(self):
     return self.env.ref('one.report_so_service').report_action(self)  
+  
+  @api.multi
+  def print_so_service_quote(self):
+    return self.env.ref('one.report_so_service_quote').report_action(self) 
 
   @api.model
   def create(self, vals):
