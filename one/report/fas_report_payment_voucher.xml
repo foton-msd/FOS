@@ -4,9 +4,12 @@
     <xpath expr="//h3" position="replace">
       <h2 align="center">
         <t>
-          <span><strong>CHECK VOUCHER</strong></span>
+          <span t-if="o.partner_type not in ['customer']"><strong>CHECK VOUCHER:</strong></span>
+          <span t-if="o.partner_type not in ['supplier']"><strong>PAYMENT RECEIPT:</strong></span>
          </t>
+          <span t-field="o.name"/>
       </h2>
+      
     </xpath>
     <xpath expr="//table" position="replace">
         <table class="table table-condensed">
@@ -14,7 +17,6 @@
             <tr>
               <th>Invoice Date</th>
               <th>Invoice Number</th>
-              <th>Vendor Reference</th>
               <th class="text-right">Original Amount</th>
               <th class="text-right">Amount Paid</th>
               <th class="text-right">Balance</th>
@@ -24,7 +26,6 @@
             <tr t-foreach="o.invoice_ids" t-as="inv">
               <td><span t-field="inv.date_invoice"/></td>
               <td><span t-field="inv.number"/></td>
-              <td><span t-field="inv.reference"/></td>
               <td class="text-right"><span t-field="inv.amount_total"/></td>
               <td class="text-right"><span t-esc="inv.amount_total - inv.residual" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
               <td class="text-right"><span t-field="inv.residual"/></td>
