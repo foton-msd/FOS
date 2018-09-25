@@ -104,7 +104,8 @@ class FasSaleOrder(models.Model):
     validated = True  
     seq = ''  
     if self.so_type == 'service':
-      validated = self.check_limit()
+      # removed as per request of Angela Navarro 09/24/2018 by Jun Salinga
+      # validated = self.check_limit()
       seq = 'fos.svso.seq'
     elif self.so_type == 'parts':
       validated = self.check_limit()
