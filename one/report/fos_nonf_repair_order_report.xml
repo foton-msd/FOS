@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <template id="one.nonf_repair_order_template">
+   <t t-call="web.html_container">
+   <t t-foreach="docs" t-as="o">
+    <t t-call="web.external_layout">
+     <div class="page">
+     <div class="oe_structure"/>
+            <h2 align="center">
+                 <span>Repair Order: </span>
+                 <span t-field="o.name"/><br/><br/>
+            </h2>
+            <table class="table">
+              <tbody>
+               <tr/>
+               <tr>
+                 <td width="10%"><strong>Customer:</strong></td>
+                 <td width="60%">
+                 <t t-esc="o.customer_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                 </td>
+                 <td width="30%">Date: <span t-field="o.date"/></td>
+               </tr>
+               <tr>
+               </tr>
+              </tbody>
+            </table>
+          <table width="100%">
+	          <tr>
+               <td width="40%"><strong>Maker: </strong><span t-field="o.maker_id"/></td>
+                <td width="40%"><strong>Conduction Sticker: </strong><span t-field="o.conduction_sticker"/></td>
+              </tr>
+              <tr>
+                <td width="40%"><strong>Model: </strong><span t-field="o.model_id"/></td>
+                <td width="40%"><strong>Plate Number: </strong><span t-field="o.plate_number"/></td>
+	          </tr>
+              <tr>
+                <td width="40%"><strong>Chassis Number: </strong><span t-field="o.chassis_number"/></td>
+                <td width="40%"><strong>Run KM: </strong><span t-field="o.run_km"/></td>
+              </tr>
+              <tr>
+                <td width="40%"><strong>Engine Number: </strong><span t-field="o.engine_number"/></td>
+                <td width="40%"><strong>Service Advisor: </strong><span t-field="o.service_advisor_id"/></td>
+              </tr>
+              <tr>
+                <td width="40%"><strong>Plate Number: </strong><span t-field="o.nonf_unit_id"/></td>
+                <td width="40%"></td>
+              </tr>               
+          </table>
+          <br/><b/>
+                <h3>
+                 <span>Repair Order Details</span><br/><b/>
+                </h3>    
+
+          <table class="table table-condensed">
+             <thead>
+               <tr>
+                 <th>Description</th>
+               </tr>
+            </thead>
+                <t t-foreach="docs.ro_lines" t-as="ol">
+                <tr><td><span t-field="ol.name"/></td></tr>
+                </t>
+          </table>  
+     </div>
+	   <div class="footer">
+              <table width="100%">
+               <tr>
+                   <td align="center"><strong>Prepared By</strong></td>
+                   <td align="center"><strong>Conforme</strong></td>
+                </tr>
+                <tr>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                </tr>
+                <tr>
+                </tr>
+                <tr>
+                   <td align="center"><u><span t-field="o.prepared_by_id"/></u></td>
+                   <td align="center"><u><span t-field="o.customer_id"/></u></td>
+                </tr>
+                <tr>
+                   <td align="center"><span t-field="o.prepared_by_desig"/></td>
+                   <td align="center"></td>
+                </tr>
+              </table>
+     </div>
+     </t>
+    </t>
+    </t>
+   </template>
+   <report id="one.nonf_repair_order_report"
+     name="one.nonf_repair_order_template"
+     file="one.nonf_repair_order_template"
+     model="nonf.ro"
+     report_type="qweb-html"
+     string="NF-Repair Orders"
+     menu="True"/>
+</odoo>
