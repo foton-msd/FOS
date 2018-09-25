@@ -246,14 +246,14 @@
     <record model="ir.sequence" id="fos_svso_seq">
       <field name="name">Service Order</field>
       <field name="code">fos.svso.seq</field>
-      <field name="prefix">SERVICE-RO-%(y)s-%(month)s-</field>
+      <field name="prefix">SERVICE-SO-%(y)s-%(month)s-</field>
       <field name="padding">6</field>
     </record>
 
     <record model="ir.sequence" id="nonf_svso_seq">
       <field name="name">Service Order</field>
       <field name="code">nonf.svso.seq</field>
-      <field name="prefix">NF-SERVICE-RO-%(y)s-%(month)s-</field>
+      <field name="prefix">NF-SERVICE-SO-%(y)s-%(month)s-</field>
       <field name="padding">6</field>
     </record>
 
