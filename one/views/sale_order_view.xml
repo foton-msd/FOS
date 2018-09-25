@@ -64,7 +64,7 @@
                 string="Print Parts Quotation" type="object"/> 
              <button name="print_so_units" class="oe_highlight"
                 attrs="{'invisible': [('so_type','!=','units')]}"
-                string="Print S.O Units" type="object"/>             
+                string="Print Unit Quotation/Order" type="object"/>             
             <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             <field name="so_type" invisible="1"/>
           </header>
