@@ -20,6 +20,7 @@
     'views/product_attribute_value_view.xml',
     'views/purchase_order_view.xml',
     'views/sale_order_view.xml', 
+    'views/account_invoice_view.xml',
     # FOS' groups, menus, wizards and views
     'views/fos_groups_view.xml',
     'views/fos_menu_view.xml', 
