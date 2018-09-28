@@ -24,6 +24,7 @@ class VqirImages(models.Model):
 
   @api.model
   def create(self, vals):
+    tools.image_resize_images(vals)
     vals['name'] = self.env['ir.sequence'].next_by_code('fos.vqir.images.seq')
     result = super(VqirImages, self).create(vals)
     return result
