@@ -139,6 +139,9 @@ class FosVqir(models.Model):
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
+    xdealer_id = -1
+    if not self.company_id.is_fmpi:
+      xdealer_id = self.company_id.dealer_id.id or -1, 
     # set upload string (SQL)
     cursor.execute("""INSERT INTO fmpi_vqir (
       name, vqir_date, preapproved_date, preclaim_number, payment_receipt, 
@@ -160,62 +163,72 @@ class FosVqir(models.Model):
       %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
       %s,%s,%s,%s, %s, %s);
       """,(
-      self.name or None, 
+      self.name or None, # name, vqir_date, preapproved_date, preclaim_number, payment_receipt,
       self.vqir_date or None, 
       self.preapproved_date or None, 
       self.preclaim_number or None, 
-      self.payment_receipt or None, 
-      self.vqir_type or None, 
-      self.vqir_service_type or None, 
-      'submit',             
+      self.payment_receipt or None,
+
+      self.vqir_type or None, #vqir_type, vqir_service_type, vqir_state, date_occur, vqir_city, 
+      self.vqir_service_type or None,
+      'submit', 
       self.date_occur or None, 
       self.vqir_city or None, 
-      self.place_of_incident or None, 
+
+      self.place_of_incident or None, # place_of_incident, km_1st_trouble, run_km, part, person, 
       self.km_1st_trouble or None, 
       self.run_km or None, 
       self.part or None, 
       self.person or None, 
-      self.others or None, 
+
+      self.others or None, # others, trouble_explanation, trouble_cause_analysis, disposal_measures, proposal_for_improvement, 
       self.trouble_explanation or None, 
-      self.trouble_cause_analysis or None, 
-      self.disposal_measures or None,
+      self.trouble_cause_analysis or None,
+      self.disposal_measures or None, 
       self.proposal_for_improvement or None, 
-      self.driver_name or None, 
+
+      self.driver_name or None, #driver_name, ss_name, ss_street1, ss_street2, ss_city, 
       self.ss_name or None, 
       self.ss_street1 or None, 
       self.ss_street2 or None, 
       self.ss_city or None, 
-      self.ss_phone or None, 
+
+      self.ss_phone or None, #ss_phone, ss_mobile, ss_fax, ss_email, users_name, 
       self.ss_mobile or None, 
       self.ss_fax or None, 
       self.ss_email or None, 
       self.users_name or None, 
-      self.users_street1 or None, 
+
+      self.users_street1 or None, #users_street1, users_street2, users_city, users_phone, users_mobile, 
       self.users_street2 or None, 
       self.users_city or None, 
       self.users_phone or None, 
       self.users_mobile or None, 
-      self.users_fax or None, 
+
+      self.users_fax or None, # users_fax, users_email, date_released, reps_name, reps_street1, 
       self.users_email or None, 
       self.date_released or None, 
       self.reps_name or None, 
       self.reps_street1 or None, 
-      self.reps_street2 or None, 
+
+      self.reps_street2 or None, # reps_street2, reps_city, reps_phone, reps_mobile, reps_fax, 
       self.reps_city or None, 
       self.reps_phone or None, 
       self.reps_mobile or None, 
-      self.reps_fax or None, 
-      self.reps_email or None,
-      self.remarks or None,
+      self.reps_fax or None,
+
+      self.reps_email or None, # reps_email, remarks, fos_fu_id, dealer_id, dealer_vqir_id, 
+      self.remarks or None,      
       self.fos_fu_id.id or None, 
-      self.company_id.dealer_id.id, 
-      self.id, 
-      self.company_id.dealer_host, 
+      xdealer_id,
+      self.id,  
+
+      self.company_id.dealer_host, # dealer_host, dealer_db, dealer_port, dealer_pgu, dealer_pgp, 
       self.company_id.dealer_pgn, 
       self.company_id.dealer_port, 
       self.company_id.dealer_pgu, 
       self.company_id.dealer_pgp, 
-      self.vqir_state_logs))    
+      self.vqir_state_logs))    #vqir_state_logs) VALUES (
     # vqir jobs and parts
     for ji in self.fos_vqir_parts_and_jobs_line:
       cursor.execute("""INSERT INTO fmpi_vqir_parts_and_jobs (
