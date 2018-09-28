@@ -197,7 +197,7 @@
                          <field name="image_small"/>
                          <field name="image_remarks"/>
                       <tree mode="kanban,tree">
-                         <field name="image" widget="image" class="oe_avatar"/>
+                         <field name="image_small" widget="image" class="oe_avatar"/>
                          <field name="image_remarks"/>
                       </tree>
                      <form>
