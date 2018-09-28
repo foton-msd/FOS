@@ -22,8 +22,39 @@ class FMPIPartsandJobs(models.Model):
   job_code_desc = fields.Char(string="Job Desc", readonly=True)
   job_qty = fields.Float(string="Job Qty", readonly=True)
   job_cost = fields.Float(string="Job Cost", readonly=True)
-  job_total = fields.Float(string="Job Total", readonly=True)
-  job_parts_total = fields.Float(string="Sub Total", readonly=True)
-  remarks = fields.Text(string="Remarks", readonly=True)
+  job_total = fields.Float(string="Job Total", compute="_getJobTotal", readonly=True)
+  job_parts_total = fields.Float(string="Total", compute="_getJobPartsTotal", readonly=True)
   
+  @api.onchange("job_qty","job_cost")
+  def job_total_changed(self):
+    self._getJobTotal()
+    self._getJobPartsTotal()
+
+  @api.onchange("parts_qty","parts_cost","parts_with_fee")
+  def parts_total_changed(self):
+    self._getPartsTotal()
+    self._getJobPartsTotal()
+
+  @api.one
+  def _getJobTotal(self):
+    self.job_total = (self.job_qty or 0) * (self.job_cost or 0)
+
+  @api.one
+  def _getJobPartsTotal(self):
+    self.job_parts_total = (self.job_total or 0) + (self.parts_total or 0)
+
+  @api.one
+  def _getPartsTotal(self):
+    self.parts_total = (self.parts_cost or 0) * (self.parts_qty or 0)
+    self.parts_net = self.parts_total
+    if self.parts_with_fee:
+      self.parts_total = self.parts_total * 1.1
+
+  @api.one
+  def HFAmount(self):
+    self.parts_hf_amount = 0
+    if self.parts_with_fee:   
+      self.parts_hf_amount = (self.parts_cost * self.parts_qty) * 0.1
+    return
+   
 FMPIPartsandJobs()
