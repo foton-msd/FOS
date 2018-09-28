@@ -1,15 +1,28 @@
 <odoo>
     <data>
+        <!-- removed filter from customer invoice' account_id selection -->
         <record id="fos_view_account_invoice_form" model="ir.ui.view">
-        <field name="name">fos.view.account.invoice.form</field>
-        <field name="model">account.invoice</field>
-        <field name="priority" eval="100"/>
-        <field name="inherit_id" ref="account.invoice_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//page[@name='other_info']/group/group/field[@name='account_id']" position="attributes">
-                <attribute name="domain">[('company_id', '=', company_id),('deprecated', '=', False)]</attribute>
-            </xpath>
-        </field>
+            <field name="name">fos.view.account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="priority" eval="100"/>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='other_info']/group/group/field[@name='account_id']" position="attributes">
+                    <attribute name="domain">[('company_id', '=', company_id),('deprecated', '=', False)]</attribute>
+                </xpath>
+            </field>
+        </record>
+        <!-- removed filter from vendor bill's account_id selection -->
+        <record id="fos_view_account_invoice_form" model="ir.ui.view">
+            <field name="name">fos.view.account.invoice.supplier.form</field>
+            <field name="model">account.invoice</field>
+            <field name="priority" eval="100"/>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='other_info']/group/group/field[@name='account_id']" position="attributes">
+                    <attribute name="domain">[('company_id', '=', company_id),('deprecated', '=', False)]</attribute>
+                </xpath>
+            </field>
         </record>
     </data>
 </odoo>
