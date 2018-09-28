@@ -175,20 +175,20 @@ class FasSaleOrder(models.Model):
                   })
     return True
 
-  @api.multi
-  @api.model
-  def action_cancel(self, a_value):
-    if self.so_type == "units" and self.state == "sale":
-      lines = self.order_line
-      if lines:
-        for line in lines:
-          if line.fu_id.product_id.id == line.product_id.id:
-            fu_obj = self.pool.get("fas.fu")
-            if fu_obj:
-              super(FasSaleOrder,self).action_cancel()
-              fu_obj.write(line.fu_id, {'active': True, 'state': 'avail', 'so_line_id': None})
-            else:
-              super(FasSaleOrder,self).action_cancel()
+#  @api.multi
+#  @api.model
+#  def action_cancel(self, a_value):
+#   if self.so_type == "units" and self.state == "sale":
+#      lines = self.order_line
+#      if lines:
+#        for line in lines:
+#          if line.fu_id.product_id.id == line.product_id.id:
+#            fu_obj = self.pool.get("fas.fu")
+#            if fu_obj:
+#              super(FasSaleOrder,self).action_cancel()
+#              fu_obj.write(line.fu_id, {'active': True, 'state': 'avail', 'so_line_id': None})
+#            else:
+#              super(FasSaleOrder,self).action_cancel()
 
   @api.multi
   @api.model
