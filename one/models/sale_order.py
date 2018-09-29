@@ -13,6 +13,7 @@ class FasSaleOrder(models.Model):
     selection=[('units','Units'),('parts','Parts'),('service','Service'),('service2','Service-NF'),('addoncost','Add-on Cost')])
   run_km = fields.Integer(string="Run KM")
   fas_area_id = fields.Many2one(string="Area", comodel_name="fas.area")
+  fos_job_type_id = fields.Many2one(string="Job Type", comodel_name="fos.job.type")
   job_type = fields.Selection(string="Job Type",
     selection=[('major_repair','Major Repair'),
       ('minor_repair','Minor Repair'),
@@ -85,7 +86,7 @@ class FasSaleOrder(models.Model):
   parts_total = fields.Float(string="Parts Total", compute="getPartsTotal", readonly=True)
   nonf_ro_id = fields.Many2one(string="Repair Order", comodel_name="nonf.ro", copy=False)
   nonf_unit_id = fields.Many2one(string="Non-FOTON Units", comodel_name="nonf.units", copy=False)
-
+  fos_service_history_id = fields.Many2one(string="Service History", comodel_name="fos.service.history")
   @api.model
   @api.multi
   def getInvoiceAmount(self):
@@ -173,6 +174,26 @@ class FasSaleOrder(models.Model):
                     'job_qty': line.product_uom_qty,
                     'job_cost': line.price_unit
                   })
+    if self.so_type == 'service':
+      fsh = self.env['fos.service.history']
+      #fsh.post2history(self, self.id)      
+      for line in self.order_line:
+        name = line.id
+        parts_and_jobs = line.name
+        customer_id = self.partner_id.id
+        charge_to = line.charged_to
+        run_km = self.run_km
+        one_fu_id = self.fu_id.id
+        service_date = self.date_order        
+        fsh.create({
+          'name': name,
+          'parts_and_jobs': parts_and_jobs,
+          'customer_id': customer_id,
+          'charge_to': charge_to,
+          'run_km': run_km,
+          'one_fu_id': one_fu_id,
+          'service_date': service_date
+          })
     return True
 
 #  @api.multi
