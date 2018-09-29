@@ -77,6 +77,7 @@
           <attribute name="string">Order Info</attribute>
         </xpath>
         <xpath expr="//field[@name='payment_term_id']" position="after">
+        <field name="fos_job_type_id" attrs="{'invisible': [('so_type','!=','service')]}" groups="one.msd_administrators"/>
           <field name="job_type" attrs="{'invisible': [('so_type','!=','service')]}"/>
           <field name="fas_area_id" attrs="{'invisible': [('so_type','!=','service')]}"/>
           <field name="run_km" attrs="{'invisible': [('so_type','!=','service')]}"/>          
@@ -218,6 +219,24 @@
               <field name="currency_id" invisible="1"/>
             </tree>
           </field>
+        </xpath>
+        <xpath expr="//form/sheet/notebook/page[2]" position="after">
+        <page string="Service History" attrs="{'invisible' : [('so_type', '!=', 'service')]}">
+          <notebook>
+            <page string="Service">
+<!-->              <field name="fos_service_history_id">
+                <tree edit="false" delete="false" create="false" default_order="run_km desc" default_group="run_km">
+                  <field name="run_km"/>
+                  <field name="dealer_name"/>
+                  <field name="customer_name"/>
+                  <field name="job_type"/>
+                  <field name="job_product"/>
+                  <field name="one_charged_to"/>
+                </tree>
+              </field> -->
+            </page>
+          </notebook>
+        </page>
         </xpath>
       </field>
     </record>
