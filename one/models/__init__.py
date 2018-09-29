@@ -29,6 +29,7 @@ from . import fos_vqir
 from . import fos_vqir_images
 from . import fos_vqir_parts_and_jobs
 from . import fos_area
+from . import fos_job_type
 from . import fos_payment_mode
 from . import fos_repair_order
 from . import fos_payment_terms
@@ -39,3 +40,4 @@ from . import nonf_units
 from . import nonf_ro
 from . import fos_payment_register
 from . import fos_service_history
+from . import fmpi_service_history
