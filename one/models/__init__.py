@@ -34,8 +34,8 @@ from . import fos_repair_order
 from . import fos_payment_terms
 from . import fos_banks
 from . import fos_account_payment
-
 from . import nonf_makers
 from . import nonf_units
 from . import nonf_ro
 from . import fos_payment_register
+from . import fos_service_history
