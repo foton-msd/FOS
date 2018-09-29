@@ -7,10 +7,11 @@ class FosServiceHistory(models.Model):
     _description = "Dealer's Performed Services"
 
     name = fields.Many2one(string="S.O. Number", comodel_name="sale.order.line")
-    parts_and_jobs = fields.Char(string="Product", related="name.name")
+    parts_and_jobs = fields.Text(string="Product", related="name.name")
     customer_id = fields.Many2one(string="Customer Name", comodel_name="res.partner")
     charge_to = fields.Char(string="Charged to")
-    run_km = fields.Integer(string="Run KM")\
-    one_fu_id = fields.Many2one(string="FOTON Number", comodel_name="one.fu")
-
+    run_km = fields.Integer(string="Run KM")
+    one_fu_id = fields.Many2one(string="FOTON Number", comodel_name="view.fas.fu")    
+    service_date = fields.Datetime(string="Service Date", related="name.order_id.confirmation_date")
+    posted = fields.Boolean(string="Posted")
 FosServiceHistory()
