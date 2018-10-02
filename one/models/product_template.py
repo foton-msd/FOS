@@ -12,7 +12,7 @@ class FASProduct(models.Model):
     ('product_unique', 'unique(name)','Product already exists!')
   ]
 
-  sub_type = fields.Selection(string="Sub-type", selection=[('units','Units'),('parts','Parts'),('supplies','Supplies'),('labor','Labor')])
+  sub_type = fields.Selection(string="Sub-type", selection=[('units','Units'),('parts','Parts'),('supplies','Supplies'),('labor','Labor'),('merchandise','Merchandise')])
   unit_class = fields.Selection(string="Unit Classification", 
     selection=[('pv','PV'),('ldt','LDT'),('he','HE'),('hdt','HDT'),('gratour','GRATOUR'),
     ('trailer','TRAILER'),('genset','GENSET'), ('bu-pv','BU-PV'),('bu-ldt','BU-LDT'),('bu-he','BU-HE'),('bu-hdt','BU-HDT')])
