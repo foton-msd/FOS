@@ -14,6 +14,7 @@ class NonFRepairOrder(models.Model):
     engine_number = fields.Char(string="Engine Number", related="nonf_unit_id.engine_number")
     conduction_sticker = fields.Char(string="Conduction Sticker", related="nonf_unit_id.conduction_sticker")
     plate_number = fields.Char(string="Plate Number", related="nonf_unit_id.name")
+    owner_name = fields.Char(string="Registered to", related="nonf_unit_id.owner_name")
     maker_id = fields.Char(string="Make", related="nonf_unit_id.maker_id.name")
     model_id = fields.Char(string="Model", related="nonf_unit_id.model_id.name")
     service_advisor_id = fields.Many2one(string="Service Advisor", comodel_name="res.users", 
