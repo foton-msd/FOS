@@ -39,7 +39,7 @@
                                 <field name="chassis_number"/>
                                 <field name="engine_number"/>
                                 <field name="conduction_sticker"/>
-                                <field name="plate_number"/>
+                                <field name="owner_name"/>
                             </group>
                             <group>
                                 <field name="date" attrs="{'readonly': [('state','!=','draft')]}"/>
@@ -107,6 +107,7 @@
                     <field name="engine_number"/>
                     <field name="conduction_sticker"/>
                     <field name="plate_number"/>
+                    <field name="owner_name"/>                    
                     <filter string="Draft" name="drafts" domain="[('state','=', 'draft')]"/>
                     <filter name="group_type" string="Customer" icon="terp-partner" context="{'group_by':'customer_id'}"/>                    
                 </search>
@@ -134,5 +135,9 @@
             action="nonf_ro_act_window"
             parent="fos_service_nonf_tasks_menu"
             sequence="1"/>
+        <menuitem id="fos_nfservice_customers_menu"
+            parent="fos_service_nonf_maintenance_menu"
+            action="base.action_partner_form"
+            sequence="4" groups="sales_team.group_sale_salesman"/>  
     </data>
 </odoo>
