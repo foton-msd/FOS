@@ -127,7 +127,6 @@ class FasSaleOrder(models.Model):
         self.env.cr.execute(""" UPDATE one_fu SET state = 'alloc' WHERE id = %s""" %(self.su_fu_id.id))
         
       if self.so_type == 'service':
-        self.post2history()
         vqir_obj = self.env['fos.vqir']
         has_warranty_line = False
         for line in self.order_line:
@@ -176,89 +175,6 @@ class FasSaleOrder(models.Model):
       
     return True
   
-  @api.multi
-  def post2history(self):
-    if self.so_type == 'service':
-      fmpi = self.env['fmpi.service.history']           
-      for line in self.order_line:
-        name = line.id
-        parts_and_jobs = line.name
-        customer_id = self.partner_id.id
-        charged_to = line.charged_to
-        run_km = self.run_km
-        one_fu_id = self.fu_id.id
-        confirmation_date = self.confirmation_date                
-        fmpi.create({
-          'dealer_id': line.company_id.dealer_id.id,
-          'name': line.order_id.name,
-          'parts_and_jobs': line.name,
-          'customer_name': line.order_id.partner_id.name,
-          'charged_to': charged_to,
-          'run_km': run_km,
-          'one_fu_id': one_fu_id,
-          'confirmation_date': confirmation_date})
-      self.post2fmpi()
-    return True
-
-  @api.multi
-  def post2fmpi(self):
-    # connection paramter to FMPI
-    url = self.company_id.fmpi_host
-    db = self.company_id.fmpi_pgn
-    username = self.company_id.fmpi_pgu
-    password = self.company_id.fmpi_pgp
-    # attempt to connect
-    logger.info("Connecting to "+url)
-    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
-    uid = common.authenticate(db, username, password, {})
-    if not uid:
-      raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
-      return 
-    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
-    if not models:
-      raise exceptions.except_orm(_('Models: Remote Authentication Failed'), _(url + " failed to authenticate " + username))
-      return 
-    # sync from dealer-to-fmpi    
-    fmpi = self.env['fmpi.service.history'].search([('fmpi_history_id','=',False)])
-    if fmpi:
-      for line in fmpi:
-        logger.info("Posting ID#" + str(line.id))
-        id = models.execute_kw(db, uid, password, 'fmpi.service.history', 'create', [{
-          'dealer_id': line.dealer_id.id,
-          'name': line.name,
-          'parts_and_jobs': line.parts_and_jobs,
-          'customer_name': line.customer_name,
-          'charged_to': line.charged_to,
-          'run_km': line.run_km,
-          'one_fu_id': line.one_fu_id.id,
-          'confirmation_date': line.confirmation_date}])
-        if not id:
-          raise exceptions.except_orm(_('Failed to post to FMPI'), _("Posting of transaction to FMPI has failed"))
-          return
-        line.write({'fmpi_history_id': id})
-      # sync from fmpi-to-dealer
-      d_ids = fmpi.search([('fmpi_history_id','!=',False)])
-      if d_ids:      
-        aID = []
-        for d_id in d_ids:  
-          aID.append(d_id.fmpi_history_id)
-        f_ids = models.execute_kw(db, uid, password, 'fmpi.service.history', 'search',
-          [[['id','not in',aID]]])
-        [record] = models.execute_kw(db, uid, password, 'fmpi.service.history', 'read', [f_ids])
-        if record:
-          for newH in record:
-            fmpi.create({
-              'dealer_id': newH.dealer_id,
-              'name': newH.name,
-              'parts_and_jobs': newH.parts_and_jobs,
-              'customer_name': newH.customer_name,
-              'charged_to': newH.charged_to,
-              'run_km': newH.run_km,
-              'one_fu_id': newH.one_fu_id,
-              'confirmation_date': newH.confirmation_date,
-              'fmpi_history_id': newH.id})
-    return
-
   @api.multi
   @api.model
   def action_confirm(self, a_value):
