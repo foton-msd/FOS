@@ -220,24 +220,6 @@
             </tree>
           </field>
         </xpath>
-        <xpath expr="//form/sheet/notebook/page[2]" position="after">
-        <page string="Service History" attrs="{'invisible' : [('so_type', '!=', 'service')]}">
-          <notebook>
-            <page string="Service">
-<!-->              <field name="fos_service_history_id">
-                <tree edit="false" delete="false" create="false" default_order="run_km desc" default_group="run_km">
-                  <field name="run_km"/>
-                  <field name="dealer_name"/>
-                  <field name="customer_name"/>
-                  <field name="job_type"/>
-                  <field name="job_product"/>
-                  <field name="one_charged_to"/>
-                </tree>
-              </field> -->
-            </page>
-          </notebook>
-        </page>
-        </xpath>
       </field>
     </record>
 
