@@ -39,6 +39,13 @@
                   confirm="Are you sure to Sync Parts from FMPI?"
                 />
               </group>
+              <group string="Service">
+                <field name="parts_categ_id"/>
+                <button name="action_sync_service"
+                  type="object" string="Sync Service"
+                  confirm="Are you sure to Sync Service from FMPI?"
+                />
+              </group>
             </group>
           </page>
           <page string="FMPI's Sync &amp; Settings" 
@@ -55,7 +62,7 @@
                   type="object" string="Sync Local Names &amp; Variants from AMS-to-ONe"
                   confirm="Click Ok button to confirm your action."/>
               </group>
-              <group string="3. Units"/>
+              <group string="3. Units"/>                       
             </group>
           </page>
         </xpath>

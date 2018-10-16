@@ -198,4 +198,74 @@ class FasResCompany(models.Model):
       conn.close()
     else:
       raise UserError(_("Connecting to FMPI Server has failed!"))
+
+  @api.multi
+  def action_sync_service(self):
+    # set connection parameters to FMPI
+    conn_string = "host='" + self.fmpi_host + \
+      "' dbname='"+ self.fmpi_pgn + \
+      "' user='"+ self.fmpi_pgu + \
+      "' password='"+ self.fmpi_pgp + "'"
+    logger.info("connecting to the database\n ->%s"%(conn_string))
+    conn = psycopg2.connect(conn_string)
+    if conn:
+      cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+      # set upload string (SQL)
+      logger.info("Executing FMPI Query....")
+      cursor.execute("""SELECT * FROM product_template     
+        WHERE sub_type = 'labor';""")
+      result_set = cursor.fetchall()
+      if(result_set):
+        pt_obj = self.env['product.template']
+        r = 0
+        for res in result_set:
+          r+=1
+          logger.info("Checking existence of Labor Code: (" + str(r) + ") "+ (res['name'] or ''))
+          ptr = pt_obj.search([('name','=',res['name'])])
+          if not ptr:
+            logger.info("Labor Code: (" + str(r) + ") "+ (res['name'] or '') + " does not exists!...creating new product_template")
+            ptr.create({
+              'name': res['name'],
+              'description': res['description'],
+              'description_sale': res['description_sale'],
+              'description_picking': res['description_picking'],
+              'description_pickingin': res['description_pickingin'],
+              'description_pickingout': res['description_pickingout'],
+              'type': res['type'],
+              'sale_ok': res['sale_ok'],
+              'purchase_ok': False,
+              'sub_type': res['sub_type'],
+              'categ_id': self.parts_categ_id.id,
+              'list_price': res['list_price'],
+              'model': res['model'],
+              'model_code': res['model_code'],
+              'inner_code': res['inner_code'],
+              'segment': res['segment'] ,
+              'fmpi_product': True,
+              'fmpi_product_id': res['id'],
+              'write_date': res['fmpi_product_write_date']
+            })
+          elif res['fmpi_product_write_date'] != ptr.write_date:
+              logger.info("Labor Code: (" + str(r) + ") "+ (res['name'] or '') + " has changes. Updating...")
+              ptr.write({
+                'name': res['name'],
+                'description': res['description'],
+                'description_sale': res['description_sale'],
+                'description_picking': res['description_picking'],
+                'description_pickingin': res['description_pickingin'],
+                'description_pickingout': res['description_pickingout'],
+                'list_price': res['list_price'],
+                'model': res['model'],
+                'model_code': res['model_code'],
+                'inner_code': res['inner_code'],
+                'segment': res['segment'] ,
+                'fmpi_product': True,
+                'run_by_sync': True,
+                'write_date': res['fmpi_product_write_date']
+              })
+          else:
+            logger.info("Skipping Labor Code: (" + str(r) + ") "+ (res['name'] or '') + " has no changes.")
+      conn.close()
+    else:
+      raise UserError(_("Connecting to FMPI Server has failed!"))
 FasResCompany()
