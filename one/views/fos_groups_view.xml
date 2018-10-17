@@ -13,5 +13,17 @@
       <field name="name">Service Advisor</field>
     </record>
 
+    <record id="group_sale_cancel" model="res.groups">
+      <field name="name">Sale Cancel</field>
+    </record>
+
+    <record id="group_purchase_cancel" model="res.groups">
+      <field name="name">Purchase Cancel</field>
+    </record>
+
+    <record id="group_inventory_cancel" model="res.groups">
+      <field name="name">Inventory IN Cancel</field>
+    </record>
+
   </data>
 </odoo>
