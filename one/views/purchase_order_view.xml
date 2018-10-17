@@ -30,6 +30,7 @@
         </xpath>
         <xpath expr="//button[@name='button_cancel']" position="attributes">
           <attribute name="confirm">Are you sure to cancel this P.O.?</attribute>
+          <attribute name="groups">one.group_purchase_cancel</attribute>
         </xpath>
         <xpath expr="//button[@name='button_confirm']" position="replace">
           <button name="button_confirm2" type="object" states="draft" string="Confirm Order" id="draft_confirm"
