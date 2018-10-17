@@ -257,6 +257,10 @@ class FasSaleOrder(models.Model):
     return self.env.ref('one.report_service_saleorder').report_action(self)
 
   @api.multi
+  def print_so_nfservice(self):
+    return self.env.ref('one.report_so_nonf_service').report_action(self)
+
+  @api.multi
   def print_saleorder_parts(self):
     return self.env.ref('one.report_parts_saleorder').report_action(self)
 
