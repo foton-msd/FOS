@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <template id="fos_report_invoice_payments" inherit_id="account.report_invoice_document">
+      <xpath expr="//div/div" position="replace">
+      </xpath>
+      <xpath expr="//h2" position="replace">
+        <h2 align="center">
+          <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice#</span>
+          <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+          <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+          <span t-if="o.type == 'out_refund'">Credit Note</span>
+          <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
+          <span t-if="o.type == 'in_invoice'">Vendor Bill#</span>
+          <span t-field="o.number"/>
+        </h2>
+      </xpath>
+      <xpath expr="//div/div/div" position="before">
+          <div class="col-xs-2">
+            <strong>Customer Name:</strong>
+              <p t-field="o.partner_id"/>
+          </div>
+      </xpath>
+      <xpath expr="//table/thead/tr/th" position="after">
+        <th>Account</th>
+      </xpath>
+      <xpath expr="//table/tbody/tr/td" position="after">
+        <td><span t-field="l.account_id"/></td>
+      </xpath>
+    </template>
+  </data>
+</odoo>
