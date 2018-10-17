@@ -12,30 +12,34 @@
           <span t-if="o.type == 'out_refund'">Credit Note</span>
           <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
           <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
-          <span t-field="o.number"/>
+           <span t-field="o.number"/>
         </h2>
         <table class="table">
           <tbody>
             <tr/>
              <tr>
-                <td width="10%"><strong>Customer Name:</strong></td>
+                <td width="12%"><strong>Customer Name:</strong></td>
                   <td width="60%">
                     <t t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     <t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/>
                   </td>
                   <td width="30%"><strong>Invoice Date: </strong><span t-field="o.date_invoice"/>
                 </td>
-             </tr>
+            </tr>
           </tbody>
         </table>
             <div class="row mt32 mb32" id="informations">
                 <div class="col-xs-3">
                     <strong>Source Document:</strong>
                     <p t-field="o.origin"/>
-                </div>
+                </div>      
                 <div class="col-xs-3">
                     <strong>Salesperson:</strong>
                     <p t-field="o.user_id"/>
+                </div>
+                   <div class="col-xs-3">
+                    <td width="30%"><strong>Payment Term:</strong></td>
+                    <p t-field="o.payment_term_id"/>
                 </div>
             </div>  
             
@@ -55,7 +59,7 @@
                             <tr t-foreach="o.invoice_line_ids" t-as="l">
                                 <td><span t-field="l.name"/></td>
                                 <td class="hidden"><span t-field="l.origin"/></td>
-                                <td class="text-right">
+                                <td class="text-right">    
                                     <span t-field="l.quantity"/>
                                     <span t-field="l.uom_id"  groups="product.group_uom"/>
                                 </td>
@@ -97,6 +101,7 @@
                             </div>
                         </div>
                     </div>
+                    <td><strong>Remarks</strong></td>
                     <p t-if="o.comment">
                         <span t-field="o.comment"/>
                     </p>
@@ -106,12 +111,14 @@
                     <p t-if="o.fiscal_position_id.note">
                         <span t-field="o.fiscal_position_id.note"/>
                     </p> 
+                     <td><br/><br/></td>
+                      <td><br/><br/></td>
     <div class="footer">
            <table width="100%">
                 <tr>
                    <td align="center"><strong>Prepared by:</strong></td>
+                   <td align="center"><strong>Checked by:</strong></td>
                    <td align="center"><strong>Approved by:</strong></td>
-                   <td align="center"><strong>Noted by:</strong></td>
                    <td align="center"><strong>Received by:</strong></td>
                 </tr>
                 <tr>
