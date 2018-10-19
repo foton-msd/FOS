@@ -3,10 +3,14 @@
       <xpath expr="//img" position="replace">
       </xpath> 
       <xpath expr="//h1" position="replace">
-        <h1 align="center">
-            <span>Warehouse Pass#</span>
-            <span t-field="o.name"/>
-        </h1>
+      <h1 align="center">
+        <t>
+          <span t-if="o.picking_type_id.code in ['outgoing']"><strong>WAREHOUSE PASS#</strong></span>
+          <span t-if="o.picking_type_id.code in ['incoming']"><strong>RECEIVING REPORT#</strong></span>
+          <span t-if="o.picking_type_id.code in ['internal']"><strong>INTERNAL TRANSFER#</strong></span>
+         </t>
+          <span t-field="o.name"/>
+      </h1>    
       </xpath>
       <xpath expr="//tr/th[3]" position="replace">
           <th><strong>Order Date</strong></th>
