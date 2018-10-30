@@ -48,6 +48,7 @@
     'views/fos_payment_modes_view.xml',
     'views/fos_account_payment_view.xml',
     'views/fos_serial_view.xml',
+    'views/fos_account_internal_xfer_view.xml',
     # non-FOTON Servicing
     'views/nonf_menus_view.xml',
     'views/nonf_units_view.xml',
