@@ -84,8 +84,8 @@
           <attribute name="string">Order Info</attribute>
         </xpath>
         <xpath expr="//field[@name='payment_term_id']" position="after">
-        <field name="fos_job_type_id" attrs="{'invisible': [('so_type','!=','service')]}" groups="one.msd_administrators"/>
-          <field name="job_type" attrs="{'invisible': [('so_type','!=','service')]}"/>
+          <field name="fos_job_type_id" attrs="{'invisible': [('so_type','!=','service')]}"/>
+         <!--> <field name="job_type" attrs="{'invisible': [('so_type','!=','service')]}"/> -->
           <field name="fas_area_id" attrs="{'invisible': [('so_type','!=','service')]}"/>
           <field name="run_km" attrs="{'invisible': [('so_type','!=','service')]}"/>          
         </xpath>
