@@ -15,15 +15,15 @@ class FasSaleOrder(models.Model):
   run_km = fields.Integer(string="Run KM")
   fas_area_id = fields.Many2one(string="Area", comodel_name="fas.area")
   fos_job_type_id = fields.Many2one(string="Job Type", comodel_name="fos.job.type")
-  job_type = fields.Selection(string="Job Type",
-    selection=[('major_repair','Major Repair'),
-      ('minor_repair','Minor Repair'),
-      ('body_repair_insurance','Body Repair Insurance'),
-      ('body_repair','Body Repair'),
-      ('pms','PMS'),
-      ('otc','OTC'),
-      ('general_job','General Job'),
-      ('warranty','Warranty')])
+#  job_type = fields.Selection(string="Job Type",
+#    selection=[('major_repair','Major Repair'),
+#      ('minor_repair','Minor Repair'),
+#      ('body_repair_insurance','Body Repair Insurance'),
+#      ('body_repair','Body Repair'),
+#      ('pms','PMS'),
+#      ('otc','OTC'),
+#      ('general_job','General Job'),
+#      ('warranty','Warranty')])
   prepared_by_id = fields.Many2one(string="Prepared by", comodel_name="res.users", default=lambda self: self.env.user, readonly=True)
   prepared_by_desig = fields.Char(string="Designation", related="prepared_by_id.partner_id.function", readonly=True)
   checked_by = fields.Char(string="Checked by")
