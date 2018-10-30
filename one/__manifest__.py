@@ -22,6 +22,7 @@
     'views/sale_order_view.xml', 
     'views/account_invoice_view.xml',
     'views/fos_stock_picking_view.xml',
+    'views/fos_account_journal_view.xml',
     # FOS' groups, menus, wizards and views
     'views/fos_groups_view.xml',
     'views/fos_menu_view.xml', 
