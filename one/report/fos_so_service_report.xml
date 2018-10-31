@@ -48,7 +48,7 @@
               </tr>
               <tr>
                 <td width="40%"><strong>Engine Number: </strong><span t-field="doc.fu_engine_number"/></td>
-                <td width="40%"><strong>Job Type: </strong><span t-field="doc.job_type"/></td>
+                <td width="40%"><strong>Job Type: </strong><span t-field="doc.fos_job_type_id"/></td>
               </tr>
               <tr>
                 <td width="40%"><strong>Plate Number: </strong><span t-field="doc.fu_plate_number"/></td>
