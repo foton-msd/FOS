@@ -65,6 +65,13 @@
               <group string="3. Units"/>                       
             </group>
           </page>
+          <page string="Accounting">
+            <group>
+              <group>
+                <field name="transfer_account_id" required="1"/>
+              </group>
+            </group>
+          </page>
         </xpath>
       </field>
     </record>  
