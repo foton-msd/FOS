@@ -37,7 +37,7 @@ class FotonUnits(models.Model):
   state = fields.Selection(string="State", selection=[('avail','Available'),('alloc','Allocated'),('sold','Sold')])
   #new_body_type = fields.Char(string="Current Body Type", readonly=True)
   #one_bt_log_ids = fields.One2many(string="Body Type Logs", comodel_name="one.fu.bt.logs", inverse_name="one_fu_id")
-  ams_services_ids = fields.One2many(string="Service History", comodel_name="ams.service.records", inverse_name="one_fu_id")
+  history_ids = fields.One2many(string="Service History", comodel_name="fmpi.service.history", inverse_name="one_fu_id")
   active_on_dealer = fields.Boolean(string="Active")
 
   @api.model_cr

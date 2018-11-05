@@ -10,9 +10,14 @@ class FMPIServiceHistory(models.Model):
     name = fields.Char(string="S.O. Number")
     parts_and_jobs = fields.Text(string="Product")
     customer_name = fields.Char(string="Customer Name")
-    charged_to = fields.Char(string="Charged to")
+    charged_to = fields.Selection(string="Charged to",
+        selection=[('warranty','Warranty'),
+        ('customer','Customer'),
+        ('internal','Internal'),
+        ('add-on-costs','Add-On-Costs')])
     run_km = fields.Integer(string="Run KM")
     one_fu_id = fields.Many2one(string="FOTON Number", comodel_name="view.fas.fu")
     confirmation_date = fields.Datetime(string="Service Date")    
     fmpi_history_id = fields.Integer(string="FMPI History ID")
+    
 FMPIServiceHistory()

@@ -39,5 +39,5 @@ from . import nonf_makers
 from . import nonf_units
 from . import nonf_ro
 from . import fos_payment_register
-#from . import fmpi_service_history
+from . import fmpi_service_history
 from . import fos_serial

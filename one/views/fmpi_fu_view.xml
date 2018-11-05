@@ -47,14 +47,15 @@
                         <page string="Service History">
                             <notebook>
                                 <page string="Service">
-                                    <field name="ams_services_ids">
-                                        <tree endit="false" delete="false" create="false" default_order="run_km desc" default_group="run_km">
-                                            <field name="run_km"/>
-                                            <field name="dealer_name"/>
+                                    <field name="history_ids">
+                                        <tree edit="false" delete="false" create="false" default_order="run_km desc" default_group="run_km">
+                                            <field name="name"/>
+                                            <field name="charged_to"/>
                                             <field name="customer_name"/>
-                                            <field name="job_type"/>
-                                            <field name="job_product"/>
-                                            <!--<field name="one_charged_to"/>-->
+                                            <field name="dealer_id"/>
+                                            <field name="confirmation_date"/>
+                                            <field name="parts_and_jobs"/>
+                                            <field name="run_km"/>
                                         </tree>
                                     </field>
                                 </page>

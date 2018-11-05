@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from xmlrpc import client as xmlrpclib
 import psycopg2
 from odoo.exceptions import UserError
 import logging
@@ -23,6 +24,9 @@ class FasResCompany(models.Model):
   ams_pgu = fields.Char(string="AMS PG User Name")
   ams_pgp = fields.Char(string="AMS PG Password")
   ams_pgn = fields.Char(string="AMS PG DB")
+  api_host = fields.Char(string="API Host")
+  api_user = fields.Char(string="API User Name")
+  api_pass = fields.Char(string="API Password")
   parts_categ_id = fields.Many2one(string="Parts Category", comodel_name="product.category")
 
   @api.multi
@@ -268,4 +272,36 @@ class FasResCompany(models.Model):
       conn.close()
     else:
       raise UserError(_("Connecting to FMPI Server has failed!"))
+
+  @api.multi
+  def action_sync_service_history(self):
+    # set connection parameters to FMPI
+    url = self.api_host.strip()
+    db = self.fmpi_pgn
+    username = self.api_user
+    password = self.api_pass
+    # attempt to connect
+    logger.info("Connecting to "+url)
+    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    uid = common.authenticate(db, username, password, {})
+    if not uid:
+      raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
+      return 
+    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    if not models:
+      raise exceptions.except_orm(_('Models: Remote Authentication Failed'), _(url + " failed to authenticate " + username))
+      return
+    
+    d_ids = self.env['fmpi.service.history'].search([(1,"=",1)]).ids
+    if d_ids:
+      
+      s_ids = "'" + str(d_ids).replace("[","(").replace("]",")") + "'"
+      logger.info("s_ids = " + s_ids)
+      rec = models.execute_kw(db, uid, password,
+        'fmpi.service.history', 'search',
+        [['id','not in', s_ids]]
+        )
+      if rec:
+        for r in rec:
+          logger.info("FMPI Record ID:"+ str(r.id))
 FasResCompany()
