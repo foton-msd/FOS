@@ -8,6 +8,10 @@
         <xpath expr="//button[@name='action_cancel']" position="attributes">
           <attribute name="groups">one.group_inventory_cancel</attribute>
         </xpath>
+        <xpath expr="//field[@name='move_line_ids']/tree/field[@name='lot_id']" position="replace">
+          <field name="lot_id" groups="stock.group_production_lot" attrs="{'required':True, 'invisible': [('lots_visible', '=', False)], 'readonly': [('in_entire_package', '=', True)]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+        </xpath>
+        <xpath expr="//field[@name='move_line_ids']/tree/field[@name='lot_name']" position="replace"/>
       </field>
     </record>
   </data>
