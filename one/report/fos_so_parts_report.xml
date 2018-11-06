@@ -70,9 +70,9 @@
                             <th>Description</th>
                             <th class="text-right">Quantity</th>
                             <th class="text-right">Unit Price</th>
-                            <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
-                            <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc. Amount</th>
-                            <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
+                            <th t-if="display_discount" class="text-right">Disc.(%)</th>
+                            <th t-if="display_discount" class="text-right">Disc. Amount</th>
+                            <th class="text-right price_tax_included">Total Price</th>
                         </tr>
                    </thead>
                    <tbody class="sale_tbody">
@@ -97,13 +97,13 @@
                                     <td class="text-right">
                                         <span t-field="l.price_unit"/>
                                     </td>
-                                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                    <td t-if="display_discount" class="text-right">
                                         <span t-field="l.discount"/>
                                     </td>
-                                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                    <td t-if="display_discount" class="text-right">
                                         <span t-field="l.discount_amount"/>
                                     </td>
-                                    <td class="text-right" groups="sale.group_show_price_total">
+                                    <td class="text-right">
                                         <span t-field="l.price_total"
                                             t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                     </td>
