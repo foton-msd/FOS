@@ -15,13 +15,12 @@
     # odoo native (inherited) views
     'views/res_company_view.xml',
     'views/res_partner_view.xml',
-    'views/stock_move_line_view.xml',    
     'views/product_template_view.xml',
     'views/product_attribute_value_view.xml',
     'views/purchase_order_view.xml',
     'views/sale_order_view.xml', 
     'views/account_invoice_view.xml',
-    'views/fos_stock_picking_view.xml',
+    'views/stock_picking_view.xml',
     'views/fos_account_journal_view.xml',
     # FOS' groups, menus, wizards and views
     'views/fos_groups_view.xml',

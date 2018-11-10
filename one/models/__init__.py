@@ -10,7 +10,7 @@ from . import sale_order_line
 from . import purchase_order
 from . import purchase_order_line
 from . import stock_move_line
-from . import stock_picking
+#from . import stock_picking
 # ONe System Tables
 from . import one_local_names
 from . import one_body_types
