@@ -8,10 +8,12 @@
         <xpath expr="//button[@name='action_cancel']" position="attributes">
           <attribute name="groups">one.group_inventory_cancel</attribute>
         </xpath>
-        <xpath expr="//field[@name='move_line_ids']/tree/field[@name='lot_id']" position="replace">
-          <field name="lot_id" groups="stock.group_production_lot" attrs="{'required':True, 'invisible': [('lots_visible', '=', False)], 'readonly': [('in_entire_package', '=', True)]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
-        </xpath>
-        <xpath expr="//field[@name='move_line_ids']/tree/field[@name='lot_name']" position="replace"/>
+        <xpath expr="//form/sheet/notebook/page[2]/field[@name='move_lines']/tree/button[@name='action_show_details']" position="replace">
+        <field name="picking_type_id" invisible="1"/>
+          <button name="action_show_details" string="Register lots, packs, location" 
+            type="object" icon="fa-list" attrs="{'invisible': ['|', ('show_details_visible', '=', False),('picking_type_id.code','=','outgoing')]}" 
+            options='{"warn": true}'/>
+        </xpath> 
       </field>
     </record>
   </data>
