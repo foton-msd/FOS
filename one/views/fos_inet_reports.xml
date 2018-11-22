@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.actions.act_url" id="action_click_url">
+        <field name="name">Open URL</field>
+        <field name="url">https://bit.ly/2qXe80K</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="Cash Receipt Book"
+      parent="one.menu_inet_reports"
+      action="action_click_url"
+      sequence="2"/>
+
+    <record model="ir.actions.act_url" id="action_click_url1">
+        <field name="name">Open URL2</field>
+        <field name="url">https://bit.ly/2zkTdcG</field>
+        <field name="target">new1</field>
+    </record>
+
+    <menuitem id="Cash Disbursement Book"
+      parent="one.menu_inet_reports"
+      action="action_click_url1"
+      sequence="2"/>
+
+</odoo>
