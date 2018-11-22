@@ -12,7 +12,7 @@
       sequence="2"/>
 
     <record model="ir.actions.act_url" id="action_click_url1">
-        <field name="name">Open URL2</field>
+        <field name="name">Open URL</field>
         <field name="url">https://bit.ly/2zkTdcG</field>
         <field name="target">new1</field>
     </record>
