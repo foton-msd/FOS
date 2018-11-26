@@ -23,7 +23,7 @@
     'views/stock_picking_view.xml',
     'views/stock_move_line_view.xml',
     'views/fos_account_journal_view.xml',
-    'views/fos_inet_reports.xml',
+    #'views/fos_inet_reports.xml',
     # FOS' groups, menus, wizards and views
     'views/fos_groups_view.xml',
     'views/fos_menu_view.xml', 
