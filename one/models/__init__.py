@@ -42,3 +42,8 @@ from . import nonf_ro
 from . import fos_payment_register
 from . import fmpi_service_history
 from . import fos_serial
+from . import fos_calc
+from . import fos_calc_banks
+from . import fos_calc_unit_prices
+from . import fos_calc_addons
+from . import fos_calc_less
