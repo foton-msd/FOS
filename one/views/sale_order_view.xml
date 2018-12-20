@@ -116,7 +116,7 @@
             <field name="dp_percentage" attrs="{'readonly': [('state','!=','sale')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
             <field name="dp_amount" attrs="{'readonly': [('state','!=','sale')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
             <field name="af" attrs="{'readonly': [('state','!=','sale')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
-            <field name="fos_payment_term_id" attrs="{'readonly': [('state','not in','draft')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
+            <field name="fos_payment_term_id" attrs="{'readonly': [('state','!=','sale')], 'invisible': [('payment_mode_name','in', (False, 'Cash','cash','CASH'))]}"/>
             <field name="insurance_company" attrs="{'readonly': [('state','!=','sale')]}"/>                            
           </group>                            
           <group string="Sales Info" attrs="{'invisible': ['|',('so_type','!=','units'),('state','in',['draft','sent'])]}">
