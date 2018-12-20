@@ -1,149 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-   <template id="one.report_invoice_template">
-   <t t-call="web.html_container">
-   <t t-foreach="docs" t-as="o">
-    <t t-call="web.external_layout">
-     <div class="oe_structure"/>
-        <h2 align="center">
-          <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
-          <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
-          <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-          <span t-if="o.type == 'out_refund'">Credit Note</span>
-          <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
-          <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
-           <span t-field="o.number"/>
-        </h2>
-        <table class="table">
-          <tbody>
-            <tr/>
-             <tr>
-                <td width="12%"><strong>Customer Name:</strong></td>
-                  <td width="60%">
-                    <t t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    <t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/>
-                  </td>
-                  <td width="30%"><strong>Invoice Date: </strong><span t-field="o.date_invoice"/>
-                </td>
-            </tr>
-          </tbody>
-        </table>
-            <div class="row mt32 mb32" id="informations">
-                <div class="col-xs-3">
-                    <strong>Source Document:</strong>
-                    <p t-field="o.origin"/>
-                </div>      
-                <div class="col-xs-3">
-                    <strong>Salesperson:</strong>
-                    <p t-field="o.user_id"/>
-                </div>
-                   <div class="col-xs-3">
-                    <td width="30%"><strong>Payment Term:</strong></td>
-                    <p t-field="o.payment_term_id"/>
-                </div>
-            </div>  
-            
-                    <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
-                    <table class="table table-condensed" name="invoice_line_table">
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th class="hidden">Source Document</th>
-                                <th class="text-right">Quantity</th>
-                                <th class="text-right">Unit Price</th>
-                                <th t-if="display_discount" class="text-right">Disc.(%)</th>
-                                <th class="text-right">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody class="invoice_tbody">
-                            <tr t-foreach="o.invoice_line_ids" t-as="l">
-                                <td><span t-field="l.name"/></td>
-                                <td class="hidden"><span t-field="l.origin"/></td>
-                                <td class="text-right">    
-                                    <span t-field="l.quantity"/>
-                                    <span t-field="l.uom_id"  groups="product.group_uom"/>
-                                </td>
-                                <td class="text-right">
-                                    <span t-field="l.price_unit"/>
-                                </td>
-                                <td t-if="display_discount" class="text-right">
-                                    <span t-field="l.discount"/>
-                                </td>
-                                <td class="text-right" id="subtotal">
-                                    <span t-field="l.price_subtotal"
-                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                </td>
-                            </tr>
-                            <tr t-foreach="range(max(5-len(o.invoice_line_ids),0))" t-as="l">
-                                <td t-translation="off">&amp;nbsp;</td>
-                                <td class="hidden"></td>
-                                <td></td>
-                                <td></td>
-                                <td t-if="display_discount"></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="clearfix">
-                        <div id="total" class="row">
-                            <div class="col-xs-4 pull-right">
-                                <table class="table table-condensed" style="min-width: 250px;max-width: 400px;">
-                                    <tr class="border-black" style="border-bottom:1px solid #dddddd;">
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Total</strong></td>
-                                        <td class="text-right">
-                                            <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <td><strong>Remarks</strong></td>
-                    <p t-if="o.comment">
-                        <span t-field="o.comment"/>
-                    </p>
-                    <p t-if="o.payment_term_id">
-                        <span t-field="o.payment_term_id.note"/>
-                    </p>
-                    <p t-if="o.fiscal_position_id.note">
-                        <span t-field="o.fiscal_position_id.note"/>
-                    </p> 
-                     <td><br/><br/></td>
-                      <td><br/><br/></td>
-    <div class="footer">
-           <table width="100%">
-                <tr>
-                   <td align="center"><strong>Prepared by:</strong></td>
-                   <td align="center"><strong>Checked by:</strong></td>
-                   <td align="center"><strong>Approved by:</strong></td>
-                   <td align="center"><strong>Received by:</strong></td>
-                </tr>
-                <tr>
-                   <td><br/><br/></td>
-                   <td><br/><br/></td>
-                   <td><br/><br/></td>
-                   <td><br/><br/></td>
-                </tr>
-                <tr>
-                   <td align="center">__________________</td>
-                   <td align="center">__________________</td>
-                   <td align="center">__________________</td>
-                   <td align="center">__________________</td>
-                </tr>
-           </table>
-    </div>               
-     </t>                     
-    </t>
-  </t>
+  <template id="fos_report_invoice_template" inherit_id="account.report_invoice_document">
+    <xpath expr="//div" position="after">
+        <div class="footer">
+            <table width="100%">
+                    <tr>
+                    <td align="center"><strong>Prepared by:</strong></td>
+                    <td align="center"><strong>Checked by:</strong></td>
+                    <td align="center"><strong>Approved by:</strong></td>
+                    <td align="center"><strong>Received by:</strong></td>
+                    </tr>
+                    <tr>
+                    <td><br/><br/></td>
+                    <td><br/><br/></td>
+                    <td><br/><br/></td>
+                    <td><br/><br/></td>
+                    </tr>
+                    <tr>
+                    <td align="center">__________________</td>
+                    <td align="center">__________________</td>
+                    <td align="center">__________________</td>
+                    <td align="center">__________________</td>
+                    </tr>
+            </table>
+        </div>       
+    </xpath>
   </template>
-   <report id="one.report_invoice_document"
-     name="one.report_invoice_template"
-     file="one.report_invoice_template"
-     model="account.invoice"
-     report_type="qweb-html"
-     string="Invoice"
-     menu="True"/>
 </odoo>
