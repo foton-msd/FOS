@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <template id="fos_report_payment_voucher" inherit_id="account.report_payment_receipt">
+    <xpath expr="//div/div[3]/div[2]" position="after">
+        <div class="col-xs-6" t-if="o.cheque_number">
+          <strong>Cheque Number: </strong><span t-field="o.cheque_number"/>
+        </div>
+    </xpath>
     <xpath expr="//h3" position="replace">
       <h2 align="center">
         <t>
@@ -71,8 +76,8 @@
           </tbody>
         </table>
         </t>
-        <p><strong>Note:</strong></p>
-        <p t-field="o.remarks" />
+        <p><strong>Notes:</strong></p>
+        <p t-field="o.note" />
     </xpath>
     <xpath expr="//t/div" position="inside">
       <div class="footer">
