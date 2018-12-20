@@ -33,6 +33,7 @@
                </tr>
               </tbody>
             </table>
+           <t t-if="doc.state == 'sale'">
             <table width="100%">
               <tr>
                <td width="40%"><strong>Foton Number: </strong><span t-field="doc.su_fu_id"/></td>
@@ -51,6 +52,23 @@
                 <td width="40%"></td>
               </tr>
             </table>
+                <br/>
+           <h4><strong>Sales Info</strong></h4>
+            <table width="100%">
+              <tr>
+               <td width="40%"><strong>Date Released: </strong><span t-field="doc.date_released"/></td>
+                <td width="40%"><strong>Sales Executive: </strong><span t-field="doc.user_id"/></td>
+              </tr>
+              <tr>
+                <td width="40%"><strong>Source of Awareness: </strong><span t-field="doc.source_of_awareness"/></td>
+                <td width="40%"><strong>Venue of Marketing Activity: </strong><span t-field="doc.venue_of_marketing_activity"/></td>
+              </tr>
+              <tr>
+                <td width="40%"><strong>Souce of Sale: </strong><span t-field="doc.source_of_sale"/></td>
+                <td width="40%"><strong>Promo: </strong><span t-field="doc.promo"/></td>
+              </tr>
+            </table>
+           </t>
             <div class="row mt32 mb32" id="informations">
                 <div t-if="doc.client_order_ref" class="col-xs-3">
                     <strong>Your Reference:</strong>
