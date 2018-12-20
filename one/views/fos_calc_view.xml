@@ -1,0 +1,113 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_fos_sale_calculator_tree">
+            <field name="name">Sale Calculator</field>
+            <field name="model">fos.calc</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="unit_id"/>
+                </tree>
+            </field>
+        </record>
+    
+        <record model="ir.ui.view" id="view_fos_sale_calculator_form">
+            <field name="name">Sale Calculator</field>
+            <field name="model">fos.calc</field>
+            <field name="arch" type="xml">
+             <form>
+    	        <sheet>                    
+                    <h1><field name="name"/></h1>
+                    <group>
+                            <field name="customer_id"/>
+                    </group>
+                    <group>
+                            <field name="unit_id" domain="[('sub_type','=','units')]"
+                            options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="srp"/>
+                            <field name="less_discount"/>
+                            <field name="net_cash"/>
+                            <field name="downpayment"/>
+                            <field name="dp_percent" widget="percentage"/>
+                            <field name="amount_financed"/>
+                            <field name="reservation_fee"/>                                                                                                                                      
+                    </group>
+                    <group>
+                            <field name="cash_outlay" widget="radio"/>
+                    </group>
+                    <group string="Standard" attrs="{'invisible': [('cash_outlay','!=','standard')]}">
+                                <field name="bank_id"/>
+                                <field name="s_term"/>
+                                <field name="monthly_amortization_std"/>
+                                <field name="downpayment"/>
+                                <field name="insurance_std"/>
+                                <field name="chattel_mortgage_std"/>
+                                <field name="lto_registration_std"/>
+                                <field name="oma_std"/>
+                                <field name="addons_total"/>   
+                    </group>
+                    <group string="OMA" attrs="{'invisible': [('cash_outlay','!=','oma')]}">
+                                <field name="bank_id"/>
+                                <field name="o_term"/>
+                                <field name="monthly_amortization_oma"/>
+                                <field name="downpayment"/>
+                                <field name="insurance_oma"/>
+                                <field name="chattel_mortgage_oma"/>
+                                <field name="lto_registration_oma"/>
+                                <field name="oma_oma"/>
+                                <field name="addons_total"/>                           
+                    </group>
+                    <group>
+                      <field name="addons" mode="tree,kanban">            
+                        <tree string="Additional Accessories" editable="bottom">
+                            <field name="product_id" domain="[('sub_type','=','parts')]"
+                            options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="description"/>                           
+                            <field name="amount"/>
+                        </tree>       
+                      </field> 
+                    </group>  
+                    <group>
+                                <field name="less_total"/>
+                    </group>
+                    <group>
+                      <field name="less" mode="tree,kanban">            
+                        <tree string="Less" editable="bottom">
+                            <field name="product_id" domain="[('sub_type','=','parts')]"
+                            options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                            <field name="description"/>
+                            <field name="amount_less"/>
+                        </tree>       
+                      </field> 
+                    </group>  
+                    <group attrs="{'invisible': [('cash_outlay','!=','std')]}">
+                            <field name="net_cash_outlay_std"/>
+                    </group>
+                    <group attrs="{'invisible': [('cash_outlay','!=','oma')]}">
+                            <field name="net_cash_outlay_oma"/>
+                    </group>
+                </sheet>
+             </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="sale_calculator_act_window">
+            <field name="name">Sale Calculator</field>
+            <field name="res_model">fos.calc</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_fos_sale_calculator_tree"/>
+        </record>
+
+        <record model="ir.sequence" id="fos_calc_seq">
+            <field name="name">FOS Calculator</field>
+            <field name="code">fos.calc.seq</field>
+            <field name="prefix">SC#</field>
+            <field name="padding">6</field>
+        </record>
+
+        <menuitem id="sale_calculator_menu"
+            name="Calculator"
+            action="sale_calculator_act_window"
+            parent="fos_sales_units_maintenance_menu"
+            sequence="3"/> 
+    </data>
+</odoo>      
