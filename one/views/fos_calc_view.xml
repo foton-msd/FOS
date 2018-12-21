@@ -80,7 +80,7 @@
                         </tree>       
                       </field> 
                     </group>  
-                    <group attrs="{'invisible': [('cash_outlay','!=','std')]}">
+                    <group attrs="{'invisible': [('cash_outlay','!=','standard')]}">
                             <field name="net_cash_outlay_std"/>
                     </group>
                     <group attrs="{'invisible': [('cash_outlay','!=','oma')]}">
