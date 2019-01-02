@@ -41,6 +41,8 @@ class FOSSaleCalculator(models.Model):
   less_total = fields.Float(string="Less", compute="_getLessTotal", readonly=True)
   net_cash_outlay_std = fields.Float(string="Net Cash Outlay", compute="_getNCOStd", readonly=True)
   net_cash_outlay_oma = fields.Float(string="Net Cash Outlay", compute="_getNCOOma", readonly=True)
+  state = fields.Selection(string="Status", selection=[('draft','Draft'),('cancel','Cancelled'),('confirm','Confirmed')], default='draft')
+  sale_order_id = fields.Many2one(string="Sale Quotation", comodel_name="sale.order", copy=False)
 
   @api.one
   def _getNetCash(self):
@@ -101,5 +103,63 @@ class FOSSaleCalculator(models.Model):
   def create(self, vals):
     vals['name'] = self.env['ir.sequence'].next_by_code('fos.calc.seq')
     return super(FOSSaleCalculator, self).create(vals)
+
+  @api.multi
+  def action_cancel(self):
+    self.write({'state': 'cancel'})
+
+  @api.multi
+  def action_confirm(self):
+    so_obj = self.env['sale.order']
+    self.ensure_one()        
+    new_so = so_obj.create({
+      'partner_id': self.customer_id.id,
+      'date_order': fields.datetime.now(),
+      'so_type': 'units' })
+    if new_so:
+      so_line = self.env['sale.order.line']
+      #Create unit line
+      so_line.create({
+        'order_id': new_so.id,
+        'charged_to': 'customer',
+        'units_and_addons': self.unit_id.id,
+        'product_id': self.unit_id.id,
+        'product_uom_qty':1,
+        'price_unit': self.srp
+      }) 
+      #Create line discount     
+ #     so_line.create({
+ #       'order_id': new_so.id,
+ #       'charged_to': 'customer',
+ #       'units_and_addons': self.unit_id.id,
+ #       'product_id': self.unit_id.id,
+ #       'product_uom_qty':1,
+ #       'price_unit': self.less_discount,
+ #       'discount_amount': self.less_discount     
+ #     })
+      for aol in self.addons:
+        so_line.create({
+          'order_id': new_so.id,
+          'charged_to': 'customer',
+          'units_and_addons': aol.product_id.id,
+          'product_id': aol.product_id.id,
+          'product_uom_qty':1,
+          'price_unit': aol.amount  
+        })
+        for lol in self.less:
+          so_line.create({
+            'order_id': new_so.id,
+            'charged_to': 'customer',
+            'units_and_addons': lol.product_id.id,
+            'product_id': lol.product_id.id,
+            'product_uom_qty':1,
+            'price_unit': lol.amount_less,
+            'discount':100
+          })
+    self.write({
+      'state': 'confirm',
+      'sale_order_id': new_so.id
+      })
+
 
 FOSSaleCalculator()
