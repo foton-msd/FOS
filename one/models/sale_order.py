@@ -104,6 +104,7 @@ class FasSaleOrder(models.Model):
       validated = self.check_limit()
       seq = 'fos.spso.seq'
     elif self.so_type == "units":
+      validated = self.check_limit()
       seq = 'fos.suso.seq'
     elif self.so_type == "service2":
       seq = 'nonf.svso.seq'

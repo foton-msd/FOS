@@ -7,6 +7,7 @@
                 <tree>
                     <field name="name"/>
                     <field name="unit_id"/>
+                    <field name="customer_id"/>
                 </tree>
             </field>
         </record>
@@ -16,49 +17,65 @@
             <field name="model">fos.calc</field>
             <field name="arch" type="xml">
              <form>
-    	        <sheet>                    
-                    <h1><field name="name"/></h1>
+                    <header>
+                         <field name="state" widget="statusbar" statusbar_visible="draft,cancel,confirm"/>
+                         <button name="action_cancel" vqir_state="cancel"  type="object" string="Cancel"
+                            attrs="{'invisible': [('state', 'not in', ('draft'))]}"
+                            confirm="Are you sure to Cancel?"/>
+                         <button name="action_confirm" vqir_state="confirm"  type="object" string="Confirm"
+                            attrs="{'invisible': [('state', 'not in', ('draft'))]}"
+                            confirm="Are you sure to Confirm?"/>
+                    </header>
+    	        <sheet>
                     <group>
-                            <field name="customer_id"/>
+                        <group>                    
+                            <h1><field name="name"/></h1>
+                        </group>
+                        <group>
+                            <h1><field name="sale_order_id" attrs="{'visible': [('state','=','confirm')]}" readonly="1"/></h1>
+                        </group>
                     </group>
                     <group>
-                            <field name="unit_id" domain="[('sub_type','=','units')]"
+                            <field name="customer_id" attrs="{'readonly': [('state','!=','draft')]}"/>
+                    </group>
+                    <group>
+                            <field name="unit_id" domain="[('sub_type','=','units')]" attrs="{'readonly': [('state','!=','draft')]}"
                             options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
-                            <field name="srp"/>
-                            <field name="less_discount"/>
-                            <field name="net_cash"/>
-                            <field name="downpayment"/>
-                            <field name="dp_percent" widget="percentage"/>
-                            <field name="amount_financed"/>
-                            <field name="reservation_fee"/>                                                                                                                                      
+                            <field name="srp" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="less_discount" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="net_cash" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="downpayment" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="dp_percent" widget="percentage" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="amount_financed" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="reservation_fee" attrs="{'readonly': [('state','!=','draft')]}"/>                                                                                                                                      
                     </group>
                     <group>
-                            <field name="cash_outlay" widget="radio"/>
+                            <field name="cash_outlay" widget="radio" attrs="{'readonly': [('state','!=','draft')]}"/>
                     </group>
                     <group string="Standard" attrs="{'invisible': [('cash_outlay','!=','standard')]}">
-                                <field name="bank_id"/>
-                                <field name="s_term"/>
-                                <field name="monthly_amortization_std"/>
-                                <field name="downpayment"/>
-                                <field name="insurance_std"/>
-                                <field name="chattel_mortgage_std"/>
-                                <field name="lto_registration_std"/>
-                                <field name="oma_std"/>
-                                <field name="addons_total"/>   
+                                <field name="bank_id" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="s_term" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="monthly_amortization_std" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="downpayment" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="insurance_std" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="chattel_mortgage_std" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="lto_registration_std" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="oma_std" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="addons_total" attrs="{'readonly': [('state','!=','draft')]}"/>   
                     </group>
                     <group string="OMA" attrs="{'invisible': [('cash_outlay','!=','oma')]}">
-                                <field name="bank_id"/>
-                                <field name="o_term"/>
-                                <field name="monthly_amortization_oma"/>
-                                <field name="downpayment"/>
-                                <field name="insurance_oma"/>
-                                <field name="chattel_mortgage_oma"/>
-                                <field name="lto_registration_oma"/>
-                                <field name="oma_oma"/>
-                                <field name="addons_total"/>                           
+                                <field name="bank_id" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="o_term" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="monthly_amortization_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="downpayment" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="insurance_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="chattel_mortgage_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="lto_registration_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="oma_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="addons_total" attrs="{'readonly': [('state','!=','draft')]}"/>                           
                     </group>
                     <group>
-                      <field name="addons" mode="tree,kanban">            
+                      <field name="addons" mode="tree,kanban" attrs="{'readonly': [('state','!=','draft')]}">            
                         <tree string="Additional Accessories" editable="bottom">
                             <field name="product_id" domain="[('sub_type','=','parts')]"
                             options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
@@ -71,7 +88,7 @@
                                 <field name="less_total"/>
                     </group>
                     <group>
-                      <field name="less" mode="tree,kanban">            
+                      <field name="less" mode="tree,kanban" attrs="{'readonly': [('state','!=','draft')]}">     
                         <tree string="Less" editable="bottom">
                             <field name="product_id" domain="[('sub_type','=','parts')]"
                             options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
