@@ -12,6 +12,8 @@ class LocalNames(models.Model):
   fmpi_fu_local_name_stamp = fields.Datetime(string="FMPI Local Name Stamp", readonly=True)
   one_body_type_ids = fields.One2many(string="Body Types", comodel_name="one.body.types", inverse_name="one_local_name_id")
   active = fields.Boolean(string="Active", default=True)
+  code_ids = fields.One2many(string="Codes", comodel_name='fos.labor.codes', 
+    inverse_name='one_local_name_id', ondelete='cascade')
 
   @api.multi
   def name_get(self):
