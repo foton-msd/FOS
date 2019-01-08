@@ -14,6 +14,8 @@ class FMPIServiceHistory(models.Model):
         selection=[('warranty','Warranty'),
         ('customer','Customer'),
         ('internal','Internal'),
+        ('first_pms','First PMS'),
+        ('tsb','TSB'),
         ('add-on-costs','Add-On-Costs')])
     run_km = fields.Integer(string="Run KM")
     one_fu_id = fields.Many2one(string="FOTON Number", comodel_name="view.fas.fu")
