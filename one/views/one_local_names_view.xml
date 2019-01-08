@@ -19,22 +19,37 @@
       <field name="arch" type="xml">
         <form delete="false" create="false">
           <sheet>
-            <h1><field name="name"/></h1>
-            <field name="one_body_type_ids">
-              <tree create="false" delete="false">
-                <field name="name"/>
-                <field name="description"/>
-              </tree>
-              <form>
-                <sheet>
-                  <group>
-                    <field name="name" readonly="1"/>
-                    <field name="description" readonly="1"/>
-                  </group>
-                  <field name="image_medium" widget="image" class="oe_avatar"/>
-                </sheet>
-              </form>
-            </field>
+            <h1><field name="name" readonly="1"/></h1>
+            <notebook>
+              <page string="Labor Codes">
+                <field name="code_ids" mode="tree,kanban" nolabel="1">            
+                  <tree string="Labor Codes" editable="bottom">
+                    <field name="product_id"
+                      options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                    <field name="description"/>
+                    <field name="no_of_hours"/>                           
+                    <field name="flat_rate"/>
+                  </tree>       
+                </field>
+              </page>
+              <page string="Body Types">
+                  <field name="one_body_type_ids">
+                    <tree create="false" delete="false">
+                      <field name="name"/>
+                      <field name="description"/>
+                    </tree>
+                    <form>
+                      <sheet>
+                        <group>
+                          <field name="name" readonly="1"/>
+                          <field name="description" readonly="1"/>
+                        </group>
+                        <field name="image_medium" widget="image" class="oe_avatar"/>
+                      </sheet>
+                    </form>
+                  </field>
+              </page>
+            </notebook>
           </sheet>
         </form>
       </field>
