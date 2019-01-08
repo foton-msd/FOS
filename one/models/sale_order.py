@@ -123,12 +123,12 @@ class FasSaleOrder(models.Model):
         vqir_obj = self.env['fos.vqir']
         has_warranty_line = False
         for line in self.order_line:
-          if line.charged_to == "warranty":
+          if line.charged_to in ["warranty","tsb","first_pms"]:
             has_warranty_line = True
             break
         if has_warranty_line:
           new_vqir_id = vqir_obj.create({
-            'vqir_type': 'warranty',
+            'vqir_type': line.charged_to,
             'vqir_date': datetime.today(),
             'date_occur': datetime.today(),
             'fos_fu_id': self.fu_id.id,
@@ -148,7 +148,7 @@ class FasSaleOrder(models.Model):
           if new_vqir_id:
             pj_obj = self.env['fos.vqir.parts.and.jobs']
             for line in self.order_line:
-              if line.charged_to == "warranty":
+              if line.charged_to in ["warranty","tsb","first_pms"]:
                 if line.product_id.type == "product":
                   pj_obj.create({
                     'fos_vqir_id': new_vqir_id.id,
