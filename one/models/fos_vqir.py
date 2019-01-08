@@ -13,7 +13,7 @@ class FosVqir(models.Model):
   preapproved_date = fields.Date(string="Pre-Approved Date", readonly=True)
   preclaim_number = fields.Char(string="Pre-Claim Reference", copy=False)
   payment_receipt = fields.Char(string="PR Reference", copy=False)
-  vqir_type = fields.Selection(string="Type", selection=[('warranty', 'Warranty'),('service','Service'),('tsb','TSB'),('promo','Promo')], required=True)
+  vqir_type = fields.Selection(string="Type", selection=[('warranty', 'Warranty'),('service','Service'),('tsb','TSB'),('first_pms','First PMS')], required=True)
   vqir_service_type = fields.Selection(string="Servive Type", selection=[('pmp','PMS'),('gj','General Job'),
     ('br','Body Repair')])
   vqir_state = fields.Selection(string="Status", copy=False, selection=[
