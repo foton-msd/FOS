@@ -12,7 +12,7 @@ class FMPIVqir(models.Model):
   preapproved_date = fields.Date(string="Pre-Approved Date", readonly=True)
   preclaim_number = fields.Char(string="Pre-Claim Reference", readonly=True)
   payment_receipt = fields.Char(string="PR Reference", readonly=True)
-  vqir_type = fields.Selection(string="Type", selection=[('warranty', 'Warranty'),('service','Service'),('tsb','TSB'),('promo','Promo')], readonly=True)
+  vqir_type = fields.Selection(string="Type", selection=[('warranty', 'Warranty'),('service','Service'),('tsb','TSB'),('first_pms','First PMS')], readonly=True)
   vqir_service_type = fields.Selection(string="Servive Type", selection=[('pmp','PMS'),('gj','General Job'),
     ('br','Body Repair')], readonly=True)
   vqir_state = fields.Selection(string="Status", selection=[
