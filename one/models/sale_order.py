@@ -360,6 +360,17 @@ class FasSaleOrder(models.Model):
   def print_so_service_quote(self):
     return self.env.ref('one.report_so_service_quote').report_action(self) 
 
+  @api.multi
+  def print_sale_order_print(self):
+    inet_host = self.env.user.company_id.inet_url
+    dbname = self.env.user.company_id.dealer_pgn
+    report_url = inet_host + "/" + dbname  + "/fos_vso.rpt" 
+    return {
+      'type' : 'ir.actions.act_url',
+      'url':report_url,
+      'target': 'new'
+    }
+
   @api.model
   def create(self, vals):
     if vals['so_type'] == "parts":
