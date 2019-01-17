@@ -27,6 +27,9 @@ class FasResCompany(models.Model):
   api_host = fields.Char(string="API Host")
   api_user = fields.Char(string="API User Name")
   api_pass = fields.Char(string="API Password")
+  inet_url = fields.Char(string="I-Net Host")
+  inet_user = fields.Char(string="I-Net User Name")
+  inet_pass = fields.Char(string="I-Net Password")
   parts_categ_id = fields.Many2one(string="Parts Category", comodel_name="product.category")
 
   @api.multi
