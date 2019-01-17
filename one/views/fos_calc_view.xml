@@ -25,6 +25,9 @@
                          <button name="action_confirm" vqir_state="confirm"  type="object" string="Confirm"
                             attrs="{'invisible': [('state', 'not in', ('draft'))]}"
                             confirm="Are you sure to Confirm?"/>
+                         <button name="print_sale_calculator" class="oe_highlight"
+                            attrs="{'invisible': [('state','!=','confirm')]}"
+                            string="Print Sale Quotation" type="object"/>
                     </header>
     	        <sheet>
                     <group>
@@ -121,10 +124,15 @@
             <field name="padding">6</field>
         </record>
 
+        <menuitem id="sales_unit_maintenance_menu" 
+            name="Maintenance" 
+            parent="fos_sales_units_quotations_orders_menu" 
+            sequence="3"/>
+
         <menuitem id="sale_calculator_menu"
             name="Calculator"
             action="sale_calculator_act_window"
-            parent="fos_sales_units_maintenance_menu"
-            sequence="3"/> 
+            parent="sales_unit_maintenance_menu"
+            sequence="4"/> 
     </data>
 </odoo>      
