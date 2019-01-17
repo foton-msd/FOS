@@ -20,8 +20,8 @@ class FOSSaleCalculator(models.Model):
   amount_financed = fields.Float('Amount Finance', compute="_getAmountFinanced", readonly=True)
   reservation_fee = fields.Float('Reservation Fee')
   bank_id = fields.Many2one(string="Bank", comodel_name="fos.calc.banks")
-  s_term = fields.Integer(string="TERM(months)", related="bank_id.standard_term")
-  o_term = fields.Integer(string="TERM(months)", related="bank_id.oma_term")
+  s_term = fields.Integer(string="TERM(months)", related="bank_id.standard_term", readonly=True)
+  o_term = fields.Integer(string="TERM(months)", related="bank_id.oma_term", readonly=True)
   std_bank = fields.Float(string="Bank Standard", related="bank_id.bank_std") 
   oma_bank = fields.Float(string="Bank OMA", related="bank_id.bank_oma") 
   monthly_amortization_std = fields.Float('Montly Amortization', compute="_getMonthlyAmortizationstd", readonly=True)
@@ -107,6 +107,18 @@ class FOSSaleCalculator(models.Model):
   @api.multi
   def action_cancel(self):
     self.write({'state': 'cancel'})
+
+  @api.multi
+  def print_sale_calculator(self):
+    inet_host = self.env.user.company_id.inet_url
+    dbname = self.env.user.company_id.dealer_pgn
+    report_url = inet_host + "/" + dbname  + "/fos_sales_calculator_quotation.rpt&prompt0=" \
+      + str(self.id) 
+    return {
+      'type' : 'ir.actions.act_url',
+      'url':report_url,
+      'target': 'new'
+    }
 
   @api.multi
   def action_confirm(self):
