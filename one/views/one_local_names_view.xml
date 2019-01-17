@@ -18,9 +18,9 @@
       <field name="model">one.local.names</field>
       <field name="arch" type="xml">
         <form delete="false" create="false">
-          <sheet>
+         <sheet>
             <h1><field name="name" readonly="1"/></h1>
-            <notebook>
+<!-->           <notebook>
               <page string="Labor Codes">
                 <field name="code_ids" mode="tree,kanban" nolabel="1">            
                   <tree string="Labor Codes" editable="bottom">
@@ -32,7 +32,7 @@
                   </tree>       
                 </field>
               </page>
-              <page string="Body Types">
+              <page string="Body Types"> -->
                   <field name="one_body_type_ids">
                     <tree create="false" delete="false">
                       <field name="name"/>
@@ -48,8 +48,8 @@
                       </sheet>
                     </form>
                   </field>
-              </page>
-            </notebook>
+<!-->              </page>
+            </notebook> -->
           </sheet>
         </form>
       </field>
