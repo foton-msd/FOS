@@ -8,8 +8,8 @@ class FOSSaleCalculatorBanks(models.Model):
     name = fields.Char(string="Bank", required=True)
     standard_term = fields.Integer(string="Standard Term(months)")
     oma_term = fields.Integer(string="OMA Term(months)")
-    bank_std = fields.Float(string="Bank Standard")
-    bank_oma = fields.Float(string="Bank OMA")    
+    bank_std = fields.Float(string="Bank Standard (%)")
+    bank_oma = fields.Float(string="Bank OMA (%)")    
     
 
 FOSSaleCalculatorBanks()

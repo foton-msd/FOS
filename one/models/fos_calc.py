@@ -56,14 +56,14 @@ class FOSSaleCalculator(models.Model):
   @api.one
   def _getMonthlyAmortizationstd(self):
    if self.s_term > 0:
-    self.monthly_amortization_std = ((self.amount_financed or 0) / (self.s_term)) * ((self.std_bank or 0) + 1)
+    self.monthly_amortization_std = ((self.amount_financed or 0) * (1 + (self.std_bank / 100))) / (self.s_term)
 
     logger.info("Total is" + str(self.monthly_amortization_std))
 
   @api.one
   def _getMonthlyAmortizationoma(self):
    if self.o_term > 0:
-    self.monthly_amortization_oma = ((self.amount_financed or 0) / (self.o_term)) * ((self.oma_bank or 0) + 1)
+    self.monthly_amortization_oma = ((self.amount_financed or 0) * (1 + (self.oma_bank / 100))) / (self.o_term)
     self.oma_oma = (((self.amount_financed or 0) * (self.oma_bank or 0)) / 100) / (self.o_term)
 
   @api.one
