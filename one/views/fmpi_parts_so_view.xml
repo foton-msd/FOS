@@ -1,0 +1,130 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="fmpi_parts_online_so_tree">
+            <field name="name">Online Parts S.O. Tree</field>
+            <field name="model">fmpi.parts.so</field>
+            <field name="arch" type="xml">
+                <tree string="Online Parts Purchase Order" create="false" delete="false">
+                    <field name="dealer_id"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="order_total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="fmpi_parts_online_so_form">
+            <field name="name">Online Parts S.O. Form</field>
+            <field name="model">fmpi.parts.so</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Order" delete="false">
+                    <header>
+                        <button name="action_proc" states="received" type="object"
+                            string="Process" class="oe_highlight"
+                            confirm="This action will notify your customer that you are now processing their order."/>
+                        <button name="action_forpo" states="proc" type="object"
+                            string="Set as Ready for Dealers confirmation" class="oe_highlight"
+                            confirm="This action will notify your customer that their order is ready and waiting for their confirmation"/>
+                        
+                        <field name="state" widget="statusbar" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <group>
+                                <group>      
+                                    <h1><field name="dealer_id" readonly="1"/></h1>                                                                  
+                                </group>
+                                <group>
+                                    <field name="name" readonly="1"/>
+                                    <field name="date" readonly="1"/>
+                                    <field name="date_received" readonly="1"/>
+                                </group>
+                            </group>
+                        </div>
+                        <group string="Order Lines">
+                            <field name="order_line" nolabel="1">
+                                <tree editable="bottom" create="false" delete="false">
+                                    <field name="fu_id" options="{'bg_color': 'gray', 'readonly': True}"/>
+                                    <field name="product_id" options="{'bg_color': 'gray', 'readonly': True}"/>
+                                    <field name="description" options="{'bg_color': 'gray', 'readonly': True}"/>
+                                    <field name="order_qty" options="{'bg_color': 'gray', 'readonly': True}"/>
+                                    <field name="price_unit" options="{'bg_color': 'gray', 'readonly': True}"/>
+                                    <field name="subtotal" options="{'bg_color': 'gray', 'readonly': True}"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="assigned_product_id" domain="[('sub_type','=','parts')]"
+                                        options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'column_visible': ('state','=','proc')}"/>
+                                    <field name="assigned_description" attrs="{'readonly': ('state','=','proc')}"/>
+                                    <field name="assigned_order_qty" attrs="{'readonly': ('state','=','proc')}"/>
+                                    <field name="assigned_price_unit" attrs="{'readonly': ('state','=','proc')}"/>
+                                    <field name="assigned_subtotal"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group class="oe_subtotal_footer oe_right"> 
+                            <div class="oe_inline">
+                                <label for="order_total"/>
+                            </div>
+                            <field name="order_total" widget="monetary" nolabel="1"/>
+                            <div class="oe_inline">
+                                <label for="assigned_order_total"/>
+                            </div>
+                            <field name="assigned_order_total" widget="monetary" nolabel="1"/>
+                        </group>   
+                        
+                        <field name="notes" class="oe_inline" 
+                            readonly="[('state','!=','draft')]"
+                            placeholder="Define your terms and conditions ..."/>
+                        <div class="oe_clear"/>
+                    </sheet>   
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>                  
+                </form>  
+            </field>
+        </record>
+    
+        <record id="view_fmpi_parts_online_so_filter" model="ir.ui.view">
+            <field name="name">Search Online Sales Orders</field>
+            <field name="model">fmpi.parts.so</field>
+            <field name="arch" type="xml">
+                <search string="Search Online Parts Order">
+                    <filter string="Order Number" domain="[('name','ilike',self)]"/>
+                    <separator/>
+                    <filter string="Today's Activities" name="orders_today"
+                        domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]"/>
+                    <filter string="All Received" name="received" domain="[('state', '=', 'received')]"/>                    
+                    <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
+                    <filter string="Processing" name="ack" domain="[('state', '=', 'ack')]"/>
+                    <filter string="Done" name="done" domain="[('state', '=', 'proc')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Dealer" domain="[]" name="group_dealer" context="{'group_by':'dealer_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Order Month" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_window_view_fmpi_parts_online_so">
+            <field name="name">Online Parts Sales Order</field>
+            <field name="res_model">fmpi.parts.so</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="fmpi_parts_online_so_tree"/>
+            <field name="context">{
+                'search_default_group_dealer':1,
+                'search_default_received': 1
+                }</field>
+        </record>
+
+        <menuitem name="Online Orders from Dealers" 
+            id="fmpi_online_so_menu_item" sequence="600"
+            parent="sale.sale_order_menu"/>
+        <menuitem name="Online Orders from Dealers" 
+            id="fmpi_parts_online_so_menu_item" 
+            parent="sale.sale_order_menu"
+            action="act_window_view_fmpi_parts_online_so"/>
+    </data>
+</odoo>

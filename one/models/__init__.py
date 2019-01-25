@@ -49,3 +49,5 @@ from . import fos_calc_addons
 from . import fos_calc_less
 from . import fos_labor_codes
 from . import fos_acctg_reports
+from . import fos_parts_po
+from . import fmpi_parts_so

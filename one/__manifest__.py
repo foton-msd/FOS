@@ -9,7 +9,7 @@
   'category': 'Uncategorized',
   'version': '0.1',
   'depends': ['base', 'stock', 'purchase', 'mail', 'sale_management', 'account_invoicing', 
-     'web_sheet_full_width', 'base_vat', 'backend_theme'],
+     'web_sheet_full_width', 'base_vat', 'backend_theme','web_tree_dynamic_colored_field'],
   'data': [
     # Jun Salinga
     # odoo native (inherited) views
@@ -60,7 +60,10 @@
     'views/nonf_ro_view.xml',
     'views/nonf_sales_service_view.xml',
     'views/fos_calc_view.xml',
-    #'wizards/nonf_cancel_ro_view.xml', 
+    #'wizards/nonf_cancel_ro_view.xml',
+    # Parts Online Order
+    'views/fos_parts_po_view.xml',
+    'views/fmpi_parts_so_view.xml',
     # reports
     'report/bir_report_sale_order_layout.xml',
     'report/fas_sales_parts_report.xml',
