@@ -56,11 +56,11 @@
                                     <field name="order_qty"/>
                                     <field name="price_unit"/>
                                     <field name="subtotal"/>
-                                    <field name="assigned_product_name" column_invisible="[('state','!=','forpo')]"/>
-                                    <field name="assigned_description" column_invisible="[('state','!=','forpo')]"/>
-                                    <field name="assigned_order_qty" column_invisible="[('state','!=','forpo')]"/>
-                                    <field name="assigned_price_unit" column_invisible="[('state','!=','forpo')]"/>
-                                    <field name="assigned_subtotal" column_invisible="[('state','!=','forpo')]"/>
+                                    <field name="assigned_product_name" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                    <field name="assigned_description" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                    <field name="assigned_order_qty" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                    <field name="assigned_price_unit" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                    <field name="assigned_subtotal" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                 </tree>
                             </field>
                         </group>
@@ -70,9 +70,9 @@
                             </div>
                             <field name="order_total" widget="monetary" nolabel="1"/>
                             <div class="oe_inline">
-                                <label for="assigned_order_total" invisible="[('state','!=','forpo')]"/>
+                                <label for="assigned_order_total" attrs="{'invisible': [('state','in', ['draft','sent','cancel'])]}"/>
                             </div>
-                            <field name="assigned_order_total" invisible="[('state','!=','forpo')]" widget="monetary" nolabel="1"/>
+                            <field name="assigned_order_total" attrs="{'invisible': [('state','in', ['draft','sent','cancel'])]}" widget="monetary" nolabel="1"/>
                         </group>   
                         
                         <field name="notes" class="oe_inline" 
