@@ -31,6 +31,8 @@ class FasResCompany(models.Model):
   inet_user = fields.Char(string="I-Net User Name")
   inet_pass = fields.Char(string="I-Net Password")
   parts_categ_id = fields.Many2one(string="Parts Category", comodel_name="product.category")
+  service_categ_id = fields.Many2one(string="Service Category", comodel_name="product.category")
+  warranty_categ_id = fields.Many2one(string="Warranty Category", comodel_name="product.category")
 
   @api.multi
   def action_sync_local_names(self):

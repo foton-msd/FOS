@@ -40,16 +40,23 @@
             <group>
               <group string="Parts">
                 <field name="parts_categ_id"/>
-                <button name="action_sync_parts"
+                <button name="sync_parts_master"
                   type="object" string="Sync Parts"
                   confirm="Are you sure to Sync Parts from FMPI?"
                 />
               </group>
-              <group string="Service">
-                <field name="parts_categ_id"/>
-                <button name="action_sync_service"
-                  type="object" string="Sync Service"
-                  confirm="Are you sure to Sync Service from FMPI?"
+              <group string="Labor Codes">
+                <field name="service_categ_id"/>
+                <button name="sync_labor_codes"
+                  type="object" string="Sync Labor Codes"
+                  confirm="Are you sure to Sync Labor Codes from FMPI?"
+                />
+              </group>
+              <group string="Warranty Codes">
+                <field name="warranty_categ_id"/>
+                <button name="sync_warranty_codes"
+                  type="object" string="Sync Warranty Codes"
+                  confirm="Are you sure to Sync Warranty Codes from FMPI?"
                 />
               </group>
               <group string="Service History">

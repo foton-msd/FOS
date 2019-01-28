@@ -9,10 +9,10 @@ logger = logging.getLogger(__name__)
 class FASProduct(models.Model):
   _inherit = 'product.template'
   _sql_constraints = [
-    ('product_unique', 'unique(name)','Product already exists!')
+    ('product_labor_unique', 'unique(name,sub_type)','Product already exists!')
   ]
 
-  sub_type = fields.Selection(string="Sub-type", selection=[('units','Units'),('parts','Parts'),('supplies','Supplies'),('labor','Labor'),('merchandise','Merchandise')])
+  sub_type = fields.Selection(string="Sub-type", selection=[('units','Units'),('parts','Parts'),('supplies','Supplies'),('labor','Labor'),('merchandise','Merchandise'),('warranty','Warranty')])
   unit_class = fields.Selection(string="Unit Classification", 
     selection=[('pv','PV'),('ldt','LDT'),('he','HE'),('hdt','HDT'),('gratour','GRATOUR'),
     ('trailer','TRAILER'),('genset','GENSET'), ('bu-pv','BU-PV'),('bu-ldt','BU-LDT'),('bu-he','BU-HE'),('bu-hdt','BU-HDT')])
@@ -39,29 +39,18 @@ class FASProduct(models.Model):
   fmpi_product_write_date = fields.Datetime(string="Write Stamp")
   run_by_sync = fields.Boolean(string="Run by sync")
   no_of_hours = fields.Float(string="No. of Hours", digits=dp.get_precision('Product Price'))
-
-  #@api.onchange('sub_type')
-  #@api.depends('type') 
-  #def SubTypeSelected(self):
-  #  if self.sub_type:
-  #    self.type = 'product'
-
-  #@api.onchange('type')
-  #@api.depends('sub_type','unit_class')
-  #def TypeChanged(self):
-  #  if self.type != 'product':
-  #    self.sub_type = False
-  #    if self.sub_type != 'units':
-  #      self.unit_class = False
   
   @api.multi
   def write(self, values):    
-    if not 'fmpi_product' in values:
-      if self.fmpi_product:        
-        if 'run_by_sync' in values and not value['run_by_sync']:
-          raise UserError(("You cannot modify detail of FMPI Products!"))
+    if 'fmpi_product' in values and values['fmpi_product']:        
+      if 'run_by_sync' in values and not values['run_by_sync']:
+        raise UserError(("You cannot modify detail of FMPI Products!"))
       else:
         values['run_by_sync'] = False
         super(FASProduct, self).write(values)
+    else:
+      values['run_by_sync'] = False
+      super(FASProduct, self).write(values)
+   
 
 FASProduct()
