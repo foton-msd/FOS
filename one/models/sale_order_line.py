@@ -42,26 +42,26 @@ class FasSaleOrderLine(models.Model):
     self.product_id = self.part_number
     self.product_id_change()
 
-  @api.onchange("parts_and_jobs")
-  @api.depends("product_id")
-  def OnChangedPartsAndLabor(self):
-    self.product_id = self.parts_and_jobs
-    self.product_id_change()
-    if self.product_id:
-      lc_obj = self.env['fos.labor.codes'].browse([
-        ('one_local_name_id','=',self.order_id.fu_local_name_id.id)
-        ])
-      if lc_obj:
-        for lc1 in lc_obj:
-          self.product_uom_qty = lc1.no_of_hours
-          pp_obj = self.env['product.product'].search(['id','=',self.product_id.id])
-          if pp_obj:
-            for pp in pp_obj:
-              pp.write({'list_price': lc1.flat_rate})
-          self.price_unit = lc1.flat_rate
+#  @api.onchange("parts_and_jobs")
+#  @api.depends("product_id")
+#   def OnChangedPartsAndLabor(self):
+ #    self.product_id = self.parts_and_jobs
+    # self.product_id_change()
+    # if self.product_id:
+     #  lc_obj = self.env['fos.labor.codes'].browse([
+      #   ('one_local_name_id','=',self.order_id.fu_local_name_id.id)
+       #  ])
+     #  if lc_obj:
+      #   for lc1 in lc_obj:
+       #    self.product_uom_qty = lc1.no_of_hours
+        #   pp_obj = self.env['product.product'].search(['id','=',self.product_id.id])
+         #  if pp_obj:
+          #   for pp in pp_obj:
+            #   pp.write({'list_price': lc1.flat_rate})
+         #  self.price_unit = lc1.flat_rate
 
-          logger.info("flat_rate:" + str(lc1.flat_rate))
-          logger.info("price_unit:" + str(self.price_unit))
+         #  logger.info("flat_rate:" + str(lc1.flat_rate))
+         #  logger.info("price_unit:" + str(self.price_unit))
       
   @api.onchange("units_and_addons")
   @api.depends("product_id")
