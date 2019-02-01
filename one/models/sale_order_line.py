@@ -42,11 +42,12 @@ class FasSaleOrderLine(models.Model):
     self.product_id = self.part_number
     self.product_id_change()
 
-#  @api.onchange("parts_and_jobs")
-#  @api.depends("product_id")
-#   def OnChangedPartsAndLabor(self):
- #    self.product_id = self.parts_and_jobs
-    # self.product_id_change()
+
+  @api.onchange("parts_and_jobs")
+  @api.depends("product_id")
+  def OnChangedPartsAndLabor(self):
+     self.product_id = self.parts_and_jobs
+     self.product_id_change()
     # if self.product_id:
      #  lc_obj = self.env['fos.labor.codes'].browse([
       #   ('one_local_name_id','=',self.order_id.fu_local_name_id.id)

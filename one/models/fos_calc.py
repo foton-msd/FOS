@@ -76,7 +76,7 @@ class FOSSaleCalculator(models.Model):
 
   @api.one
   def _getNCOOma(self):
-    self.net_cash_outlay_oma = ((self.downpayment or 0) + (self.addons_total or 0) + (self.chattel_mortgage_oma or 0) + (self.insurance_oma or 0) + (self.lto_registration_oma or 0)) - (self.less_total or 0)
+    self.net_cash_outlay_oma = ((self.downpayment or 0) + (self.monthly_amortization_oma) + (self.addons_total or 0) + (self.chattel_mortgage_oma or 0) + (self.insurance_oma or 0) + (self.lto_registration_oma or 0)) - (self.less_total or 0)
   
   @api.multi
   def _getAddonsTotal(self):
