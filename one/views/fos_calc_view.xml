@@ -26,7 +26,6 @@
                             attrs="{'invisible': [('state', 'not in', ('draft'))]}"
                             confirm="Are you sure to Confirm?"/>
                          <button name="print_sale_calculator" class="oe_highlight"
-                            attrs="{'invisible': [('state','!=','confirm')]}"
                             string="Print Sale Quotation" type="object"/>
                     </header>
     	        <sheet>
