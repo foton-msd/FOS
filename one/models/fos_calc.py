@@ -12,7 +12,7 @@ class FOSSaleCalculator(models.Model):
   name = fields.Char(string="Sale Calculator", required=True, default='Auto-generated', readonly=True, copy=False)
   unit_id = fields.Many2one(string="Unit", comodel_name="product.product")
   customer_id = fields.Many2one(string="Customer", comodel_name="res.partner", required=True)
-  srp = fields.Float('SRP', digits=dp.get_precision('Product Price'), default=0.0, related="unit_id.product_tmpl_id.list_price")
+  srp = fields.Float('SRP', digits=dp.get_precision('Product Price'), default=0.0)
   less_discount = fields.Float('Less Discount', default=0.0)
   net_cash = fields.Float(string="Net Cash", compute="_getNetCash", readonly=True)
   downpayment = fields.Float('Downpayment')
@@ -87,6 +87,11 @@ class FOSSaleCalculator(models.Model):
   def _getLessTotal(self):
     for line in self.less:
       self.less_total += line.amount_less
+
+  @api.onchange("unit_id")
+  def product_changed(self):
+    if self.unit_id:
+      self.srp = self.unit_id.product_tmpl_id.list_price
 
   @api.onchange("srp","less_discount","downpayment","net_cash","reservation_fee","amount_financed","oma_bank","o_term","addons_total","chattel_mortgage_oma","chattel_mortgage_std","insurance_oma","insurance_std","lto_registration_oma","lto_registration_std","less_total")
   def unit_change(self):
