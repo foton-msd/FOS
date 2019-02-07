@@ -364,7 +364,7 @@ class FasSaleOrder(models.Model):
   def print_sale_order_print(self):
     inet_host = self.env.user.company_id.inet_url
     dbname = self.env.user.company_id.dealer_pgn
-    report_url = inet_host + "/" + dbname  + "/fos_vso.rpt" 
+    report_url = inet_host + "/?report=" + dbname  + "/fos_vso.rpt&prompt0=" + str(self.id)
     return {
       'type' : 'ir.actions.act_url',
       'url':report_url,
