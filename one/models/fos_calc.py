@@ -186,10 +186,10 @@ class FOSSaleCalculator(models.Model):
                         'discount':100
                     })
 
-        #self.write({
-        #    'state': 'confirm',
-        #    'sale_order_id': new_so.id
-        #})
+        self.write({
+            'state': 'confirm',
+            'sale_order_id': new_so.id
+        })
 
 
 FOSSaleCalculator()
