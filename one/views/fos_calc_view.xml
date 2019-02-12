@@ -76,8 +76,8 @@
                                 <field name="oma_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="addons_total" attrs="{'readonly': [('state','!=','draft')]}"/>                           
                     </group>
-                    <group>
-                      <field name="addons" mode="tree,kanban" attrs="{'readonly': [('state','!=','draft')]}">            
+                    <group string="Addons">
+                      <field name="addons" mode="tree,kanban" attrs="{'readonly': [('state','!=','draft')]}" nolabel="1">            
                         <tree string="Additional Accessories" editable="bottom">
                             <field name="product_id" domain="[('sub_type','=','parts')]"
                             options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
@@ -86,11 +86,16 @@
                         </tree>       
                       </field> 
                     </group>  
-                    <group>
-                                <field name="less_total"/>
-                    </group>
-                    <group>
-                      <field name="less" mode="tree,kanban" attrs="{'readonly': [('state','!=','draft')]}">     
+                    
+                    <group class="oe_subtotal_footer oe_right"> 
+                            <div class="oe_inline">
+                                <label for="addons_total"/>
+                            </div>
+                            <field name="addons_total" widget="monetary" nolabel="1"/>                        
+                    </group>   
+                    
+                    <group string="Less">
+                      <field name="less" mode="tree,kanban" attrs="{'readonly': [('state','!=','draft')]}" nolabel="1">     
                         <tree string="Less" editable="bottom">
                             <field name="product_id" domain="[('sub_type','=','parts')]"
                             options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
@@ -99,6 +104,12 @@
                         </tree>       
                       </field> 
                     </group>  
+                    <group class="oe_subtotal_footer oe_right"> 
+                            <div class="oe_inline">
+                                <label for="less_total"/>
+                            </div>
+                            <field name="less_total" widget="monetary" nolabel="1"/>                        
+                    </group> 
                     <group attrs="{'invisible': [('cash_outlay','!=','standard')]}">
                             <field name="net_cash_outlay_std"/>
                     </group>

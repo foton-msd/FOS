@@ -163,16 +163,19 @@ class FOSSaleCalculator(models.Model):
                 })
 
             for lol in self.less:
+                logger.info("Analysing Discount Line: " + str(new_so.id))
                 has_addons = False
-                for sol in so_line:
-                    if so_line.product_id.id == lol.product_id.id:
-                        so_line.write({
-                            'product_uom_qty': so_line.product_uom_qty - 1,
-                            'discount_amount': so_line.discount_amount - lol.amount_less
+                so_lines = self.env['sale.order.line'].search([['order_id','=', new_so.id]])
+                for sol in so_lines:
+                    if sol.product_id.id == lol.product_id.id:
+                        logger.info("Discount line found from addons")
+                        sol.write({
+                            'discount_amount': so_line.discount_amount + lol.amount_less
                         })
+                        sol.DiscountAmountChanged()
                         has_addons = True
                         break
-                if has_addons == False:
+                if not has_addons:
                     so_line.create({
                         'order_id': new_so.id,
                         'charged_to': 'customer',
@@ -183,21 +186,10 @@ class FOSSaleCalculator(models.Model):
                         'discount':100
                     })
 
-        #     for lol in self.less:
-        #        so_line.create({
-        #            'order_id': new_so.id,
-        #            'charged_to': 'customer',
-        #            'units_and_addons': lol.product_id.id,
-        #            'product_id': lol.product_id.id,
-        #            'product_uom_qty': 1,
-        #            'price_unit': lol.amount_less,
-        #             'discount': 100
-        #        })
-
-        self.write({
-            'state': 'confirm',
-            'sale_order_id': new_so.id
-        })
+        #self.write({
+        #    'state': 'confirm',
+        #    'sale_order_id': new_so.id
+        #})
 
 
 FOSSaleCalculator()

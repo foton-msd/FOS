@@ -6,6 +6,7 @@ from odoo.addons import decimal_precision as dp
 class FOSCalcLess(models.Model):
   _name = 'fos.calc.less'
   _description = 'Less Discount'
+  _sql_constraints = [('calc_less_unique', 'unique (fos_calc_id, product_id)','Discount line already existing!')]
 
   fos_calc_id = fields.Many2one(string="FOS Calculator", comodel_name="fos.calc")
   product_id = fields.Many2one(string='Less', comodel_name='product.product')
