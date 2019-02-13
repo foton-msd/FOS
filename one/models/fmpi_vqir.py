@@ -1,4 +1,5 @@
 import psycopg2
+import socket
 from odoo import models, fields, api
 import logging
 logger = logging.getLogger(__name__)
@@ -101,10 +102,10 @@ class FMPIVqir(models.Model):
   @api.multi
   def action_ack_log(self):
     # set connection parameters to FMPI
-    conn_string = "host='" + self.dealer_host + \
+    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
+    conn_string = "host='" + dealer_ip + \
       "' dbname='"+ self.dealer_db + \
-      "' user='"+ self.dealer_pgu + \
-      "' password='"+ self.dealer_pgp + "'"
+      "' user='odoo' password='OneOdoo'"
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
@@ -117,10 +118,10 @@ class FMPIVqir(models.Model):
   @api.multi
   def action_app_log(self):
     # set connection parameters to FMPI
-    conn_string = "host='" + self.dealer_host + \
+    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
+    conn_string = "host='" + dealer_ip + \
       "' dbname='"+ self.dealer_db + \
-      "' user='"+ self.dealer_pgu + \
-      "' password='"+ self.dealer_pgp + "'"
+      "' user='odoo' password='OneOdoo'"
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
@@ -133,10 +134,10 @@ class FMPIVqir(models.Model):
   @api.multi
   def action_dis_log(self):
     # set connection parameters to FMPI
-    conn_string = "host='" + self.dealer_host + \
+    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
+    conn_string = "host='" + dealer_ip + \
       "' dbname='"+ self.dealer_db + \
-      "' user='"+ self.dealer_pgu + \
-      "' password='"+ self.dealer_pgp + "'"
+      "' user='odoo' password='OneOdoo'"
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
@@ -149,10 +150,10 @@ class FMPIVqir(models.Model):
   @api.multi
   def action_pre_log(self):
     # set connection parameters to FMPI
-    conn_string = "host='" + self.dealer_host + \
+    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
+    conn_string = "host='" + dealer_ip + \
       "' dbname='"+ self.dealer_db + \
-      "' user='"+ self.dealer_pgu + \
-      "' password='"+ self.dealer_pgp + "'"
+      "' user='odoo' password='OneOdoo'"
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
@@ -165,10 +166,10 @@ class FMPIVqir(models.Model):
   @api.multi
   def action_dec_log(self):
     # set connection parameters to FMPI
-    conn_string = "host='" + self.dealer_host + \
+    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
+    conn_string = "host='" + dealer_ip + \
       "' dbname='"+ self.dealer_db + \
-      "' user='"+ self.dealer_pgu + \
-      "' password='"+ self.dealer_pgp + "'"
+      "' user='odoo' password='OneOdoo'"
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
@@ -181,10 +182,10 @@ class FMPIVqir(models.Model):
   @api.multi
   def action_pd_log(self):
     # set connection parameters to FMPI
-    conn_string = "host='" + self.dealer_host + \
+    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
+    conn_string = "host='" + dealer_ip + \
       "' dbname='"+ self.dealer_db + \
-      "' user='"+ self.dealer_pgu + \
-      "' password='"+ self.dealer_pgp + "'"
+      "' user='odoo' password='OneOdoo'"
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()

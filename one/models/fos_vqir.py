@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import psycopg2
 import datetime
+import socket
 from odoo import models, fields, api
 import logging
 logger = logging.getLogger(__name__)
@@ -124,6 +125,8 @@ class FosVqir(models.Model):
 
   @api.multi
   def action_submit(self):
+    fmpi_ip = socket.gethostbyname(str(self.company_id.fmpi_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
+    
     vqir_state_logs = "Document:" + (self.name or 'Empty Document') + "\n" + \
       "Submitted by: " + (self.env.user.name or 'No User Name specified') + "\n" + \
       "Submitted at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
@@ -132,10 +135,9 @@ class FosVqir(models.Model):
       'vqir_state_logs': vqir_state_logs + str(self.vqir_state_logs or '')})  
     logger.info("State Logs:" + vqir_state_logs + str(self.vqir_state_logs or ''))
     # set connection parameters to FMPI
-    conn_string = "host='" + self.company_id.fmpi_host + \
+    conn_string = "host='" + fmpi_ip + \
       "' dbname='"+ self.company_id.fmpi_pgn + \
-      "' user='"+ self.company_id.fmpi_pgu + \
-      "' password='"+ self.company_id.fmpi_pgp + "'"
+      "' user='odoo' password='OneOdoo'"
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
