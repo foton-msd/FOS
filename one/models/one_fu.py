@@ -30,6 +30,7 @@ class FotonUnits(models.Model):
   fmpi_fu_local_name_id = fields.Many2one(string="Local Name", comodel_name="one.local.names", readonly=True)
   fmpi_dealer_id = fields.Many2one(string="Original Dealer", comodel_name="one.dealers", readonly=True)
   one_dealer_id = fields.Many2one(string="Current Dealer", comodel_name="one.dealers", readonly=True)
+  one_dealer_type = fields.Char(string="Type", related="one_dealer_id.type", readonly=True)
   #one_transfer_ids = fields.One2many(string="Transfer Logs", comodel_name="one.fu.transfers", inverse_name="one_fu_id")
   classification = fields.Char(string="Classification", related="fmpi_fu_local_name_id.classification", store=True)
   state = fields.Selection(string="State", selection=[('avail','Available'),('alloc','Allocated'),('sold','Sold')])

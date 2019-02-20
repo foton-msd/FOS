@@ -100,7 +100,7 @@
                 <filter string="Sold Units" name="state2" domain="[('state','=','sold')]"/>
                 <filter string="Allocated Units" name="state3" domain="[('state','=','alloc')]"/>
                 <filter name="group_state" string="Status" context="{'group_by':'state'}"/>
-                <filter name="group_dealer" string="Dealer" context="{'group_by':'fmpi_dealer_id'}"/>
+                <filter name="group_dealer" string="Dealer" context="{'group_by':'fmpi_dealer_id'}" domain="[('one_dealer_type','=','Dealer')]"/>
                 <filter name="group_classification" string="Local Name" icon="terp-partner" context="{'group_by':'fmpi_fu_local_name_id'}"/>
             </search>
         </field>
