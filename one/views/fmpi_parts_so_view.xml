@@ -52,11 +52,11 @@
                                     <field name="price_unit" options="{'bg_color': 'gray', 'readonly': True}"/>
                                     <field name="subtotal" options="{'bg_color': 'gray', 'readonly': True}"/>
                                     <field name="state" invisible="1"/>
-                                    <field name="assigned_product_id" domain="[('sub_type','=','parts')]"
+                                    <field name="assigned_product_id" domain="[('sub_type','=','parts')]" attrs="{'readonly': [('state','!=','proc')]}"
                                         options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'column_visible': ('state','=','proc')}"/>
-                                    <field name="assigned_description" attrs="{'readonly': ('state','=','proc')}"/>
-                                    <field name="assigned_order_qty" attrs="{'readonly': ('state','=','proc')}"/>
-                                    <field name="assigned_price_unit" attrs="{'readonly': ('state','=','proc')}"/>
+                                    <field name="assigned_description" attrs="{'readonly': [('state','!=','proc')]}"/>
+                                    <field name="assigned_order_qty" attrs="{'readonly': [('state','!=','proc')]}"/>
+                                    <field name="assigned_price_unit" attrs="{'readonly': [('state','!=','proc')]}"/>
                                     <field name="assigned_subtotal"/>
                                 </tree>
                             </field>

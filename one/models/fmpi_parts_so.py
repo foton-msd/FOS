@@ -66,18 +66,19 @@ class FMPIPartsSO(models.Model):
             logger.info("Models: " + str(models))
             mod_out = models.execute_kw(db, uid, password, 'fos.parts.po', 'write', 
                 [[self.fos_parts_po_id,], {'state': 'proc'}])
-            if mod_out:
-                for line in self.order_line:
-                    logger.info("Product ID:" + str(line.assigned_product_id.id))
-                    is_updated = models.execute_kw(db, uid, password, 'fos.parts.po.line', 'write', 
-                        [[line.fos_parts_po_line_id,], 
-                        {
-                            'assigned_product_id': line.assigned_product_id.id,
-                            'assigned_product_name': line.assigned_product_name,
-                            'assigned_description': line.assigned_description,
-                            'assigned_order_qty': line.assigned_order_qty,
-                            'assigned_price_unit': line.assigned_price_unit
-                        }])
+            #if mod_out:
+            #    logger.info("Mod_Out:" + str(mod_out))
+            #    for line in self.order_line:
+            #        logger.info("Product ID:" + str(line.assigned_product_id.id))
+            #        is_updated = models.execute_kw(db, uid, password, 'fos.parts.po.line', 'write', 
+            #            [[line.fos_parts_po_line_id,], 
+            #            {
+            #                'assigned_product_id': line.assigned_product_id.id,
+            #                'assigned_product_name': line.assigned_product_name,
+            #                'assigned_description': line.assigned_description,
+            #                'assigned_order_qty': line.assigned_order_qty,
+            #                'assigned_price_unit': line.assigned_price_unit
+            #            }])
             self.write({'state': 'proc'})
 
     @api.one
@@ -98,44 +99,51 @@ class FMPIPartsSO(models.Model):
         if models:
             logger.info("Models: " + str(models))
             mod_out = models.execute_kw(db, uid, password, 'fos.parts.po', 'write', 
-                [[self.fos_parts_po_id,], {'state': 'proc'}])
+                [[fos_parts_po_id,], {'state': 'forpo'}])
             if mod_out:
+                # search dealer's parts existence
                 for line in self.order_line:
-                    logger.info("Product ID:" + str(line.assigned_product_id.id))
-                    is_updated = models.execute_kw(db, uid, password, 'fos.parts.po.line', 'write', 
-                        [[line.fos_parts_po_line_id,], 
-                        {
-                            'assigned_product_id': line.assigned_product_id.id,
-                            'assigned_product_name': line.assigned_product_name,
-                            'assigned_description': line.assigned_description,
-                            'assigned_order_qty': line.assigned_order_qty,
-                            'assigned_price_unit': line.assigned_price_unit
-                        }])
-            self.write({'state': 'forpo'})
+                    name_template = line.assigned_product_id.product_tmpl_id.name
+                    dealer_pt = models.execute_kw(db, uid, password,
+                        'product.product', 'search_read',[[['name','=',name_template]]])
+                    if not dealer_pt:
+                        raise exceptions.except_orm(_('Remote Search Failed'), _(name_template + " does not exists on Dealer's Parts Master"))
+                    else:
+                        logger.info("Product ID:" + str(line.assigned_product_id.id))
+                        is_updated = models.execute_kw(db, uid, password, 'fos.parts.po.line', 'write', 
+                            [[line.fos_parts_po_line_id,], 
+                            {
+                                'assigned_product_id': dealer_pt[0]['id'],
+                                'assigned_product_name': line.assigned_product_name,
+                                'assigned_description': line.assigned_description,
+                                'assigned_order_qty': line.assigned_order_qty,
+                                'assigned_price_unit': line.assigned_price_unit
+                            }])
+                self.write({'state': 'forpo'})
 
             
-    @api.one
-    def action_forpo(self):
-        fos_parts_po_id = self.fos_parts_po_id
-        db = self.db
-        url = self.url
-        username = self.username
-        password = self.password
-        # attempt to connect
-        logger.info("Connecting to "+url)
-        common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
-        uid = common.authenticate(db, username, password, {})
-        if not uid:
-            raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
-            return
-        #logger.info("FOS Parts Order ID:" + str([fos_parts_po_id]))
-        models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
-        if models:
-            is_updated = models.execute_kw(db, uid, password, 'fos.parts.po', 'write', 
-                [[fos_parts_po_id,], {'state': 'forpo'}])
-            
-            if is_updated:
-                self.write({'state': 'forpo'})
+    #@api.one
+    #def action_forpo(self):
+    #    fos_parts_po_id = self.fos_parts_po_id
+    #    db = self.db
+    #    url = self.url
+    #    username = self.username
+    #    password = self.password
+    #    # attempt to connect
+    #    logger.info("Connecting to "+url)
+    #    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    #    uid = common.authenticate(db, username, password, {})
+    #    if not uid:
+    #        raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
+    #        return
+    #    #logger.info("FOS Parts Order ID:" + str([fos_parts_po_id]))
+    #    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    #    if models:
+    #        is_updated = models.execute_kw(db, uid, password, 'fos.parts.po', 'write', 
+    #            [[fos_parts_po_id,], {'state': 'forpo'}])
+    #        
+    #        if is_updated:
+    #            self.write({'state': 'forpo'})
 FMPIPartsSO()    
 
 class FMPIPartsSOLine(models.Model):

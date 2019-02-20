@@ -36,6 +36,7 @@ class FOSPartsPO(models.Model):
     assigned_price_unit = fields.Float(string="Unit Price", readonly=True, digits=dp.get_precision('Product Price'))
     assigned_subtotal = fields.Float(string="Total", readonly=True, compute="LineTotals", digits=dp.get_precision('Product Price'))
     purchase_order_id = fields.Many2one(string="Purchase Order", comodel_name="purchase.order", readonly=True)
+    fmpi_parts_so_id = fields.Integer(string="FMPI Parts SO ID", readony=True)
 
     @api.one
     def action_confirm(self):
@@ -53,11 +54,10 @@ class FOSPartsPO(models.Model):
                     po_line_id = self.env['purchase.order.line'].create(
                         {
                             'order_id': po_id.id,
-                            'product_id': line.product_id.id,
-                            'name': line.product_id.description_purchase or
-                                line.product_id.description or line.product_id.name,
-                            'product_qty': line.order_qty,
-                            'price_unit': line.price_unit,
+                            'product_id': line.assigned_product_id,
+                            'name': line.assigned_description,
+                            'product_qty': line.assigned_order_qty,
+                            'price_unit': line.assigned_price_unit,
                             'date_planned': fields.datetime.now(),
                             'product_uom': line.product_id.product_tmpl_id.uom_po_id.id
                         })
@@ -105,17 +105,27 @@ class FOSPartsPO(models.Model):
                 }])
                 logger.info("Sale Order ID: " + str(so_id))
                 if so_id:
-                    for line in self.order_line:
-                        so_line_id = models.execute_kw(db, uid, password, 'sale.order.line', 'create', [{
+                    fmpi_parts_so_lines = models.execute_kw(db, uid, password,
+                        'fmpi.parts.so.line', 'search_read',[[['fmpi_parts_so_id','=',self.fmpi_parts_so_id]]],
+                        {'fields': ['assigned_product_id','assigned_description','assigned_order_qty',
+                        'assigned_price_unit','fu_id']})
+                    #logger.info("Value:" + str(fmpi_parts_so_lines))
+                    i = 0
+                    for line in fmpi_parts_so_lines:
+                        values = {
                             'order_id': so_id,
                             'charged_to': 'customer',
-                            'part_number': line.assigned_product_id,
-                            'product_id': line.assigned_product_id,
-                            'name': line.assigned_description,
-                            'product_uom_qty': line.assigned_order_qty,
-                            'price_unit': line.assigned_price_unit,
-                            'fu_id': line.fu_id.id
-                        }])
+                            'part_number': fmpi_parts_so_lines[i]['assigned_product_id'],
+                            'product_id':  fmpi_parts_so_lines[i]['assigned_product_id'],
+                            'name':  fmpi_parts_so_lines[i]['assigned_description'],
+                            'product_uom_qty':  fmpi_parts_so_lines[i]['assigned_order_qty'],
+                            'price_unit':  fmpi_parts_so_lines[i]['assigned_price_unit'],
+                            'fu_id':  fmpi_parts_so_lines[i]['fu_id']
+                        }
+                        logger.info("VALUES:"+str(values))
+                        models.execute_kw(db, uid, password, 'sale.order.line', 'create', [values])
+                        i+=1
+
             else:
                 raise exceptions.except_orm(_('Remote Action Failed'), _("Cannot create Partner Profile"))
             self.write({'state': 'confirm','purchase_order_id': po_id.id})
@@ -157,6 +167,7 @@ class FOSPartsPO(models.Model):
             'password': self.company_id.dealer_pgp
             }])
         if fmpi_parts_so_id:
+            self.fmpi_parts_so_id = fmpi_parts_so_id
             logger.info("Order ID: " + str(fmpi_parts_so_id))
             for line in self.order_line:
                 product_ids = models.execute_kw(db, uid, password,
@@ -252,6 +263,7 @@ class FOSPartsPOLine(models.Model):
     price_unit = fields.Float(string="Unit Price", digits=dp.get_precision('Product Price'))
     subtotal = fields.Float(string="Total", compute="LineTotals", digits=dp.get_precision('Product Price'))
     fu_id = fields.Many2one(string="FOTON No.", comodel_name="one.fu")
+    delivery_date = fields.Date(string="Delivery Date")
     # data fields used by FMPI
     assigned_product_id = fields.Integer(string="Served-Part Number", readonly=True) 
     assigned_product_name = fields.Char(string="Served-Part Number", readonly=True)

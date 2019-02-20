@@ -56,6 +56,7 @@
                                     <field name="order_qty"/>
                                     <field name="price_unit"/>
                                     <field name="subtotal"/>
+                                    <field name="assigned_product_id" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_product_name" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_description" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_order_qty" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
