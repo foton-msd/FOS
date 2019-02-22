@@ -105,27 +105,25 @@ class FOSPartsPO(models.Model):
                 }])
                 logger.info("Sale Order ID: " + str(so_id))
                 if so_id:
-                    fmpi_parts_so_lines = models.execute_kw(db, uid, password,
-                        'fmpi.parts.so.line', 'search_read',[[['fmpi_parts_so_id','=',self.fmpi_parts_so_id]]],
-                        {'fields': ['assigned_product_id','assigned_description','assigned_order_qty',
-                        'assigned_price_unit','fu_id']})
-                    #logger.info("Value:" + str(fmpi_parts_so_lines))
-                    i = 0
-                    for line in fmpi_parts_so_lines:
-                        values = {
-                            'order_id': so_id,
-                            'charged_to': 'customer',
-                            'part_number': fmpi_parts_so_lines[i]['assigned_product_id'],
-                            'product_id':  fmpi_parts_so_lines[i]['assigned_product_id'],
-                            'name':  fmpi_parts_so_lines[i]['assigned_description'],
-                            'product_uom_qty':  fmpi_parts_so_lines[i]['assigned_order_qty'],
-                            'price_unit':  fmpi_parts_so_lines[i]['assigned_price_unit'],
-                            'fu_id':  fmpi_parts_so_lines[i]['fu_id']
-                        }
-                        logger.info("VALUES:"+str(values))
-                        models.execute_kw(db, uid, password, 'sale.order.line', 'create', [values])
-                        i+=1
-
+                    line_ids = models.execute_kw(db, uid, password,
+                        'fmpi.parts.so.line', 'search_read',[[['fmpi_parts_so_id','=',self.fmpi_parts_so_id]]])
+                    if line_ids:
+                        for line_id in line_ids:
+                            fmpi_parts_so_lines = models.execute_kw(db, uid, password,
+                                'fmpi.parts.so.line', 'search_read',[[['id','=',line_id['id']]]])
+                            #for line in fmpi_parts_so_lines:
+                            values = {
+                                'order_id': so_id,
+                                'charged_to': 'customer',
+                                'part_number': (fmpi_parts_so_lines[0]['assigned_product_id'][0]),
+                                'product_id':  (fmpi_parts_so_lines[0]['assigned_product_id'][0]),
+                                'name':  (fmpi_parts_so_lines[0]['assigned_description']),
+                                'product_uom_qty': (fmpi_parts_so_lines[0]['assigned_order_qty']),
+                                'price_unit':  (fmpi_parts_so_lines[0]['assigned_price_unit']),
+                                'fu_id':  (fmpi_parts_so_lines[0]['fu_id'])
+                            }
+                            models.execute_kw(db, uid, password, 'sale.order.line', 'create', [values])
+                            models.execute_kw(db, uid, password, 'fmpi.parts.so', 'write', [[self.fmpi_parts_so_id],{'state':'confirm'}])
             else:
                 raise exceptions.except_orm(_('Remote Action Failed'), _("Cannot create Partner Profile"))
             self.write({'state': 'confirm','purchase_order_id': po_id.id})
