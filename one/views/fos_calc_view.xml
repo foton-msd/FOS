@@ -41,6 +41,9 @@
                             <field name="customer_id" attrs="{'readonly': [('state','!=','draft')]}"/>
                     </group>
                     <group>
+                            <field name="sale_executive" attrs="{'readonly': [('state','!=','draft')]}"/>
+                    </group>
+                    <group>
                             <field name="unit_id" domain="[('sub_type','=','units')]" attrs="{'readonly': [('state','!=','draft')]}"
                             options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                             <field name="srp" attrs="{'readonly': [('state','!=','draft')]}"/>

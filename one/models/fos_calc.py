@@ -17,7 +17,7 @@ class FOSSaleCalculator(models.Model):
     less_discount = fields.Float('Less Discount', default=0.0)
     net_cash = fields.Float(string="Net Cash", compute="_getNetCash", readonly=True)
     downpayment = fields.Float('Downpayment')
-    dp_percent = fields.Float('DP (%)', compute="_getDPPercentage", readonly=True)
+    dp_percent = fields.Float('DP (%)', readonly=True)
     amount_financed = fields.Float('Amount Finance', compute="_getAmountFinanced", readonly=True)
     reservation_fee = fields.Float('Reservation Fee')
     bank_id = fields.Many2one(string="Bank", comodel_name="fos.calc.banks")
@@ -44,16 +44,11 @@ class FOSSaleCalculator(models.Model):
     net_cash_outlay_oma = fields.Float(string="Net Cash Outlay", compute="_getNCOOma", readonly=True)
     state = fields.Selection(string="Status", selection=[('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'Confirmed')], default='draft')
     sale_order_id = fields.Many2one(string="Sale Quotation", comodel_name="sale.order", copy=False)
+    sale_executive = fields.Many2one(string="Sale Executive", comodel_name="res.users", default=lambda self: self.env.user)
 
     @api.one
     def _getNetCash(self):
         self.net_cash = (self.srp or 0) - (self.less_discount or 0)
-
-    @api.one
-    def _getDPPercentage(self):
-        if self.srp > 0:
-            self.dp_percent = ((self.downpayment or 0) /
-                               (self.net_cash or 0)) * 100
 
     @api.one
     def _getMonthlyAmortizationstd(self):
@@ -101,16 +96,23 @@ class FOSSaleCalculator(models.Model):
         if self.unit_id:
             self.srp = self.unit_id.lst_price
 
-    @api.onchange("srp", "less_discount", "downpayment", "net_cash", "reservation_fee", "amount_financed", "oma_bank", "o_term", "addons_total", "chattel_mortgage_oma", "chattel_mortgage_std", "insurance_oma", "insurance_std", "lto_registration_oma", "lto_registration_std", "less_total")
+    @api.onchange("srp", "less_discount", "net_cash", "reservation_fee", "amount_financed", "oma_bank", "o_term", "addons_total", "chattel_mortgage_oma", "chattel_mortgage_std", "insurance_oma", "downpayment", "insurance_std", "lto_registration_oma", "lto_registration_std", "less_total")
     def unit_change(self):
         self._getNetCash()
-        self._getDPPercentage()
         self._getAmountFinanced()
         self._getMonthlyAmortizationoma()
         self._getMonthlyAmortizationstd()
         self._getAddonsTotal()
         self._getNCOOma()
         self._getNCOStd()
+
+    @api.onchange("downpayment")  
+    def DownpaymentChanged(self):    
+        self.dp_percent = ((self.downpayment or 0) / (self.net_cash or 0)) * 100
+
+    @api.onchange("dp_percent")  
+    def DPPercentChanged(self):
+        self.downpayment = (self.net_cash) * ((self.dp_percent) * 0.01)
 
     @api.model
     def create(self, vals):
