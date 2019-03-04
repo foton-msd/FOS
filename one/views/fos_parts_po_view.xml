@@ -59,9 +59,10 @@
                                     <field name="assigned_product_id" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_product_name" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_description" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
-                                    <field name="assigned_order_qty" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                <!--    <field name="assigned_order_qty" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/> -->
                                     <field name="assigned_price_unit" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_subtotal" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                    <field name="eta" widget="date" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                 </tree>
                             </field>
                         </group>

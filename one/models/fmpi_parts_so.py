@@ -117,7 +117,8 @@ class FMPIPartsSO(models.Model):
                                 'assigned_product_name': line.assigned_product_name,
                                 'assigned_description': line.assigned_description,
                                 'assigned_order_qty': line.assigned_order_qty,
-                                'assigned_price_unit': line.assigned_price_unit
+                                'assigned_price_unit': line.assigned_price_unit,
+                                'eta': line.eta
                             }])
                 self.write({'state': 'forpo'})
 
@@ -176,6 +177,8 @@ class FMPIPartsSOLine(models.Model):
     assigned_price_unit = fields.Float(string="Served-Unit Price", readonly=True, digits=dp.get_precision('Product Price'))
     assigned_subtotal = fields.Float(string="Served-Total", compute="LineTotals", digits=dp.get_precision('Product Price'))
     fos_parts_po_line_id = fields.Integer(string="FOS Parts PO Line ID") 
+    eta = fields.Datetime(string="ETA", default=fields.Datetime.now)
+    received_qty = fields.Float(string="Received Qty")
     
     @api.one
     def LineTotals(self):

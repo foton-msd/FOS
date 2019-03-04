@@ -186,7 +186,8 @@ class FOSPartsPO(models.Model):
                             'assigned_description': line.description,
                             'assigned_order_qty': line.order_qty,
                             'assigned_price_unit': line.price_unit,
-                            'fos_parts_po_line_id': line.id
+                            'fos_parts_po_line_id': line.id,
+                            'eta': line.eta
                         }])
         self.write({'state': 'sent'})
 
@@ -269,7 +270,8 @@ class FOSPartsPOLine(models.Model):
     assigned_order_qty = fields.Float(string="Served-Qty", digits=dp.get_precision('Product Unit of Measure'), readonly=True)
     assigned_price_unit = fields.Float(string="Served-Unit Price", digits=dp.get_precision('Product Price'), readonly=True)
     assigned_subtotal = fields.Float(string="Served-Total", compute="LineTotals", digits=dp.get_precision('Product Price'), readonly=True)
- 
+    eta = fields.Datetime(string="ETA", readonly=True)
+
     @api.one
     def LineTotals(self):
         self.subtotal = self.order_qty * self.price_unit

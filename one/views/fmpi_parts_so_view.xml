@@ -55,9 +55,10 @@
                                     <field name="assigned_product_id" domain="[('sub_type','=','parts')]" attrs="{'readonly': [('state','!=','proc')]}"
                                         options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'column_visible': ('state','=','proc')}"/>
                                     <field name="assigned_description" attrs="{'readonly': [('state','!=','proc')]}"/>
-                                    <field name="assigned_order_qty" attrs="{'readonly': [('state','!=','proc')]}"/>
+                                <!--    <field name="assigned_order_qty" attrs="{'readonly': [('state','!=','proc')]}"/> -->
                                     <field name="assigned_price_unit" attrs="{'readonly': [('state','!=','proc')]}"/>
                                     <field name="assigned_subtotal"/>
+                                    <field name="eta" widget="date" attrs="{'readonly': [('state','!=','proc')]}"/>
                                 </tree>
                             </field>
                         </group>
