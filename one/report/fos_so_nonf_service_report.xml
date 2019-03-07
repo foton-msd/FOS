@@ -200,7 +200,7 @@
     file="one.report_so_nonf_service_template"
     name="one.report_so_nonf_service_template"
     print_report_name="(object.name)"
-    menu="True"
+    menu="False"
         />
 </data>     
 </odoo>
