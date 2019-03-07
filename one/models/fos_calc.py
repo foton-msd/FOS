@@ -107,8 +107,9 @@ class FOSSaleCalculator(models.Model):
         self._getNCOStd()
 
     @api.onchange("downpayment")  
-    def DownpaymentChanged(self):    
-        self.dp_percent = ((self.downpayment or 0) / (self.net_cash or 0)) * 100
+    def DownpaymentChanged(self):   
+        if self.srp > 0:
+            self.dp_percent = ((self.downpayment or 0) / (self.net_cash or 0)) * 100
 
     @api.onchange("dp_percent")  
     def DPPercentChanged(self):
