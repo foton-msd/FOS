@@ -65,7 +65,22 @@
           <field name="description" string="Description"/>
         </search>
       </field>
+
     </record>
+      <record id="fos_product_template_tree" model="ir.ui.view">
+      <field name="name">fos.product.template.tree</field>
+      <field name="model">product.template</field>
+      <field name="inherit_id" ref="product.product_template_tree_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//tree/field[@name='categ_id']" position="replace"/>
+        <xpath expr="//tree/field[@name='name']" position="after">
+          <field name="description"/>
+        </xpath>
+        <xpath expr="//tree/field[@name='default_code']" position="before">
+          <field name="categ_id"/>
+        </xpath>
+      </field>
+     </record>
 
     <record id="fas_product_product_tree" model="ir.ui.view">
       <field name="name">fas.product.product.tree</field>
@@ -74,6 +89,9 @@
       <field name="arch" type="xml">
         <xpath expr="//tree/field[@name='name']" position="after">
           <field name="description"/>
+        </xpath>
+        <xpath expr="//tree/field[@name='default_code']" position="before">
+          <field name="categ_id"/>
         </xpath>
       </field>
      </record>
