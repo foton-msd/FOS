@@ -8,6 +8,7 @@
                     <field name="name"/>
                     <field name="unit_id"/>
                     <field name="customer_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -38,10 +39,11 @@
                         </group>
                     </group>
                     <group>
-                            <field name="customer_id" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="customer_id" attrs="{'readonly': [('state','!=','draft')]}"
+                             options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                     </group>
                     <group>
-                            <field name="sale_executive" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="sale_executive_id" attrs="{'readonly': [('state','!=','draft')]}"/>
                     </group>
                     <group>
                             <field name="unit_id" domain="[('sub_type','=','units')]" attrs="{'readonly': [('state','!=','draft')]}"
@@ -62,9 +64,6 @@
                                 <field name="s_term" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="monthly_amortization_std" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="downpayment" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                <field name="insurance_std" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                <field name="chattel_mortgage_std" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                <field name="lto_registration_std" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="oma_std" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="addons_total" attrs="{'readonly': [('state','!=','draft')]}"/>   
                     </group>
@@ -73,9 +72,6 @@
                                 <field name="o_term" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="monthly_amortization_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="downpayment" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                <field name="insurance_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                <field name="chattel_mortgage_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                <field name="lto_registration_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="oma_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="addons_total" attrs="{'readonly': [('state','!=','draft')]}"/>                           
                     </group>

@@ -45,6 +45,8 @@ class FOSSaleCalculator(models.Model):
     state = fields.Selection(string="Status", selection=[('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'Confirmed')], default='draft')
     sale_order_id = fields.Many2one(string="Sale Quotation", comodel_name="sale.order", copy=False)
     sale_executive = fields.Many2one(string="Sale Executive", comodel_name="res.users", default=lambda self: self.env.user)
+    sale_executive_id = fields.Many2one(string="Sale Executive", comodel_name="fos.sale.executive")
+    
 
     @api.one
     def _getNetCash(self):
