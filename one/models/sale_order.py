@@ -63,7 +63,9 @@ class FasSaleOrder(models.Model):
   af = fields.Float(string="AF")
   insurance_company = fields.Char(string="Insurance Company")
   source_of_awareness = fields.Char(string="Source of awareness")
+  source_of_awareness_id = fields.Char(string="Source of awareness", comodel_name="fos.source.of.awareness")
   source_of_sale = fields.Char(string="Source of sale")
+  source_of_sale_id = fields.Char(string="Source of sale", comodel_name="fos.source.of.sale")  
   venue_of_marketing_activity = fields.Char(string="Venue of Marketing Activity")
   promo = fields.Selection(string="Promo", selection=[
     ('1','Zero Interest'),
@@ -78,6 +80,7 @@ class FasSaleOrder(models.Model):
   parts_total = fields.Float(string="Parts Total", compute="getPartsTotal", readonly=True)
   nonf_ro_id = fields.Many2one(string="Repair Order", comodel_name="nonf.ro", copy=False)
   nonf_unit_id = fields.Many2one(string="Non-FOTON Units", comodel_name="nonf.units", copy=False)
+  promised_date = fields.Datetime(string="Promised Date")
   
   @api.model
   @api.multi
