@@ -94,6 +94,6 @@
      file="one.repair_order_template"
      model="fos.repair.orders"
      report_type="qweb-html"
-     string="Repair Orders"
+     string="Repair Order"
      menu="True"/>
 </odoo>
