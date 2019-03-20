@@ -56,8 +56,8 @@
                                     <field name="order_qty"/>
                                     <field name="price_unit"/>
                                     <field name="subtotal"/>
-                                    <field name="assigned_product_id" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
-                                    <field name="assigned_product_name" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                    <field name="assigned_product_id" attrs="{'bg_color': 'red', 'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                    <field name="assigned_product_name" attrs="{'bg_color': 'red: assigned_product_id != product_id', 'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_description" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                 <!--    <field name="assigned_order_qty" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/> -->
                                     <field name="assigned_price_unit" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
@@ -116,7 +116,7 @@
         <record model="ir.sequence" id="fos_parts_po_seq">
             <field name="name">Online Parts P.O. Sequence Number</field>
             <field name="code">fos.parts.po.seq</field>
-            <field name="prefix">OPP#</field>
+            <field name="prefix">POLO#</field>
             <field name="padding">6</field>
         </record>
 
