@@ -8,6 +8,11 @@
         <xpath expr="//group/group/field[2]" position="after">
           <field name="fos_fu_id" options="{'no_open': True, 'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"/> 
         </xpath>
+        <xpath expr="//group[@name='main_group']/group/field[@name='product_id']" position="replace">
+          <field name="product_id" 
+            domain="[('tracking','=','serial')]"
+            help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
+        </xpath>
       </field>
     </record>
   </data>
