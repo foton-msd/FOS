@@ -21,12 +21,12 @@
               <p t-field="o.partner_id"/>
           </div>
       </xpath>
-      <xpath expr="//table/thead/tr/th" position="after">
+<!-->      <xpath expr="//table/thead/tr/th" position="after">
         <th>Account</th>
       </xpath>
       <xpath expr="//table/tbody/tr/td" position="after">
         <td><span t-field="l.account_id"/></td>
-      </xpath>
+      </xpath> -->
     </template>
   </data>
 </odoo>
