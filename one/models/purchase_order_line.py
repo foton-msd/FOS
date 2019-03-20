@@ -8,7 +8,8 @@ class FasPurchaseOrderLine(models.Model):
   _name = 'purchase.order.line'
   _inherit = 'purchase.order.line'
 
-  fu_id = fields.Many2one(string="P.O. for FOTON Number", comodel_name="view.fas.fu")
+  fu_id = fields.Many2one(string="P.O. for FOTON Number", comodel_name="one.fu")
+  eta = fields.Datetime(string="ETA")
   #fas_fu_ids = fields.One2many(string="FOTON Units", comodel_name="view.fas.fu", inverse_name="po_line_id")	
 
   @api.multi
