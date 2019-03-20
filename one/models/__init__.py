@@ -47,6 +47,9 @@ from . import fos_calc_banks
 from . import fos_calc_unit_prices
 from . import fos_calc_addons
 from . import fos_calc_less
+from . import fos_sale_executive
+from . import fos_su_source_of_awareness
+from . import fos_su_source_of_sales
 #from . import fos_labor_codes
 from . import fos_acctg_reports
 from . import fos_parts_po
