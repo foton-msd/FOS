@@ -22,6 +22,9 @@
           <field name="date_order" widget="date"
             attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
         </xpath>
+        <xpath expr="//field[@name='validity_date']" position="after">
+          <field name="promised_date" widget="date"  attrs="{'invisible': [('so_type','!=','service')]}"/>
+        </xpath>
         <xpath expr="//form/header" position="replace">
           <header>
             <button name="action_confirm2" id="action_confirm2"
@@ -126,9 +129,9 @@
             <field name="date_released"/>
             <field name="user_id" string="Sales Executive" attrs="{'readonly': [('state','!=','sale')]}"
               options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"/>
-            <field name="source_of_awareness" attrs="{'readonly': [('state','!=','sale')]}"/>
+            <field name="source_of_awareness_id" attrs="{'readonly': [('state','!=','sale')]}"/>
             <field name="venue_of_marketing_activity" attrs="{'readonly': [('state','!=','sale')]}"/>
-            <field name="source_of_sale" attrs="{'readonly': [('state','!=','sale')]}"/>
+            <field name="source_of_sale_id" attrs="{'readonly': [('state','!=','sale')]}"/>
             <field name="promo" attrs="{'readonly': [('state','!=','sale')]}"/>
           </group>
         </xpath>
@@ -204,7 +207,6 @@
               <field name="units_and_addons" 
                 attrs="{'column_invisible': [('parent.so_type','!=','units')], 'required': [('parent.so_type','=','units')]}"
                 domain="[('sub_type','=','units')]"/>
-
               <field name="layout_category_id" groups="sale.group_sale_layout"/>
               <field name="name"/>
               <field name="product_uom_qty" string="Ordered Qty"
