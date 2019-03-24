@@ -13,8 +13,10 @@
                     <field name="fos_fu_id"/>
                     <field name="fu_local_name"/>
                     <field name="fu_chassis_number"/>
-                    <field name="fu_engine_number"/>
-                    <field name="fu_plate_number"/>
+                    <field name="pj_job_total"/>
+                    <field name="pj_parts_total"/>
+                    <field name="pj_total"/>
+                    <field name="pj_approved_total"/>                    
                     <field name="vqir_state"/>
                 </tree>
             </field>
@@ -138,6 +140,7 @@
                    <field name="job_qty"/>
                    <field name="job_cost"/>
                    <field name="job_total"/>
+                   <field name="approved_amount" attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel'])]}"/>
                    <field name="job_parts_total"/>
                  </tree>
                  <form string="Trouble Parts and Jobs">
@@ -160,6 +163,7 @@
                          <field name="job_qty"/>
                          <field name="job_cost"/>
                          <field name="job_total"/>
+                         <field name="approved_amount"/>                         
                          <field name="job_parts_total"/>
                        </group>
                      </group>
@@ -172,6 +176,10 @@
                <label for="pj_total"/>
                </div>
                <field name="pj_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+               <div class="oe_inline">
+                    <label for="pj_approved_total" attrs="{'invisible': [('vqir_state','in', ['draft','cancel'])]}"/>
+                </div>
+                    <field name="pj_approved_total" class="oe_subtotal_footer_separator" widget="monetary" nolabel="1" attrs="{'invisible': [('vqir_state','in', ['draft','cancel'])]}"/>
                </group>
                <field name="remarks" class="oe_inline" placeholder="Add your remarks" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}"/>
                <div class="oe_clear"/>        

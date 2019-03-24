@@ -24,8 +24,7 @@ class FosVqir(models.Model):
       ('ack','Acknowledged'),
       ('approved','Approved'),
       ('disapproved','Disapproved'),
-      ('declined','Declined'),
-      ('preclaimed','Pre-claimed'),
+      ('declined','Returned'),
       ('paid','Paid')
     ], default='draft', readonly=True)
   vqir_state_logs = fields.Text(string="Status Logs", readonly=True)
@@ -85,14 +84,22 @@ class FosVqir(models.Model):
   fu_owner_address = fields.Char(string="Address", related="fos_fu_id.owner_address", readonly=True)
   fu_color = fields.Char(string="Color", related="fos_fu_id.color", readonly=True)
   pj_total = fields.Float(string="Total", compute="_getPJTotal", readonly=True)
-  pj_parts_total = fields.Float(string="Total", compute="_getPJPartsTotal", readonly=True)
-  pj_job_total = fields.Float(string="Total", compute="_getPJJobTotal", readonly=True)
+  pj_parts_total = fields.Float(string="Parts Total", compute="_getPJPartsTotal", readonly=True)
+  pj_job_total = fields.Float(string="Job Total", compute="_getPJJobTotal", readonly=True)
+  pj_approved_total = fields.Float(string="Approved Total", compute="_getApprovedTotal", readonly=True)
   remarks = fields.Text(string="Remarks")
   # parts and jobs
   fos_vqir_parts_and_jobs_line = fields.One2many(string="Parts & Jobs", comodel_name="fos.vqir.parts.and.jobs", inverse_name="fos_vqir_id", ondelete="cascade")
   # images
   fos_vqir_images_line = fields.One2many(string="Images", comodel_name="fos.vqir.images", inverse_name="fos_vqir_id", ondelete="cascade")  
   company_id = fields.Many2one(string="Company", comodel_name="res.company", required=False)
+  # date 
+  approved_date = fields.Datetime(string="Approved Date")
+  submitted_date = fields.Datetime(string="Submitted Date")
+  declined_date = fields.Datetime(string="Declined Date")
+  disapproved_date = fields.Datetime(string="Disapproved Date")
+  ack_date = fields.Datetime(string="Acknowledge Date")
+  paid_date = fields.Datetime(string="Paid Date")
 
   @api.model
   def create(self, vals):
@@ -105,23 +112,33 @@ class FosVqir(models.Model):
   def action_cancel(self):
     self.write({'vqir_state': 'cancel'})
         
-  @api.multi
+  @api.one
   def _getPJTotal(self):
+    pj_total = 0
     for line in self.fos_vqir_parts_and_jobs_line:
-      self.pj_total += line.parts_total + line.job_total
-    return self.pj_total
+      pj_total += line.parts_total + line.job_total
+    self.pj_total = pj_total
 
-  @api.multi
+  @api.one
   def _getPJPartsTotal(self):
+    pj_parts_total = 0
     for line in self.fos_vqir_parts_and_jobs_line:
-      self.pj_parts_total += line.parts_total
-    return self.pj_parts_total
+      pj_parts_total += line.parts_total
+    self.pj_parts_total = pj_parts_total
 
-  @api.multi
+  @api.one
   def _getPJJobTotal(self):
+    pj_job_total = 0
     for line in self.fos_vqir_parts_and_jobs_line:
-      self.pj_job_total += line.job_total
-    return self.pj_job_total
+      pj_job_total += line.job_total
+    self.pj_job_total = pj_job_total
+
+  @api.one
+  def _getApprovedTotal(self):
+    pj_approved_total = 0
+    for line in self.fos_vqir_parts_and_jobs_line:
+      pj_approved_total += line.approved_amount
+    self.pj_approved_total = pj_approved_total
 
   @api.multi
   def action_submit(self):
@@ -145,6 +162,7 @@ class FosVqir(models.Model):
     if not self.company_id.is_fmpi:
       xdealer_id = self.company_id.dealer_id.id or -1, 
     # set upload string (SQL)
+    cur_stamp = fields.datetime.now()
     cursor.execute("""INSERT INTO fmpi_vqir (
       name, vqir_date, preapproved_date, preclaim_number, payment_receipt, 
       vqir_type, vqir_service_type, vqir_state, date_occur, vqir_city, 
@@ -157,13 +175,15 @@ class FosVqir(models.Model):
       reps_street2, reps_city, reps_phone, reps_mobile, reps_fax, 
       reps_email, remarks, fos_fu_id, dealer_id, dealer_vqir_id, 
       dealer_host, dealer_db, dealer_port, dealer_pgu, dealer_pgp, 
-      vqir_state_logs) VALUES (
+      vqir_state_logs, approved_date, submitted_date, declined_date,
+      disapproved_date, ack_date, paid_date) VALUES (
       %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
       %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
       %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
       %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
       %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-      %s,%s,%s,%s, %s, %s);
+      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+      %s,%s);
       """,(
       self.name or None, # name, vqir_date, preapproved_date, preclaim_number, payment_receipt,
       self.vqir_date or None, 
@@ -230,15 +250,24 @@ class FosVqir(models.Model):
       self.company_id.dealer_port, 
       self.company_id.dealer_pgu, 
       self.company_id.dealer_pgp, 
-      self.vqir_state_logs))    #vqir_state_logs) VALUES (
+      self.vqir_state_logs,
+      self.approved_date or None,
+      cur_stamp,
+      self.declined_date or None,
+      self.disapproved_date or None,
+      self.ack_date or None,
+      self.paid_date or None))
+    self.write({'submitted_date': cur_stamp}) 
+    
+      #vqir_state_logs) VALUES (
     # vqir jobs and parts
     for ji in self.fos_vqir_parts_and_jobs_line:
       cursor.execute("""INSERT INTO fmpi_vqir_parts_and_jobs (
         name, fmpi_vqir_id, si_number, si_date, parts_number, 
         parts_desc, parts_qty, parts_cost, parts_with_fee, parts_total, 
-        job_code, job_code_desc, job_qty, job_cost) 
+        job_code, job_code_desc, job_qty, job_cost, approved_amount,dealer_pj_id) 
         VALUES (%s,(SELECT id FROM fmpi_vqir ORDER BY id DESC LIMIT 1),
-        %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);""",
+        %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);""",
         (ji.name or None, 
         ji.si_number or None, 
         ji.si_date or None, 
@@ -251,7 +280,9 @@ class FosVqir(models.Model):
         ji.job_code or None, 
         ji.job_code_desc or None, 
         ji.job_qty or None, 
-        ji.job_cost or None))
+        ji.job_cost or None,
+        ji.approved_amount or None,
+        ji.id))
     for img in self.fos_vqir_images_line:
       cursor.execute("""
           INSERT INTO fmpi_vqir_images (
@@ -266,6 +297,4 @@ class FosVqir(models.Model):
         ))
     conn.commit()
     conn.close()
-        
-
 FosVqir()

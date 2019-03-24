@@ -24,7 +24,9 @@ class FMPIPartsandJobs(models.Model):
   job_cost = fields.Float(string="Job Cost", readonly=True)
   job_total = fields.Float(string="Job Total", compute="_getJobTotal", readonly=True)
   job_parts_total = fields.Float(string="Total", compute="_getJobPartsTotal", readonly=True)
-  
+  approved_amount = fields.Float(string="Approved Amount")
+  dealer_pj_id = fields.Integer(string="Dealer PJ ID")
+
   @api.onchange("job_qty","job_cost")
   def job_total_changed(self):
     self._getJobTotal()

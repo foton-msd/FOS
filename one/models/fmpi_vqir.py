@@ -23,8 +23,7 @@ class FMPIVqir(models.Model):
       ('ack','Acknowledged'),
       ('approved','Approved'),
       ('disapproved','Disapproved'),
-      ('declined','Declined'),
-      ('preclaimed','Pre-claimed'),
+      ('declined','Returned'),
       ('paid','Paid')
     ], default='draft', readonly=True)
   vqir_state_logs = fields.Text(string="Status Logs", readonly=True)
@@ -82,12 +81,13 @@ class FMPIVqir(models.Model):
   fu_owner_address = fields.Char(string="Address", related="fos_fu_id.owner_address", readonly=True)
   fu_color = fields.Char(string="Color", related="fos_fu_id.color", readonly=True)
   pj_total = fields.Float(string="Total", compute="_getPJTotal", readonly=True)
-  pj_parts_total = fields.Float(string="Total", compute="_getPJPartsTotal", readonly=True)
-  pj_job_total = fields.Float(string="Total", compute="_getPJJobTotal", readonly=True)
+  pj_parts_total = fields.Float(string="Parts Total", compute="_getPJPartsTotal", readonly=True)
+  pj_job_total = fields.Float(string="Job Total", compute="_getPJJobTotal", readonly=True)
+  pj_approved_total = fields.Float(string="Approved Total", compute="_getApprovedTotal", readonly=True)
   remarks = fields.Text(string="Remarks", readonly=True)
   
   # parts and jobs
-  fmpi_vqir_parts_and_jobs_line = fields.One2many(string="Parts & Jobs", comodel_name="fmpi.vqir.parts.and.jobs", inverse_name="fmpi_vqir_id", readonly=True, ondelete="cascade")
+  fmpi_vqir_parts_and_jobs_line = fields.One2many(string="Parts & Jobs", comodel_name="fmpi.vqir.parts.and.jobs", inverse_name="fmpi_vqir_id", ondelete="cascade")
   # images
   fmpi_vqir_images_line = fields.One2many(string="Images", comodel_name="fmpi.vqir.images", inverse_name="fmpi_vqir_id", readonly=True, ondelete="cascade")
   # dealer info
@@ -98,6 +98,13 @@ class FMPIVqir(models.Model):
   dealer_port = fields.Char(string="Port", required=True)
   dealer_pgu = fields.Char(string="PGU", required=True)
   dealer_pgp = fields.Char(string="PGP", required=True)
+  # date
+  approved_date = fields.Datetime(string="Approved Date")
+  submitted_date = fields.Datetime(string="Submitted Date")
+  declined_date = fields.Datetime(string="Declined Date")
+  disapproved_date = fields.Datetime(string="Disapproved Date")
+  ack_date = fields.Datetime(string="Acknowledge Date")
+  paid_date = fields.Datetime(string="Paid Date")
   
   @api.multi
   def action_ack_log(self):
@@ -109,11 +116,13 @@ class FMPIVqir(models.Model):
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
+    cur_stamp = fields.datetime.now()
     cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'ack' WHERE id = %s;
-    """,(self.vqir_state_logs, str(self.dealer_vqir_id)))
+      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'ack', ack_date = %s WHERE id = %s;
+    """,(self.vqir_state_logs, cur_stamp, str(self.dealer_vqir_id)))
     conn.commit()
-    conn.close()    
+    conn.close()
+    self.write({"ack_date":cur_stamp})
 
   @api.multi
   def action_app_log(self):
@@ -125,11 +134,18 @@ class FMPIVqir(models.Model):
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
+    cur_stamp = fields.datetime.now()
     cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'approved' WHERE id = %s;
-    """,(self.vqir_state_logs, str(self.dealer_vqir_id)))
+      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'approved', approved_date = %s WHERE id = %s;
+    """,(self.vqir_state_logs, cur_stamp, str(self.dealer_vqir_id)))
+    for line in self.fmpi_vqir_parts_and_jobs_line:
+      cursor.execute("""
+        UPDATE fos_vqir_parts_and_jobs SET approved_amount = %s
+        WHERE id = %s;
+      """,(line.approved_amount, line.dealer_pj_id))
     conn.commit()
     conn.close()
+    self.write({"approved_date":cur_stamp})
 
   @api.multi
   def action_dis_log(self):
@@ -141,27 +157,13 @@ class FMPIVqir(models.Model):
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
+    cur_stamp = fields.datetime.now()
     cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'disapproved' WHERE id = %s;
-    """,(self.vqir_state_logs, str(self.dealer_vqir_id)))
+      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'disapproved', disapproved_date = %s WHERE id = %s;
+    """,(self.vqir_state_logs, cur_stamp, str(self.dealer_vqir_id)))
     conn.commit()
     conn.close()
-
-  @api.multi
-  def action_pre_log(self):
-    # set connection parameters to FMPI
-    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
-    conn_string = "host='" + dealer_ip + \
-      "' dbname='"+ self.dealer_db + \
-      "' user='odoo' password='OneOdoo'"
-    logger.info("connecting to the database\n ->%s"%(conn_string))
-    conn = psycopg2.connect(conn_string)
-    cursor = conn.cursor()
-    cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'preclaimed' WHERE id = %s;
-    """,(self.vqir_state_logs, str(self.dealer_vqir_id)))
-    conn.commit()
-    conn.close()
+    self.write({"disapproved_date":cur_stamp})
     
   @api.multi
   def action_dec_log(self):
@@ -173,11 +175,13 @@ class FMPIVqir(models.Model):
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
+    cur_stamp = fields.datetime.now()
     cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'declined' WHERE id = %s;
-    """,(self.vqir_state_logs, str(self.dealer_vqir_id)))
+      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'declined', declined_date = %s WHERE id = %s;
+    """,(self.vqir_state_logs, cur_stamp, str(self.dealer_vqir_id)))
     conn.commit()
     conn.close()
+    self.write({"declined_date":cur_stamp})
 
   @api.multi
   def action_pd_log(self):
@@ -189,28 +193,40 @@ class FMPIVqir(models.Model):
     logger.info("connecting to the database\n ->%s"%(conn_string))
     conn = psycopg2.connect(conn_string)
     cursor = conn.cursor()
+    cur_stamp = fields.datetime.now()
     cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'paid' WHERE id = %s;
-    """,(self.vqir_state_logs, str(self.dealer_vqir_id)))
+      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'paid', paid_date = %s WHERE id = %s;
+    """,(self.vqir_state_logs, fields.datetime.now(), str(self.dealer_vqir_id)))
     conn.commit()
     conn.close()
+    self.write({"paid_date":cur_stamp})
 
-  @api.multi
+  @api.one
   def _getPJTotal(self):
+    pj_total = 0
     for line in self.fmpi_vqir_parts_and_jobs_line:
-      self.pj_total += line.parts_total + line.job_total
-    return self.pj_total
+      pj_total += line.parts_total + line.job_total
+    self.pj_total = pj_total
 
-  @api.multi
+  @api.one
   def _getPJPartsTotal(self):
+    pj_parts_total = 0
     for line in self.fmpi_vqir_parts_and_jobs_line:
-      self.pj_parts_total += line.parts_total
-    return self.pj_parts_total
+      pj_parts_total += line.parts_total
+    self.pj_parts_total = pj_parts_total
 
-  @api.multi
+  @api.one
   def _getPJJobTotal(self):
+    pj_job_total = 0
     for line in self.fmpi_vqir_parts_and_jobs_line:
-      self.pj_job_total += line.job_total
-    return self.pj_job_total
+      pj_job_total += line.job_total
+    self.pj_job_total = pj_job_total
+
+  @api.one
+  def _getApprovedTotal(self):
+    pj_approved_total = 0
+    for line in self.fmpi_vqir_parts_and_jobs_line:
+      pj_approved_total += line.approved_amount
+    self.pj_approved_total = pj_approved_total
 
 FMPIVqir()
