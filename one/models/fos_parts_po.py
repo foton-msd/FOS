@@ -54,13 +54,16 @@ class FOSPartsPO(models.Model):
                     po_line_id = self.env['purchase.order.line'].create(
                         {
                             'order_id': po_id.id,
+                            'fu_id': line.fu_id.id,
                             'product_id': line.assigned_product_id,
                             'name': line.assigned_description,
                             'product_qty': line.assigned_order_qty,
                             'price_unit': line.assigned_price_unit,
                             'date_planned': fields.datetime.now(),
-                            'product_uom': line.product_id.product_tmpl_id.uom_po_id.id
+                            'product_uom': line.product_id.product_tmpl_id.uom_po_id.id,
+                            'eta': line.eta
                         })
+                    logger.info("Estimated Time" +str(line.eta))
                     if not po_line_id:
                         no_error = False
             else:
@@ -120,7 +123,7 @@ class FOSPartsPO(models.Model):
                                 'name':  (fmpi_parts_so_lines[0]['assigned_description']),
                                 'product_uom_qty': (fmpi_parts_so_lines[0]['assigned_order_qty']),
                                 'price_unit':  (fmpi_parts_so_lines[0]['assigned_price_unit']),
-                                'fu_id':  (fmpi_parts_so_lines[0]['fu_id'])
+                                'fu_id':  (fmpi_parts_so_lines[0]['fu_id'][0] if fmpi_parts_so_lines[0]['fu_id'] else 0)
                             }
                             models.execute_kw(db, uid, password, 'sale.order.line', 'create', [values])
                             models.execute_kw(db, uid, password, 'fmpi.parts.so', 'write', [[self.fmpi_parts_so_id],{'state':'confirm'}])
