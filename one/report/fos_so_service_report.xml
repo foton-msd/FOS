@@ -110,7 +110,7 @@
 
                             <!-- Lines associated -->
                             <t t-foreach="layout_category['lines']" t-as="l">
-                             <t t-if="l.product_id.type == 'product'">                             <t t-if="l.product_id.type == 'service' and 'consu'">
+                             <t t-if="l.product_id.type == 'product'">
                                 <tr>
                                     <td><span t-field="l.name"/></td>
                                     <td class="text-right">
