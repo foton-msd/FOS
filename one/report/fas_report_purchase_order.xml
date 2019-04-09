@@ -10,31 +10,28 @@
     </xpath>
     <xpath expr="//h2" position="replace">
 	<h2><center><span t-field="o.name"/></center></h2>
-
     </xpath>
     <xpath expr="//t/div/table/thead/tr/th[2]" position="replace">
     </xpath>
     <xpath expr="//t/div/table/tbody/tr/td[2]" position="replace">
     </xpath>
-    <xpath expr="//t/div/div[4]" position="replace">
-      <div class="clearfix">
-            <div class="row">
-                <div class="col-xs-4 pull-right">
-                    <table class="table table-condensed">
-                        <tr class="border-black">
-                        </tr>
-                        <tr class="border-black">
-                            <td><strong>Total</strong></td>
-                            <td class="text-right">
-                                <span t-field="o.amount_total"
-                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-      </div>
+    <xpath expr="//table/thead/tr/th" position="before">
+         <th><strong>Product</strong></th>
     </xpath>
+    <xpath expr="//table/tbody/tr/td" position="before">
+         <td>
+            <span t-field="line.product_id"/>
+         </td>
+    </xpath>
+    <xpath expr="//table/thead/tr/th[5]" position="before">
+         <th ><strong>Taxes</strong></th>
+    </xpath>
+    <xpath expr="//table/tbody/tr/td[5]" position="before">
+         <td>
+            <span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>
+         </td>
+    </xpath>
+
       <xpath expr="//t/div" position="inside">
 
          <div class="footer">
@@ -73,6 +70,14 @@
         <h2 align="center">
         <span t-field="o.name"/>
         </h2>
+    </xpath>
+    <xpath expr="//table/thead/tr/th" position="before">
+         <th><strong>Product</strong></th>
+    </xpath>
+    <xpath expr="//table/tbody/tr/td" position="before">
+         <td>
+            <span t-field="order_line.product_id"/>
+         </td>
     </xpath>
     <xpath expr="//t/div" position="inside">
 
