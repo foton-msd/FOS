@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="one.report_picking_list_template">
+   <t t-call="web.html_container">
+   <t t-foreach="docs" t-as="doc">
+    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="row">
+                            <h2 align="center">Picking List</h2><br/>
+                                <div class="col-xs-6">
+                                    <div>
+                                        <span><strong>Control Number:  </strong><span t-field="doc.name"/></span>
+                                    <div/>
+                                    </div>
+                                    <div>
+                                        <span><strong>Date of S.O:  </strong><span t-field="doc.confirmation_date"/></span>
+                                    <div/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 col-xs-offset-1">
+                                     <div>
+                                        <strong>Customer:</strong>
+                                        <div t-field="doc.partner_shipping_id"
+                                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                                    </div>
+                                </div>
+                            </div>
+            <br/>
+            <t t-foreach="doc.order_lines_layouted()" t-as="page">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Part Number</th>
+                            <th>Description</th>
+                            <th>Location</th>
+                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Unit Price</th>
+                        </tr>
+                   </thead>
+                   <tbody class="sale_tbody">
+                        <t t-foreach="page" t-as="layout_category">
+
+                            <t t-if="layout_category_size > 1 or page_size > 1" groups="sale.group_sale_layout">
+                                <tr class="active">
+                                    <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                        <t t-esc="layout_category['name']"/>
+                                    </td>
+                                </tr>
+                            </t>
+
+                            <!-- Lines associated -->
+                            <t t-foreach="layout_category['lines']" t-as="l">
+                                <tr>
+                                    <td><span t-field="l.product_id"/></td>
+                                    <td><span t-field="l.part_desc"/></td>
+                                    <t t-foreach="l.move_ids" t-as="mv">
+                                        <td><span t-field="mv.location_id"></span></td>
+                                    </t>
+                                    <td class="text-right">
+                                      <span t-field="l.product_uom_qty"/></td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_unit"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+            <div class="clearfix">
+                <div class="row">
+                    <div class="col-xs-4 pull-right">
+                    <table class="table table-condensed" style="min-width: 80px;max-width: 200px;">
+                        <tr class="border-black" style="border-bottom:1px solid #dddddd;"/>
+                        <tr class="border-black">
+                        <td><strong>Total Quantity</strong></td>
+                            <td class="text-right">
+                            <span style="font-size: 100%" t-field="doc.total_qty"/>
+                            </td>
+                        </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Remarks</strong></p>
+            <p t-field="doc.note" />
+            <p t-if="doc.payment_term_id.note">
+                <span t-field="doc.payment_term_id.note"/>
+            </p>
+            <div class="oe_structure"/>
+        </div>
+        <div class="footer">
+              <table width="100%">
+               <tr>
+                   <td align="center"><strong>Prepared By</strong></td>
+                   <td align="center"><strong>Picked By</strong></td>
+                   <td align="center"><strong>Checked By</strong></td>
+                   <td align="center"><strong>Approved By</strong></td>
+                </tr>
+                <tr>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                </tr>
+                <tr>
+                </tr>
+                <tr>
+                   <td align="center"><u>___________________________</u></td>
+                   <td align="center"><u>___________________________</u></td>
+                   <td align="center"><u>___________________________</u></td>
+                   <td align="center"><u>___________________________</u></td>
+                </tr>
+                <tr>
+                   <td align="center">Parts Salesman</td>
+                   <td align="center">Warehouseman</td>
+                   <td align="center">Checked by</td>
+                   <td align="center">Approved by</td>
+                </tr>
+                <tr>
+                   <td align="center">Signature Over Printed Name with Date</td>
+                   <td align="center">Signature Over Printed Name with Date</td>
+                   <td align="center">Signature Over Printed Name with Date</td>
+                   <td align="center">Signature Over Printed Name with Date</td>
+                </tr>
+              </table>
+        </div>
+    </t>
+   </t>
+  </t>  
+</template>
+
+<report 
+    id="one.report_so_picking_list"
+    string="Print Picking List"
+    model="sale.order" 
+    report_type="qweb-html"
+    file="one.report_picking_list_template"
+    name="one.report_picking_list_template"
+    print_report_name="'Picking List - %s' % (object.name)"
+    menu="False"/>   
+</data>     
+</odoo>
