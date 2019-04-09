@@ -29,6 +29,12 @@
                             <div class="col-xs-6" t-if="o.payment_method_id">
                                 <strong>Payment Method: </strong><span t-field="o.payment_method_id.name"/>
                             </div>
+                            <div class="col-xs-6" t-if="o.journal_id">
+                                <strong>Payment Journal: </strong><span t-field="o.journal_id"/>
+                            </div>
+                            <div class="col-xs-6" t-if="o.destination_journal_id">
+                                <strong>Transfer to: </strong><span t-field="o.destination_journal_id"/>
+                            </div>
                             <div class="col-xs-6" t-if="o.cheque_number">
                                <strong>Cheque Number: </strong><span t-field="o.cheque_number"/>
                            </div>
