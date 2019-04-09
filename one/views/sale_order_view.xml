@@ -76,8 +76,11 @@
                 attrs="{'invisible': [('so_type','!=','units')]}"
                 string="Print Unit Quotation/Order" type="object"/>          
              <button name="print_sale_order_print" class="oe_highlight"
-                attrs="{'invisible': [('so_type','!=','units')]}"
-                string="Print Sale Order" type="object"/>   
+                attrs="{'invisible': ['|',('so_type','!=','units'),('state','!=','sale')]}"             
+                string="Print Sale Order" type="object"/>
+             <button name="print_parts_picking_list" class="oe_highlight"
+                attrs="{'invisible': ['|',('so_type','!=','parts'),('state','!=','sale')]}"
+                string="Print Picking List" type="object"/>  
             <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
             <field name="so_type" invisible="1"/>
           </header>
