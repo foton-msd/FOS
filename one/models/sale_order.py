@@ -76,8 +76,9 @@ class FasSaleOrder(models.Model):
     ('6','Zero Interest and Low Monthly'),
     ('7','Promo Rate')])
   product_total = fields.Float(string="Product Total", compute="getProductTotal", readonly=True)
-  labor_total = fields.Float(string="Labor Total", compute="getLaborTotal", readonly=True)
-  parts_total = fields.Float(string="Parts Total", compute="getPartsTotal", readonly=True)
+  labor_total = fields.Monetary(string="Labor Total", compute="getLaborTotal", readonly=True)
+  parts_total = fields.Monetary(string="Parts Total", compute="getPartsTotal", readonly=True)
+  total_qty = fields.Float(string="Total Quantity", compute="getQuantityTotal", readonly=True)
   nonf_ro_id = fields.Many2one(string="Repair Order", comodel_name="nonf.ro", copy=False)
   nonf_unit_id = fields.Many2one(string="Non-FOTON Units", comodel_name="nonf.units", copy=False)
   promised_date = fields.Datetime(string="Promised Date")
@@ -319,17 +320,28 @@ class FasSaleOrder(models.Model):
 
     return retval
 
-  @api.multi
+  @api.one
   def getLaborTotal(self):
+    labor_total = 0
     for line in self.order_line:
       if line.product_id.type == "service":
-        self.labor_total += line.price_total
+        labor_total += line.price_total
+    self.labor_total = labor_total
 
-  @api.multi
+  @api.one
   def getPartsTotal(self):
+    parts_total = 0
     for line in self.order_line:
       if line.product_id.type == "product":
-        self.parts_total += line.price_total
+        parts_total += line.price_total
+    self.parts_total = parts_total
+
+  @api.one
+  def getQuantityTotal(self):
+    total_qty = 0
+    for line in self.order_line:
+        total_qty += line.product_uom_qty
+    self.total_qty = total_qty
 
   @api.multi
   def print_saleorder_service(self):
@@ -358,6 +370,10 @@ class FasSaleOrder(models.Model):
   @api.multi
   def print_so_service(self):
     return self.env.ref('one.report_so_service').report_action(self)  
+
+  @api.multi
+  def print_parts_picking_list(self):
+    return self.env.ref('one.report_so_picking_list').report_action(self)  
   
   @api.multi
   def print_so_service_quote(self):
