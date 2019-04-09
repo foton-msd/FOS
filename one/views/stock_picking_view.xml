@@ -7,27 +7,26 @@
       <field name="arch" type="xml">
         <xpath expr="//button[@name='action_cancel']" position="attributes">
           <attribute name="groups">one.group_inventory_cancel</attribute>
-        </xpath>       
+        </xpath> 
+<!--        <xpath expr="//button[@name='button_validate']" position="replace">
+            <button name="j_validate2" attrs="{'invisible': [('show_validate', '=', False)]}" 
+            string="Validate2" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+        </xpath> -->
+        <xpath expr="//form" position="attributes">
+           <attribute name="delete">false</attribute>
+        </xpath>
+  <!--      <xpath expr="//notebook/page[@name='extra']/group/group/field[@name='picking_type_id']" position="attributes">
+           <attribute name="domain">[('picking_type_code','=','internal')]</attribute>
+        </xpath> -->
       </field>
     </record>
+
     <record model="ir.ui.view" id="fos_stock_picking_view">
       <field name="name">fos.stock.picking.view</field>
       <field name="model">stock.picking</field>
       <field name="inherit_id" ref="stock.vpicktree"/>
       <field name="arch" type="xml">
         <xpath expr="//tree" position="attributes">
-           <attribute name="create">false</attribute>
-           <attribute name="delete">false</attribute>
-        </xpath>
-      </field>
-    </record>
-    <record model="ir.ui.view" id="fos_stock_picking_form">
-      <field name="name">fos.stock.picking.form</field>
-      <field name="model">stock.picking</field>
-      <field name="inherit_id" ref="stock.view_picking_form"/>
-      <field name="arch" type="xml">
-        <xpath expr="//form" position="attributes">
-           <attribute name="create">false</attribute>
            <attribute name="delete">false</attribute>
         </xpath>
       </field>
