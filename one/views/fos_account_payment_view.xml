@@ -14,7 +14,7 @@
         </group>  
         </xpath>
         <xpath expr="//group/group/field[@name='partner_id']" position="after">
-          <field name="payment_received_from" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+          <field name="payment_received_from" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('payment_type','=','transfer')]}"/>
         </xpath>
       </field>
     </record>
