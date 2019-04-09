@@ -36,20 +36,6 @@
           <field name="fob_usd" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
           <field name="fob_rmb" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
         </xpath>
-        <xpath expr="//page[@name='inventory']" position="inside">
-          <hr/>
-          <group string="Parts Locations" attrs="{'invisible': [('sub_type','!=','parts')]}">
-            <field name="loc1" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-            <field name="loc2" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-            <field name="loc3" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-            <field name="loc4" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-            <field name="loc5" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-            <field name="loc6" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-            <field name="loc7" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-            <field name="loc8" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-            <field name="loc9" attrs="{'invisible': [('sub_type','!=','parts')]}"/>            
-          </group>
-       </xpath>
       </field>
     </record>
 
