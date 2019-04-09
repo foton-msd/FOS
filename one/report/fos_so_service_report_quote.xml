@@ -190,10 +190,10 @@
                                         <span t-field="l.price_unit"/>
                                     </td>
                                     <td t-if="display_discount" class="text-right">
-                                        <span t-field="l.discount"/>
+                                        <span t-esc="'%.2f'%(l.discount)"/>
                                     </td>
                                     <td t-if="display_discount" class="text-right">
-                                        <span t-field="l.discount_amount"/>
+                                        <span t-esc="'%.2f'%(l.discount_amount)"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-field="l.price_total"
