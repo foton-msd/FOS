@@ -34,7 +34,7 @@ class FASProduct(models.Model):
   model_code = fields.Char(string="Model Code")
   inner_code = fields.Char(string="Inner Code")
   segment = fields.Char(string="Segment")
-  fmpi_product = fields.Boolean(string="FMPI Product", default=False)
+  fmpi_product = fields.Boolean(string="FMPI Product", default=False, copy=False)
   fmpi_product_id = fields.Integer(string="Product")
   fmpi_product_write_date = fields.Datetime(string="Write Stamp")
   run_by_sync = fields.Boolean(string="Run by sync")
