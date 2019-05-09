@@ -185,9 +185,9 @@ class FMPIPartsSOLine(models.Model):
         self.subtotal = self.order_qty * self.price_unit
         self.assigned_subtotal = self.assigned_order_qty * self.assigned_price_unit
     
-    @api.onchange("assigned_product_id", "assigned_order_qty")
+    @api.onchange("assigned_product_id", "assigned_order_qty", "assigned_sub_total")
     def ChangingAssignedParts(self):
-        dnp = self.assigned_product_id.product_tmpl_id.dnp or self.assigned_product_id.list_price
+        dnp = self.assigned_product_id.list_price
         #if dnp:
         self.assigned_price_unit = dnp or 0
         self.assigned_subtotal = self.assigned_order_qty * self.assigned_price_unit
