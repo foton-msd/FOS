@@ -24,17 +24,18 @@
           <field name="unit_class"/>
         </xpath>
         <xpath expr="//field[@name='uom_id']" position="before">
+          <field name="is_fmpi" invisible='1'/>
           <hr attrs="{'invisible': [('sub_type','!=','parts')]}"/>
           <field name="model" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
           <field name="model_code" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
           <field name="inner_code" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
           <field name="segment" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-          <hr attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-          <field name="dnp"     attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-          <field name="isc"     attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-          <field name="fob_php" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-          <field name="fob_usd" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
-          <field name="fob_rmb" attrs="{'invisible': [('sub_type','!=','parts')]}"/>
+          <hr attrs="{'invisible': [('sub_type','!=','parts'),('is_fmpi','=',False)]}"/>
+          <field name="dnp" attrs="{'invisible': ['|', ('sub_type','!=','parts'),('is_fmpi','=',False)]}"/>
+          <field name="isc" attrs="{'invisible': ['|', ('sub_type','!=','parts'),('is_fmpi','=',False)]}"/>
+          <field name="fob_php" attrs="{'invisible': ['|', ('sub_type','!=','parts'),('is_fmpi','=',False)]}"/>
+          <field name="fob_usd" attrs="{'invisible': ['|', ('sub_type','!=','parts'),('is_fmpi','=',False)]}"/>
+          <field name="fob_rmb" attrs="{'invisible': ['|', ('sub_type','!=','parts'),('is_fmpi','=',False)]}"/>
         </xpath>
       </field>
     </record>

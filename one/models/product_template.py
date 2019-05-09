@@ -20,7 +20,7 @@ class FASProduct(models.Model):
   fob_php = fields.Float(string="FOB PHP")
   fob_usd = fields.Float(string="FOB USD")
   fob_rmb = fields.Float(string="FOB RMB")
-  dnp = fields.Float(string="DNP")
+  dnp = fields.Float(string="DNP (Dealer's SRP)")
   loc1 = fields.Char(string="Location 1")
   loc2 = fields.Char(string="Location 2")
   loc3 = fields.Char(string="Location 3")
@@ -39,6 +39,7 @@ class FASProduct(models.Model):
   fmpi_product_write_date = fields.Datetime(string="Write Stamp")
   run_by_sync = fields.Boolean(string="Run by sync")
   no_of_hours = fields.Float(string="No. of Hours", digits=dp.get_precision('Product Price'))
+  is_fmpi = fields.Boolean(string="Is FMPI", related='company_id.is_fmpi')
   
   @api.multi
   def write(self, values):    
