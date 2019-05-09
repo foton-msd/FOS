@@ -47,7 +47,8 @@ class FOSPartsPO(models.Model):
             po_id = self.env['purchase.order'].create({
                 'partner_id': partner_id,
                 'po_type': 'parts',
-                'date_planned': fields.datetime.now()
+                'date_planned': fields.datetime.now(),
+                'notes': self.name
             })
             if po_id:
                 for line in self.order_line:
@@ -104,7 +105,8 @@ class FOSPartsPO(models.Model):
                 logger.info("Partner ID: " + str(fmpi_partner_id))
                 so_id = models.execute_kw(db, uid, password, 'sale.order', 'create', [{
                     'partner_id': fmpi_partner_id,
-                    'so_type': 'parts'
+                    'so_type': 'parts',
+                    'note': self.name
                 }])
                 logger.info("Sale Order ID: " + str(so_id))
                 if so_id:
@@ -282,7 +284,7 @@ class FOSPartsPOLine(models.Model):
 
     @api.onchange("product_id", "order_qty")
     def ChangingParts(self):
-        dnp = self.product_id.product_tmpl_id.dnp or self.product_id.list_price
+        dnp = self.product_id.standard_price
         if dnp:
             self.price_unit = dnp
         self.subtotal = self.order_qty * self.price_unit
