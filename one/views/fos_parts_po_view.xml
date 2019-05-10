@@ -56,10 +56,10 @@
                                     <field name="order_qty"/>
                                     <field name="price_unit"/>
                                     <field name="subtotal"/>
-                                    <field name="assigned_product_id" attrs="{'bg_color': 'red', 'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                            <!--    <field name="assigned_product_id" attrs="{'bg_color': 'red', 'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/> -->
                                     <field name="assigned_product_name" attrs="{'bg_color': 'red: assigned_product_id != product_id', 'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_description" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
-                                <!--    <field name="assigned_order_qty" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/> -->
+                            <!--    <field name="assigned_order_qty" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/> -->
                                     <field name="assigned_price_unit" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_subtotal" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="eta" widget="date" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
