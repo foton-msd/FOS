@@ -50,15 +50,20 @@
                                     <field name="description" options="{'bg_color': 'gray', 'readonly': True}"/>
                                     <field name="order_qty" options="{'bg_color': 'gray', 'readonly': True}"/>
                                     <field name="price_unit" options="{'bg_color': 'gray', 'readonly': True}"/>
+                                    <field name="vat_amount" options="{'bg_color': 'gray', 'readonly': True}"/>
                                     <field name="subtotal" options="{'bg_color': 'gray', 'readonly': True}"/>
+                                    <field name="subtotal_with_vat" options="{'bg_color': 'gray', 'readonly': True}"/>
                                     <field name="state" invisible="1"/>
                                     <field name="assigned_product_id" domain="[('sub_type','=','parts')]" attrs="{'readonly': [('state','!=','proc')]}"
                                         options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'column_visible': ('state','=','proc')}"/>
                                     <field name="assigned_description" attrs="{'readonly': [('state','!=','proc')]}"/>
                                 <!--    <field name="assigned_order_qty" attrs="{'readonly': [('state','!=','proc')]}"/> -->
-                                    <field name="assigned_price_unit" attrs="{'readonly': [('state','!=','proc')]}"/>
+                                    <field name="assigned_price_unit" attrs="{'readonly': [('state','!=','proc')]}"/>                             
                                     <field name="assigned_subtotal"/>
+                                    <field name="assigned_vat_amount"/>
+                                    <field name="assigned_subtotal_with_vat"/>
                                     <field name="eta" widget="date" attrs="{'readonly': [('state','!=','proc')]}"/>
+                                    <field name="received_qty" attrs="{'readonly': [('state','!=','proc')]}"/>
                                 </tree>
                             </field>
                         </group>
@@ -71,6 +76,14 @@
                                 <label for="assigned_order_total"/>
                             </div>
                             <field name="assigned_order_total" widget="monetary" nolabel="1"/>
+                            <div class="oe_inline">
+                                <label for="order_total_with_vat"/>
+                            </div>
+                            <field name="order_total_with_vat" widget="monetary" nolabel="1"/>
+                            <div class="oe_inline">
+                                <label for="assigned_order_total_with_vat"/>
+                            </div>
+                            <field name="assigned_order_total_with_vat" widget="monetary" nolabel="1"/>
                         </group>   
                         
                         <field name="notes" class="oe_inline" 

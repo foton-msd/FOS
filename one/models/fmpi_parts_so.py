@@ -25,10 +25,14 @@ class FMPIPartsSO(models.Model):
     notes = fields.Text(string="Notes")
     order_line = fields.One2many(string="Order Line", ondelete="cascade",
         comodel_name="fmpi.parts.so.line", inverse_name="fmpi_parts_so_id")
-    order_total = fields.Float(string="Order Total", compute="OrderTotal", 
+    order_total = fields.Float(string="Order Total without VAT", compute="OrderTotal", 
         digits=dp.get_precision('Product Price'))
-    assigned_order_total = fields.Float(string="Served Total", compute="OrderTotal", 
+    assigned_order_total = fields.Float(string="Served Total without VAT", compute="OrderTotal", 
         digits=dp.get_precision('Product Price'))
+    assigned_order_total_with_vat = fields.Float(string="Served Total with VAT", compute="OrderTotal", 
+        digits=dp.get_precision('Product Price'))
+    order_total_with_vat = fields.Float(string="Order Total with VAT", compute="OrderTotal", 
+        digits=dp.get_precision('Product Price'))    
     company_id = fields.Many2one('res.company', string='Company',  required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.invoice'))
     url = fields.Char(string="URL", readonly=True, required=True)
@@ -41,11 +45,17 @@ class FMPIPartsSO(models.Model):
     def OrderTotal(self):
         ototal = 0
         stotal = 0
+        ototalwithvat = 0
+        stotalwithvat = 0
         for line in self.order_line:
             ototal += line.subtotal
             stotal += line.assigned_subtotal
+            ototalwithvat += line.subtotal_with_vat
+            stotalwithvat += line.assigned_subtotal_with_vat
         self.order_total = ototal
         self.assigned_order_total = stotal
+        self.order_total_with_vat = ototalwithvat
+        self.assigned_order_total_with_vat = stotalwithvat
  
     @api.one
     def action_proc(self):
@@ -118,6 +128,8 @@ class FMPIPartsSO(models.Model):
                                 'assigned_description': line.assigned_description,
                                 'assigned_order_qty': line.assigned_order_qty,
                                 'assigned_price_unit': line.assigned_price_unit,
+                                'assigned_vat_amount': line.assigned_vat_amount,
+                                'assigned_subtotal_with_vat': line.assigned_subtotal_with_vat,
                                 'eta': line.eta
                             }])
                 self.write({'state': 'forpo'})
@@ -169,13 +181,17 @@ class FMPIPartsSOLine(models.Model):
         digits=dp.get_precision('Product Unit of Measure'))
     price_unit = fields.Float(string="Order-Unit Price", readonly=True, digits=dp.get_precision('Product Price'))
     subtotal = fields.Float(string="Order-Total", compute="LineTotals", digits=dp.get_precision('Product Price'))
+    vat_amount = fields.Float(string="VAT Amount", compute='LineTotals')
+    subtotal_with_vat = fields.Float(string='Order-Total with VAT', readony=True, compute='LineTotals')
     # data fields used by FMPI
     assigned_product_id = fields.Many2one(string="Served-Part Number", comodel_name="product.product")
     assigned_product_name = fields.Char(string="Part Number", related="assigned_product_id.product_tmpl_id.name")
     assigned_description = fields.Text(string="Served-Description")
     assigned_order_qty = fields.Float(string="Served-Qty", digits=dp.get_precision('Product Unit of Measure'))
     assigned_price_unit = fields.Float(string="Served-Unit Price", readonly=True, digits=dp.get_precision('Product Price'))
-    assigned_subtotal = fields.Float(string="Served-Total", compute="LineTotals", digits=dp.get_precision('Product Price'))
+    assigned_subtotal = fields.Float(string="Served-Total without VAT", compute="LineTotals", digits=dp.get_precision('Product Price'))
+    assigned_vat_amount = fields.Float(string="Service-VAT Amount", compute='LineTotals')
+    assigned_subtotal_with_vat = fields.Float(string='Serve-Total with VAT', readony=True, compute='LineTotals')
     fos_parts_po_line_id = fields.Integer(string="FOS Parts PO Line ID") 
     eta = fields.Datetime(string="ETA", default=fields.Datetime.now)
     received_qty = fields.Float(string="Received Qty")
@@ -184,6 +200,10 @@ class FMPIPartsSOLine(models.Model):
     def LineTotals(self):
         self.subtotal = self.order_qty * self.price_unit
         self.assigned_subtotal = self.assigned_order_qty * self.assigned_price_unit
+        self.vat_amount = self.subtotal * 0.12
+        self.subtotal_with_vat = self.vat_amount + self.subtotal
+        self.assigned_vat_amount = self.assigned_subtotal * 0.12
+        self.assigned_subtotal_with_vat = self.assigned_vat_amount + self.assigned_subtotal
     
     @api.onchange("assigned_product_id", "assigned_order_qty", "assigned_sub_total")
     def ChangingAssignedParts(self):

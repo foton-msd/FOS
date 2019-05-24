@@ -55,13 +55,17 @@
                                     <field name="description"/>
                                     <field name="order_qty"/>
                                     <field name="price_unit"/>
+                                    <field name="vat_amount"/>
                                     <field name="subtotal"/>
+                                    <field name="subtotal_with_vat"/>
                             <!--    <field name="assigned_product_id" attrs="{'bg_color': 'red', 'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/> -->
                                     <field name="assigned_product_name" attrs="{'bg_color': 'red: assigned_product_id != product_id', 'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_description" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                             <!--    <field name="assigned_order_qty" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/> -->
                                     <field name="assigned_price_unit" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="assigned_subtotal" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                    <field name="assigned_vat_amount" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
+                                    <field name="assigned_subtotal_with_vat" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                     <field name="eta" widget="date" attrs="{'column_invisible': [('parent.state','in', ['draft','sent','cancel'])]}"/>
                                 </tree>
                             </field>
@@ -75,6 +79,14 @@
                                 <label for="assigned_order_total" attrs="{'invisible': [('state','in', ['draft','sent','cancel'])]}"/>
                             </div>
                             <field name="assigned_order_total" attrs="{'invisible': [('state','in', ['draft','sent','cancel'])]}" widget="monetary" nolabel="1"/>
+                            <div class="oe_inline">
+                                <label for="order_total_with_vat"/>
+                            </div>
+                            <field name="order_total_with_vat" widget="monetary" nolabel="1"/>
+                            <div class="oe_inline">
+                                <label for="assigned_order_total_with_vat" attrs="{'invisible': [('state','in', ['draft','sent','cancel'])]}"/>
+                            </div>
+                            <field name="assigned_order_total_with_vat" attrs="{'invisible': [('state','in', ['draft','sent','cancel'])]}" widget="monetary" nolabel="1"/>
                         </group>   
                         
                         <field name="notes" class="oe_inline" 

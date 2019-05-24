@@ -23,9 +23,13 @@ class FOSPartsPO(models.Model):
     notes = fields.Text(string="Notes")
     order_line = fields.One2many(string="Order Line", ondelete="cascade",
         comodel_name="fos.parts.po.line", inverse_name="fos_parts_po_id")
-    order_total = fields.Float(string="Order Total", compute="OrderTotal", 
+    order_total = fields.Float(string="Order Total without VAT", compute="OrderTotal", 
         digits=dp.get_precision('Product Price'))
-    assigned_order_total = fields.Float(string="Served Total", compute="OrderTotal", 
+    assigned_order_total = fields.Float(string="Served Total without VAT", compute="OrderTotal", 
+        digits=dp.get_precision('Product Price'))
+    assigned_order_total_with_vat = fields.Float(string="Served Total with VAT", compute="OrderTotal", 
+        digits=dp.get_precision('Product Price'))
+    order_total_with_vat = fields.Float(string="Order Total with VAT", compute="OrderTotal", 
         digits=dp.get_precision('Product Price'))
     company_id = fields.Many2one('res.company', string='Company',  required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.invoice'))
@@ -64,6 +68,8 @@ class FOSPartsPO(models.Model):
                             'product_uom': line.product_id.product_tmpl_id.uom_po_id.id,
                             'eta': line.eta
                         })
+                    fpos = po_line_id.order_id.fiscal_position_id
+                    po_line_id.taxes_id = fpos.map_tax(po_line_id.product_id.supplier_taxes_id)
                     logger.info("Estimated Time" +str(line.eta))
                     if not po_line_id:
                         no_error = False
@@ -187,10 +193,14 @@ class FOSPartsPO(models.Model):
                             'order_qty': line.order_qty,
                             'fu_id': line.fu_id.id,
                             'price_unit': line.price_unit,
+                            'vat_amount': line.vat_amount,
+                            'subtotal_with_vat': line.subtotal_with_vat,
                             'assigned_product_id': int(p_id['id']),
                             'assigned_description': line.description,
                             'assigned_order_qty': line.order_qty,
                             'assigned_price_unit': line.price_unit,
+                            'assigned_vat_amount': line.vat_amount,
+                            'assigned_subtotal_with_vat': line.subtotal_with_vat,
                             'fos_parts_po_line_id': line.id,
                             'eta': line.eta
                         }])
@@ -230,11 +240,17 @@ class FOSPartsPO(models.Model):
     def OrderTotal(self):
         ototal = 0
         stotal = 0
+        ototalwithvat = 0
+        stotalwithvat = 0
         for line in self.order_line:
             ototal += line.subtotal
             stotal += line.assigned_subtotal
+            ototalwithvat += line.subtotal_with_vat
+            stotalwithvat += line.assigned_subtotal_with_vat
         self.order_total = ototal
         self.assigned_order_total = stotal
+        self.order_total_with_vat = ototalwithvat
+        self.assigned_order_total_with_vat = stotalwithvat
 
     @api.model
     def create(self, vals):
@@ -268,19 +284,27 @@ class FOSPartsPOLine(models.Model):
     subtotal = fields.Float(string="Total", compute="LineTotals", digits=dp.get_precision('Product Price'))
     fu_id = fields.Many2one(string="FOTON No.", comodel_name="one.fu")
     delivery_date = fields.Date(string="Delivery Date")
+    vat_amount = fields.Float(string="VAT Amount", compute='LineTotals')
+    subtotal_with_vat = fields.Float(string='Total with VAT', readony=True, compute='LineTotals')
     # data fields used by FMPI
     assigned_product_id = fields.Integer(string="Served-Part Number", readonly=True) 
     assigned_product_name = fields.Char(string="Served-Part Number", readonly=True)
     assigned_description = fields.Text(string="Served-Description", readonly=True)
     assigned_order_qty = fields.Float(string="Served-Qty", digits=dp.get_precision('Product Unit of Measure'), readonly=True)
     assigned_price_unit = fields.Float(string="Served-Unit Price", digits=dp.get_precision('Product Price'), readonly=True)
-    assigned_subtotal = fields.Float(string="Served-Total", compute="LineTotals", digits=dp.get_precision('Product Price'), readonly=True)
+    assigned_subtotal = fields.Float(string="Served-Total without VAT", compute="LineTotals", digits=dp.get_precision('Product Price'), readonly=True)
+    assigned_vat_amount = fields.Float(string="Service-VAT Amount", compute='LineTotals')
+    assigned_subtotal_with_vat = fields.Float(string='Serve-Total with VAT', readony=True, compute='LineTotals')
     eta = fields.Datetime(string="ETA", readonly=True)
 
     @api.one
     def LineTotals(self):
         self.subtotal = self.order_qty * self.price_unit
         self.assigned_subtotal = self.assigned_order_qty * self.assigned_price_unit
+        self.vat_amount = self.subtotal * 0.12
+        self.subtotal_with_vat = self.vat_amount + self.subtotal
+        self.assigned_vat_amount = self.assigned_subtotal * 0.12
+        self.assigned_subtotal_with_vat = self.assigned_vat_amount + self.assigned_subtotal
 
     @api.onchange("product_id", "order_qty")
     def ChangingParts(self):
@@ -288,9 +312,14 @@ class FOSPartsPOLine(models.Model):
         if dnp:
             self.price_unit = dnp
         self.subtotal = self.order_qty * self.price_unit
+        self.vat_amount = self.subtotal * 0.12
+        self.subtotal_with_vat = self.vat_amount + self.subtotal
         if self.product_id:
             self.description = self.product_id.product_tmpl_id.description
             self.fmpi_product_id = self.product_id.product_tmpl_id.fmpi_product_id
+
+
+
 
 FOSPartsPOLine()
 
