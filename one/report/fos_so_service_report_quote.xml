@@ -159,7 +159,7 @@
                     <thead>
                         <tr>
                             <th>Description</th>
-                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Flat Rate Time</th>
                             <th class="text-right">Unit Price</th>
                             <th t-if="display_discount" class="text-right">Disc.(%)</th>
                             <th t-if="display_discount" class="text-right">Disc. Amount</th>
@@ -289,7 +289,7 @@
 </template>
 <report 
     id="one.report_so_service_quote"
-    string="Service Sale Quotation"
+    string="Repair Estimate"
     model="sale.order" 
     report_type="qweb-html"
     file="one.report_so_service_quote_template"
