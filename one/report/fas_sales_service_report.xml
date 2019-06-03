@@ -90,7 +90,7 @@
                         <tr>
                             <th>Product</th>
                             <th class="text-center">Description</th>
-                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Flat Rate Time</th>
                         </tr>
                    </thead>
                    <tbody class="sale_tbody">
