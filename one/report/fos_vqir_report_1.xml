@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="view_fos_vqir_report_search" model="ir.ui.view">
+		<field name="name">view.fos.vqir.report.search</field>
+		<field name="model">view.fos.vqir.report</field>
+		<field name="arch" type="xml">
+			<search string="VQIR Report">
+				<field name="vqir_date"/>
+				<filter string="This Year" name="year" invisible="0" 
+                                  domain="[('vqir_date','&lt;=', time.strftime('%%Y-12-31')),('vqir_date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+ 				<group expand="1" string="Group by">
+                        <filter string="Dealer" name="by_dealer" context="{'group_by':'dealer_id'}"/>
+                        <filter string="State" name="by_state" context="{'group_by':'vqir_state'}"/>
+                        <filter string="Date" name="by_date" context="{'group_by':'vqir_date'}"/>
+                </group>
+			</search>
+		</field>		
+	</record>
+
+	<record model="ir.ui.view" id="view_one_vqir_report_1_tree">
+		<field name="name">view.one.vqir.report.tree</field>
+		<field name="model">view.fos.vqir.report</field>
+		<field name="arch" type="xml">
+			<tree string="VQIR Analysis" create="false" edit="false" delete="false">
+				<field name="name"/>
+				<field name="vqir_date"/>
+				<field name="dealer_id"/>
+				<field name="fos_fu_id"/>
+        		<field name="fu_chassis_number"/>
+        		<field name="fu_engine_number"/>
+        		<field name="users_name"/>
+        		<field name="users_mobile"/>
+        		<field name="km_1st_trouble"/>
+        		<field name="run_km"/>
+        		<field name="date_occur"/>
+        		<field name="trouble_cause_analysis"/>
+        		<field name="disposal_measures"/>
+        		<field name="parts_number"/>
+        		<field name="parts_desc"/>
+        		<field name="parts_qty"/>
+        		<field name="parts_cost"/>
+        		<field name="parts_hf_amount"/>
+        		<field name="parts_total"/>
+        		<field name="job_code"/>
+	    		<field name="job_code_desc"/>
+        		<field name="job_qty"/>        		
+				<field name="job_cost"/>
+        		<field name="job_total"/>
+	       		<field name="job_parts_total"/>
+        		<field name="vqir_state"/>
+        		<field name="remarks"/>
+ 			</tree>
+		</field>
+	</record> 
+    	<!-- actions opening views on models -->
+    	<record model="ir.actions.act_window" id="view_fos_vqir_report_1_action_window">
+      		<field name="name">VQIR Report</field>
+      		<field name="res_model">view.fos.vqir.report</field>
+      		<field name="view_mode">tree</field>
+		<field name="view_type">form</field>
+		<field name="search_view_id" ref="view_fos_vqir_report_search"/>
+		<field name="context">{'search_default_year': 1}</field>
+    	</record>
+
+    	<!-- actions -->
+    <menuitem name="VQIR Report" id="menu_vqir_report" 
+        parent="menu_top_service" 
+        sequence="3"
+        groups="one.msd_administrators"
+	    action="view_fos_vqir_report_1_action_window"/>
+</odoo>
