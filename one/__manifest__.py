@@ -88,6 +88,7 @@
     'report/fas_report_purchase_order.xml',
     'report/parts_sales_report_1_view.xml',
     'report/fos_sale_report.xml',    
+    'report/fos_vqir_report_1.xml',
     'report/fos_so_nonf_service_report.xml',      
     'security/ir.model.access.csv',
     ],
