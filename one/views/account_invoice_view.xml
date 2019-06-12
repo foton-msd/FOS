@@ -14,7 +14,26 @@
                     <field name="account_id" groups="account.group_account_user"
                         domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                 </xpath>
-
+                <xpath expr="//field[@name='comment']" position="after">
+                    <group string="Signatories" col="3">
+                        <group>
+                            <field name="prepared_by_id"/>
+                            <field name="prepared_by_desig"/>
+                        </group>
+                        <group>
+                            <field name="approved_by"/>
+                            <field name="approved_by_desig"/>
+                        </group>
+                        <group>
+                            <field name="checked_by"/>
+                            <field name="checked_by_desig"/>
+                        </group>
+                        <group>
+                            <field name="received_by"/>
+                            <field name="received_by_desig"/>
+                        </group>
+                    </group>
+                </xpath>
             </field>
         </record>
         <!-- removed filter from vendor bill's account_id selection -->
@@ -30,6 +49,26 @@
                 <xpath expr="//page/field/tree/field[@name='account_id']" position="replace">
                     <field name="account_id" groups="account.group_account_user"
                         domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
+                </xpath>                
+                <xpath expr="//field[@name='comment']" position="after">
+                    <group string="Signatories" col="3">
+                        <group>
+                            <field name="prepared_by_id"/>
+                            <field name="prepared_by_desig"/>
+                        </group>
+                        <group>
+                            <field name="approved_by"/>
+                            <field name="approved_by_desig"/>
+                        </group>
+                        <group>
+                            <field name="checked_by"/>
+                            <field name="checked_by_desig"/>
+                        </group>
+                        <group>
+                            <field name="received_by"/>
+                            <field name="received_by_desig"/>
+                        </group>
+                    </group>
                 </xpath>
             </field>
         </record>
