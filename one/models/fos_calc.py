@@ -40,12 +40,15 @@ class FOSSaleCalculator(models.Model):
     addons_total = fields.Float(string="Additional Accessories", compute="_getAddonsTotal", readonly=True)
     less = fields.One2many(string="Product", comodel_name="fos.calc.less", inverse_name="fos_calc_id", ondelete='cascade', index=True, copy=False)
     less_total = fields.Float(string="Less", compute="_getLessTotal", readonly=True)
+    additional_accessories = fields.Float(string="Additional Accessories", compute="_gettotalAccessories", readonly=True)
     net_cash_outlay_std = fields.Float(string="Net Cash Outlay", compute="_getNCOStd", readonly=True)
     net_cash_outlay_oma = fields.Float(string="Net Cash Outlay", compute="_getNCOOma", readonly=True)
     state = fields.Selection(string="Status", selection=[('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'Confirmed')], default='draft')
     sale_order_id = fields.Many2one(string="Sale Quotation", comodel_name="sale.order", copy=False)
     sale_executive = fields.Many2one(string="Sale Executive", comodel_name="res.users", default=lambda self: self.env.user)
     sale_executive_id = fields.Many2one(string="Sale Executive", comodel_name="fos.sale.executive")
+    prepared_by_id = fields.Many2one(string="Prepared by", comodel_name="res.users", default=lambda self: self.env.user)
+    prepared_by_desig = fields.Char(string="Designation", related="prepared_by_id.partner_id.function")
     
 
     @api.one
@@ -89,6 +92,10 @@ class FOSSaleCalculator(models.Model):
             self.addons_total += line.amount
 
     @api.multi
+    def _gettotalAccessories(self):
+        self.additional_accessories = self.addons_total - self.less_total
+
+    @api.multi
     def _getLessTotal(self):
         for line in self.less:
             self.less_total += line.amount_less
@@ -108,7 +115,7 @@ class FOSSaleCalculator(models.Model):
         self._getNCOOma()
         self._getNCOStd()
 
-    @api.onchange("downpayment")  
+    @api.onchange("downpayment") 
     def DownpaymentChanged(self):   
         if self.srp > 0:
             self.dp_percent = ((self.downpayment or 0) / (self.net_cash or 0)) * 100
