@@ -53,6 +53,7 @@
     'views/fos_acctg_reports.xml',
     'views/fos_account_internal_xfer_view.xml',
     'views/stock_backorder_confirmation_view.xml',
+    'views/fos_service_technician_view.xml',
     #'views/fos_labor_codes_view.xml',
     # non-FOTON Servicing
     'views/nonf_menus_view.xml',
@@ -89,7 +90,8 @@
     'report/parts_sales_report_1_view.xml',
     'report/fos_sale_report.xml',    
     'report/fos_vqir_report_1.xml',
-    'report/fos_so_nonf_service_report.xml',      
+    'report/fos_so_nonf_service_report.xml',
+    'report/fos_sale_calculator_report.xml', 
     'security/ir.model.access.csv',
     ],
   'application': 'True',
