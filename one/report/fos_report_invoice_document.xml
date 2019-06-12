@@ -4,25 +4,32 @@
     <xpath expr="//div" position="after">
         <div class="footer">
             <table width="100%">
-                    <tr>
+                <tr>
                     <td align="center"><strong>Prepared by:</strong></td>
                     <td align="center"><strong>Checked by:</strong></td>
                     <td align="center"><strong>Approved by:</strong></td>
                     <td align="center"><strong>Received by:</strong></td>
-                    </tr>
-                    <tr>
-                    <td><br/><br/></td>
-                    <td><br/><br/></td>
-                    <td><br/><br/></td>
-                    <td><br/><br/></td>
-                    </tr>
-                    <tr>
-                    <td align="center">__________________</td>
-                    <td align="center">__________________</td>
-                    <td align="center">__________________</td>
-                    <td align="center">__________________</td>
-                    </tr>
-            </table>
+                </tr>
+                <tr>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                   <td><br/><br/></td>
+                </tr>
+                <tr>
+                </tr>
+                <tr>
+                   <td align="center"><u><span t-field="o.prepared_by_id"/></u></td>
+                   <td align="center"><u><span t-field="o.checked_by"/></u></td>
+                   <td align="center"><u><span t-field="o.approved_by"/></u></td>
+                   <td align="center"><u><span t-field="o.received_by"/></u></td>
+                </tr>
+                <tr>
+                   <td align="center"><span t-field="o.prepared_by_desig"/></td>
+                   <td align="center"><span t-field="o.checked_by_desig"/></td>
+                   <td align="center"><span t-field="o.approved_by_desig"/></td>
+                   <td align="center"><u><span t-field="o.received_by"/></u></td>
+                </tr>
+              </table>
         </div>       
     </xpath>
   </template>

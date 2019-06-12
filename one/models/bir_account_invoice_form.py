@@ -11,6 +11,15 @@ _logger = logging.getLogger(__name__)
 class BIRAccountInvoiceForm(models.Model):
   _inherit = 'account.invoice'
 
+  prepared_by_id = fields.Many2one(string="Prepared by", comodel_name="res.users", readonly=True, default=lambda self: self.env.user)
+  prepared_by_desig = fields.Char(string="Designation", readonly=True, related="prepared_by_id.partner_id.function")
+  checked_by = fields.Char(string="Checked by")
+  checked_by_desig = fields.Char(string="Designation")
+  approved_by = fields.Char(string="Approved by")
+  approved_by_desig = fields.Char(string="Designation")
+  received_by = fields.Char(string="Received by")
+  received_by_desig = fields.Char(string="Designation")
+
   @api.multi
   def _bir_get_tax_amount_by_group(self):
     self.ensure_one()
@@ -40,5 +49,6 @@ class BIRAccountInvoiceForm(models.Model):
         if not found:
           res2.append([tax_name, tax_base, tax_amount])
     return res2
+
 
 BIRAccountInvoiceForm()
