@@ -65,7 +65,7 @@
                                 <field name="monthly_amortization_std" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="downpayment" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="oma_std" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                <field name="addons_total" attrs="{'readonly': [('state','!=','draft')]}"/>   
+                                <field name="additional_accessories" attrs="{'readonly': [('state','!=','draft')]}"/>   
                     </group>
                     <group string="OMA" attrs="{'invisible': [('cash_outlay','!=','oma')]}">
                                 <field name="bank_id" attrs="{'readonly': [('state','!=','draft')]}"/>
@@ -73,7 +73,7 @@
                                 <field name="monthly_amortization_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="downpayment" attrs="{'readonly': [('state','!=','draft')]}"/>
                                 <field name="oma_oma" attrs="{'readonly': [('state','!=','draft')]}"/>
-                                <field name="addons_total" attrs="{'readonly': [('state','!=','draft')]}"/>                           
+                                <field name="additional_accessories" attrs="{'readonly': [('state','!=','draft')]}"/>                           
                     </group>
                     <group string="Addons">
                       <field name="addons" mode="tree,kanban" attrs="{'readonly': [('state','!=','draft')]}" nolabel="1">            
