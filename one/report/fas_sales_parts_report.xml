@@ -32,28 +32,43 @@
                </tr>
               </tbody>
             </table>
-            <table width="100%">
-	          <tr>
-               <td width="40%"><strong>Local Name: </strong><span t-field="doc.fu_local_name_id"/></td>
-                <td width="40%"><strong>Conduction Sticker: </strong><span t-field="doc.fu_conduction_sticker"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Body Type: </strong><span t-field="doc.fu_body_type"/></td>
-                <td width="40%"><strong>Area: </strong><span t-field="doc.fas_area_id"/></td>
-	          </tr>
-              <tr>
-                <td width="40%"><strong>Chassis Number: </strong><span t-field="doc.fu_chassis_number"/></td>
-                <td width="40%"><strong>Run KM: </strong><span t-field="doc.run_km"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Engine Number: </strong><span t-field="doc.fu_engine_number"/></td>
-                <td width="40%"><strong>Job Type: </strong><span t-field="doc.fos_job_type_id"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Plate Number: </strong><span t-field="doc.fu_plate_number"/></td>
-                <td width="40%"></td>
-              </tr>
-            </table>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Local Name: </strong><span t-field="doc.fu_local_name_id"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Conduction Sticker: </strong><span t-field="doc.fu_conduction_sticker"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Body Type: </strong><span t-field="doc.fu_body_type"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Area: </strong><span t-field="doc.fas_area_id"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Chassis Number: </strong><span t-field="doc.fu_chassis_number"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Run KM: </strong><span t-field="doc.run_km"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Engine Number: </strong><span t-field="doc.fu_engine_number"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Job Type: </strong><span t-field="doc.fos_job_type_id"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Plate Number: </strong><span t-field="doc.fu_plate_number"/>
+              </div>
+            </div>
             <div class="row mt32 mb32" id="informations">
                 <div t-if="doc.client_order_ref" class="col-xs-3">
                     <strong>Your Reference:</strong>

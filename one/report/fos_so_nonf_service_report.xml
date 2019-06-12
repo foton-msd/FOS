@@ -33,24 +33,38 @@
                </tr>
               </tbody>
             </table>
-            <table width="100%">
-	          <tr>
-               <td width="40%"><strong>Maker: </strong><span t-field="doc.nonf_maker"/></td>
-                <td width="40%"><strong>Conduction Sticker: </strong><span t-field="doc.nonf_conduction_sticker"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Model: </strong><span t-field="doc.nonf_model"/></td>
-                <td width="40%"><strong>Plate Number: </strong><span t-field="doc.nonf_plate_number"/></td>
-	          </tr>
-              <tr>
-                <td width="40%"><strong>Chassis Number: </strong><span t-field="doc.nonf_unit_id.chassis_number"/></td>
-                <td width="40%"><strong>Plate Number: </strong><span t-field="doc.nonf_plate_number"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Engine Number: </strong><span t-field="doc.nonf_unit_id.engine_number"/></td>
-                <td width="40%"><strong>Color: </strong><span t-field="doc.nonf_color"/></td>              
-              </tr>              
-          </table>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Maker: </strong><span t-field="doc.nonf_maker"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Conduction Sticker: </strong><span t-field="doc.nonf_conduction_sticker"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Model: </strong><span t-field="doc.nonf_model"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Plate Number: </strong><span t-field="doc.nonf_plate_number"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Chassis Number: </strong><span t-field="doc.nonf_unit_id.chassis_number"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Plate Number: </strong><span t-field="doc.nonf_plate_number"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Engine Number: </strong><span t-field="doc.nonf_unit_id.engine_number"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Color: </strong><span t-field="doc.nonf_color"/>
+              </div>
+            </div>
             <div class="row mt32 mb32" id="informations">
                 <div t-if="doc.client_order_ref" class="col-xs-3">
                     <strong>Your Reference:</strong>

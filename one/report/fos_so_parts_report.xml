@@ -69,8 +69,10 @@
                         <tr>
                             <th>Part Number</th>
                             <th>Description</th>
+                            <th>Location</th>
                             <th class="text-right">Quantity</th>
                             <th class="text-right">Unit Price</th>
+                            <th class="text-right">Taxes</th>
                             <th t-if="display_discount" class="text-right">Disc.(%)</th>
                             <th t-if="display_discount" class="text-right">Disc. Amount</th>
                             <th class="text-right price_tax_included">Total Price</th>
@@ -92,12 +94,18 @@
                                 <tr>
                                     <td><span t-field="l.product_id"/></td>
                                     <td><span t-field="l.part_desc"/></td>
+                                    <t t-foreach="l.move_ids" t-as="mv">
+                                        <td><span t-field="mv.location_id"></span></td>
+                                    </t>
                                     <td class="text-right">
                                         <span t-field="l.product_uom_qty"/>
                                         <span t-field="l.product_uom" groups="product.group_uom"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
                                     </td>
                                     <td t-if="display_discount" class="text-right">
                                         <span t-esc="'%.2f'%(l.discount)"/>

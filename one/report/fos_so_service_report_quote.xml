@@ -33,28 +33,43 @@
                </tr>
               </tbody>
             </table>
-            <table width="100%">
-                  <tr>
-               <td width="40%"><strong>Local Name: </strong><span t-field="doc.fu_local_name_id"/></td>
-                <td width="40%"><strong>Conduction Sticker: </strong><span t-field="doc.fu_conduction_sticker"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Body Type: </strong><span t-field="doc.fu_body_type"/></td>
-                <td width="40%"><strong>Area: </strong><span t-field="doc.fas_area_id"/></td>
-                  </tr>
-              <tr>
-                <td width="40%"><strong>Chassis Number: </strong><span t-field="doc.fu_chassis_number"/></td>
-                <td width="40%"><strong>Run KM: </strong><span t-field="doc.run_km"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Engine Number: </strong><span t-field="doc.fu_engine_number"/></td>
-                <td width="40%"><strong>Job Type: </strong><span t-field="doc.fos_job_type_id"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Plate Number: </strong><span t-field="doc.fu_plate_number"/></td>
-                <td width="40%"></td>
-              </tr> 
-            </table>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Local Name: </strong><span t-field="doc.fu_local_name_id"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Conduction Sticker: </strong><span t-field="doc.fu_conduction_sticker"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Body Type: </strong><span t-field="doc.fu_body_type"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Area: </strong><span t-field="doc.fas_area_id"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Chassis Number: </strong><span t-field="doc.fu_chassis_number"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Run KM: </strong><span t-field="doc.run_km"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Engine Number: </strong><span t-field="doc.fu_engine_number"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Job Type: </strong><span t-field="doc.fos_job_type_id"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Plate Number: </strong><span t-field="doc.fu_plate_number"/>
+              </div>
+            </div>
             <div class="row mt32 mb32" id="informations">
                 <div t-if="doc.client_order_ref" class="col-xs-3">
                     <strong>Your Reference:</strong>
@@ -92,6 +107,7 @@
                             <th>Description</th>
                             <th class="text-right">Quantity</th>
                             <th class="text-right">Unit Price</th>
+                            <th class="text-right">Taxes</th>
                             <th t-if="display_discount" class="text-right">Disc.(%)</th>
                             <th t-if="display_discount" class="text-right">Disc. Amount</th>
                             <th class="text-right price_tax_included">Total Price</th>
@@ -120,11 +136,14 @@
                                     <td class="text-right">
                                         <span t-field="l.price_unit"/>
                                     </td>
-                                    <td t-if="display_discount" class="text-right">
-                                        <span t-field="l.discount"/>
+                                    <td class="text-right">
+                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
                                     </td>
                                     <td t-if="display_discount" class="text-right">
-                                        <span t-field="l.discount_amount"/>
+                                        <span t-esc="'%.2f'%(l.discount)"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-right">
+                                        <span t-esc="'%.2f'%(l.discount_amount)"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-field="l.price_total"
@@ -161,6 +180,7 @@
                             <th>Description</th>
                             <th class="text-right">Flat Rate Time</th>
                             <th class="text-right">Unit Price</th>
+                            <th class="text-right">Taxes</th>
                             <th t-if="display_discount" class="text-right">Disc.(%)</th>
                             <th t-if="display_discount" class="text-right">Disc. Amount</th>
                             <th class="text-right price_tax_included">Total Price</th>
@@ -188,6 +208,9 @@
                                     </td>
                                     <td class="text-right">
                                         <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
                                     </td>
                                     <td t-if="display_discount" class="text-right">
                                         <span t-esc="'%.2f'%(l.discount)"/>
@@ -224,25 +247,53 @@
         </div>
       </div>
                 <tr>
-                   <td><br/><br/></td>
+                   <td><br/></td>
                 </tr>
-      <div class="clearfix">
-         <div class="row">
-           <div class="col-xs-4 pull-right">
-               <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
-                  <tr class="border-black" style="border-bottom:1px solid #dddddd;">
-                  </tr>
-                  <tr class="border-black">
-                    <td><strong>Grand Total</strong></td>
-                    <td class="text-right">
-                      <span t-field="doc.amount_total"
-                        t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
-                    </td>
-                  </tr>
-                </table>
-           </div>
-         </div>
-      </div>
+            <div class="clearfix">
+                <div class="row" name="total">
+                    <div class="col-xs-4 pull-right">
+                        <table class="table table-condensed" style="min-width: 200px;max-width: 350px;">
+                            <tr class="border-black" style="border-bottom:1px solid #dddddd;">
+                                <td><strong>Subtotal</strong></td>
+                                <td class="text-right">
+                                    <span t-field="doc.amount_untaxed"
+                                        t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                </td>
+                            </tr>
+                            <t t-foreach="doc._get_tax_amount_by_group()" t-as="amount_by_group">
+                                <tr style="border-bottom:1px solid #dddddd;">
+                                    <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
+                                        <td>
+                                            <span t-esc="amount_by_group[0]"/>
+                                            <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="amount_by_group[1]"
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </t>
+                                    <t t-else ="">
+                                        <td>
+                                            <span t-esc="amount_by_group[0]"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="amount_by_group[1]"
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                            <tr class="border-black">
+                                <td><strong>Total</strong></td>
+                                <td class="text-right">
+                                    <span t-field="doc.amount_total"
+                                        t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <p><strong>Remarks</strong></p>
             <p t-field="doc.note" />
             <p t-if="doc.payment_term_id.note">

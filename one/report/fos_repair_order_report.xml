@@ -24,28 +24,38 @@
                </tr>
               </tbody>
             </table>
-          <table width="100%">
-	          <tr>
-               <td width="40%"><strong>FOTON Number: </strong><span t-field="o.fu_id"/></td>
-                <td width="40%"><strong>Conduction Sticker: </strong><span t-field="o.fu_conduction_sticker"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Local Name: </strong><span t-field="o.fu_local_name"/></td>
-                <td width="40%"><strong>Plate Number: </strong><span t-field="o.fu_plate_number"/></td>
-	          </tr>
-              <tr>
-                <td width="40%"><strong>Chassis Number: </strong><span t-field="o.fu_chassis_number"/></td>
-                <td width="40%"><strong>Run KM: </strong><span t-field="o.run_km"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Engine Number: </strong><span t-field="o.fu_engine_number"/></td>
-                <td width="40%"><strong>Service Advisor: </strong><span t-field="o.service_advisor_id"/></td>
-              </tr>
-              <tr>
-                <td width="40%"><strong>Plate Number: </strong><span t-field="o.fu_plate_number"/></td>
-                <td width="40%"></td>
-              </tr>               
-          </table>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>FOTON Number: </strong><span t-field="o.fu_id"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Conduction Sticker: </strong><span t-field="o.fu_conduction_sticker"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Local Name: </strong><span t-field="o.fu_local_name"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Plate Number: </strong><span t-field="o.fu_plate_number"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Chassis Number: </strong><span t-field="o.fu_chassis_number"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Run KM: </strong><span t-field="o.run_km"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <strong>Engine Number: </strong><span t-field="o.fu_engine_number"/>
+              </div>
+              <div class="col-xs-6">
+                <strong>Service Advisor: </strong><span t-field="o.service_advisor_id"/>
+              </div>
+            </div>
           <br/><b/>
                 <h3>
                  <span>Repair Order Details</span><br/><b/>
