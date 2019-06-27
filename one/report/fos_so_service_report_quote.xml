@@ -28,6 +28,7 @@
                  <td width="10%"><strong>Charged to:</strong></td>
                  <td width="90%">
                  <t t-esc="doc.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                 <t><span t-if="doc.partner_id.mobile"> Mobile: <span t-field="doc.partner_id.mobile" /><br/></span><span t-if="doc.partner_id.phone"> Phone: <span t-field="doc.partner_id.phone"/><br/></span></t>
                  <t t-esc="doc.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="doc.partner_id.vat"/>
                  </td>
                </tr>
@@ -126,7 +127,7 @@
 
                             <!-- Lines associated -->
                             <t t-foreach="layout_category['lines']" t-as="l">
-                             <t t-if="l.product_id.type == 'product'">
+                             <t t-if="l.product_id.type in ['consu','product']">
                                 <tr>
                                     <td><span t-field="l.part_desc"/></td>
                                     <td class="text-right">
