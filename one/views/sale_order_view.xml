@@ -51,9 +51,15 @@
             <button name="print_saleorder_service" class="oe_highlight"
                 attrs="{'invisible': [('so_type','!=','service')]}"
                 string="Print Service" type="object"/>
+            <button name="print_nfso_service" class="oe_highlight"
+                attrs="{'invisible': [('so_type','!=','service2')]}"
+                string="Print NF-Service" type="object"/>
             <button name="print_saleorder_parts" class="oe_highlight"
                 attrs="{'invisible': [('so_type','!=','service')]}"
                 string="Print Parts" type="object"/>
+            <button name="print_nfso_parts" class="oe_highlight"
+                attrs="{'invisible': [('so_type','!=','service2')]}"
+                string="Print NF-Parts" type="object"/>
             <button name="print_so_service" class="oe_highlight"
                 attrs="{'invisible': ['|',('so_type','!=','service'),('state','!=','sale')]}"
                 string="Print S.O Service" type="object"/>
@@ -130,7 +136,7 @@
           </group>                            
           <group string="Sales Info" attrs="{'invisible': ['|',('so_type','!=','units'),('state','in',['draft','sent'])]}">
             <field name="date_released"/>
-            <field name="user_id" string="Sales Executive" attrs="{'readonly': [('state','!=','sale')]}"
+            <field name="sales_executive_id" string="Sales Executive" attrs="{'readonly': [('state','!=','sale')]}"
               options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"/>
             <field name="source_of_awareness_id" attrs="{'readonly': [('state','!=','sale')]}"/>
             <field name="venue_of_marketing_activity" attrs="{'readonly': [('state','!=','sale')]}"/>
@@ -212,6 +218,22 @@
                 domain="[('sub_type','=','units')]"/>
               <field name="layout_category_id" groups="sale.group_sale_layout"/>
               <field name="name"/>
+<!--              <field name="service_technicians" widget="many2many_tags" attrs="{'column_invisible': [('parent.state','not in',['sale','done'])], 'required': [('parent.so_type','in',['service','service2'])]}">                                                   
+                <tree>
+                  <field name="name"/>  
+                </tree>
+                <form>
+                  <field name="name"/>
+                </form>
+              </field>
+              <field name="service_start_date" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+              <field name="service_end_date" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+              <field name="service_duration" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+              <field name="service_status" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>    
+              <button name="service_start" string="Start" type="object" attrs="{'invisible': [('service_status','=',True)], 'column_invisible': [('parent.state', 'not in', ['sale', 'done']), [('parent.so_type','in',['service','service2')]]}"/>
+              <button name="service_pause" string="Pause" type="object" attrs="{'invisible': [('service_status','not in',['start','resume'])], 'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+              <button name="service_resume" string="Resume" type="object" attrs="{'invisible': [('service_status','!=','pause')],'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+              <button name="service_stop" string="Finish" type="object" attrs="{'invisible': [('service_status','not in',['pause','start'])],'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/> -->
               <field name="product_uom_qty" string="Ordered Qty"
                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"/>
               <field name="qty_delivered" attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])], 'readonly': [('qty_delivered_updateable', '=', False)]}"/>
