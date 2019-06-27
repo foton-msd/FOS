@@ -20,7 +20,6 @@ class FasSaleOrder(models.Model):
   checked_by = fields.Char(string="Checked by")
   approved_by = fields.Char(string="Approved by")
   checked_by_desig = fields.Char(string="Designation")
-  
   approved_by_desig = fields.Char(string="Designation")
   sq_number = fields.Char(string="Quotation Number", readonly=True)
   # unit info fields for service
@@ -82,6 +81,7 @@ class FasSaleOrder(models.Model):
   nonf_ro_id = fields.Many2one(string="Repair Order", comodel_name="nonf.ro", copy=False)
   nonf_unit_id = fields.Many2one(string="Non-FOTON Units", comodel_name="nonf.units", copy=False)
   promised_date = fields.Datetime(string="Promised Date")
+  sales_executive_id = fields.Many2one(string="Sales Executive", comodel_name="fos.sale.executive")
   
   @api.model
   @api.multi
@@ -352,6 +352,14 @@ class FasSaleOrder(models.Model):
     return self.env.ref('one.report_so_nonf_service').report_action(self)
 
   @api.multi
+  def print_nfso_service(self):
+    return self.env.ref('one.report_service_nfsaleorder').report_action(self)
+  
+  @api.multi
+  def print_nfso_parts(self):
+    return self.env.ref('one.report_parts_nfsaleorder').report_action(self)
+
+  @api.multi
   def print_saleorder_parts(self):
     return self.env.ref('one.report_parts_saleorder').report_action(self)
 
@@ -365,7 +373,7 @@ class FasSaleOrder(models.Model):
 
   @api.multi
   def print_so_units(self):
-    return self.env.ref('one.report_so_units').report_action(self)  
+   return self.env.ref('one.report_so_units').report_action(self)  
 
   @api.multi
   def print_so_service(self):
