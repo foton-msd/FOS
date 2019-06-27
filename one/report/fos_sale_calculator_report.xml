@@ -65,7 +65,7 @@
                 <strong>Reservation Fee: </strong><span t-field="doc.reservation_fee"/>
               </div>
             </div><br/>
-            <h4><b>Ammotization</b></h4> <br/>
+            <h4><b>Amortization</b></h4> <br/>
             <div class="row">
               <div class="col-xs-6">
                 <strong>Bank: </strong><span t-field="doc.bank_id"/>
@@ -81,10 +81,10 @@
             </div>
             <div class="row">
               <div class="col-xs-6" t-if="doc.cash_outlay == 'standard'">
-                <strong>Net Monthly Ammotization: </strong><span t-esc="'%.2f'%(doc.monthly_amortization_std)"/>
+                <strong>Net Monthly Amortization: </strong><span t-esc="'%.2f'%(doc.monthly_amortization_std)"/>
               </div>
               <div class="col-xs-6" t-if="doc.cash_outlay == 'oma'">
-                <strong>Net Monthly Ammotization: </strong><span t-esc="'%.2f'%(doc.monthly_amortization_oma)"/>
+                <strong>Net Monthly Amortization: </strong><span t-esc="'%.2f'%(doc.monthly_amortization_oma)"/>
               </div>
             </div>
             <div class="row">
