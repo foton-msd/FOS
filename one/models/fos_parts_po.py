@@ -134,7 +134,7 @@ class FOSPartsPO(models.Model):
                                 'fu_id':  (fmpi_parts_so_lines[0]['fu_id'][0] if fmpi_parts_so_lines[0]['fu_id'] else 0)
                             }
                             models.execute_kw(db, uid, password, 'sale.order.line', 'create', [values])
-                            models.execute_kw(db, uid, password, 'fmpi.parts.so', 'write', [[self.fmpi_parts_so_id],{'state':'confirm'}])
+                            models.execute_kw(db, uid, password, 'fmpi.parts.so', 'write', [[self.fmpi_parts_so_id],{'state':'confirm','sale_order_id': so_id}])
             else:
                 raise exceptions.except_orm(_('Remote Action Failed'), _("Cannot create Partner Profile"))
             self.write({'state': 'confirm','purchase_order_id': po_id.id})
