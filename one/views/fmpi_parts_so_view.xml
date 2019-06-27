@@ -33,7 +33,8 @@
                         <div class="oe_title">
                             <group>
                                 <group>      
-                                    <h1><field name="dealer_id" readonly="1"/></h1>                                                                  
+                                    <h1><field name="dealer_id" readonly="1"/></h1>
+                                    <h2><field name="sale_order_id"/></h2>                                                               
                                 </group>
                                 <group>
                                     <field name="name" readonly="1"/>
