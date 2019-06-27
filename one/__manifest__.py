@@ -23,6 +23,7 @@
     'views/stock_picking_view.xml',
     'views/stock_move_line_view.xml',
     'views/fos_account_journal_view.xml',
+    #'views/fos_account_account.xml',
     #'views/fos_inet_reports.xml',
     # FOS' groups, menus, wizards and views
     'views/fos_groups_view.xml',
@@ -91,7 +92,9 @@
     'report/fos_sale_report.xml',    
     'report/fos_vqir_report_1.xml',
     'report/fos_so_nonf_service_report.xml',
-    'report/fos_sale_calculator_report.xml', 
+    'report/fos_sale_calculator_report.xml',
+    'report/fos_nf_sales_parts_report.xml',
+    'report/fos_nf_sales_service_report.xml',
     'security/ir.model.access.csv',
     ],
   'application': 'True',
