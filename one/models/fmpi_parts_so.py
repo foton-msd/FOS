@@ -40,6 +40,7 @@ class FMPIPartsSO(models.Model):
     username = fields.Char(string="User Name", readonly=True, required=True)
     password = fields.Char(string="Password", readonly=True, required=True)
     fos_parts_po_id = fields.Integer(string="PO Number", readonly=True, required=True)
+    sale_order_id = fields.Many2one(string="Sale Order", comodel_name="sale.order", readonly=True)
         
     @api.one
     def OrderTotal(self):
