@@ -8,8 +8,8 @@
   'website': "https://one.fotonphils.net/",
   'category': 'Uncategorized',
   'version': '0.1',
-  'depends': ['base', 'stock', 'purchase', 'mail', 'sale_management', 'account_invoicing', 
-     'web_sheet_full_width', 'base_vat', 'backend_theme','web_tree_dynamic_colored_field'],
+  'depends': ['base', 'stock', 'purchase', 'mail', 'sale_management', 'account_invoicing', 'report_xlsx',
+     'web_sheet_full_width', 'base_vat', 'backend_theme','web_tree_dynamic_colored_field','account_financial_report'],
   'data': [
     # Jun Salinga
     # odoo native (inherited) views
@@ -19,6 +19,7 @@
     'views/product_attribute_value_view.xml',
     'views/purchase_order_view.xml',
     'views/sale_order_view.xml', 
+    'views/service_order_lines_view.xml',
     'views/account_invoice_view.xml',
     'views/stock_picking_view.xml',
     'views/stock_move_line_view.xml',
@@ -54,7 +55,7 @@
     'views/fos_acctg_reports.xml',
     'views/fos_account_internal_xfer_view.xml',
     'views/stock_backorder_confirmation_view.xml',
-    #'views/fos_service_technician_view.xml',
+    'views/fos_service_technician_view.xml',
     #'views/fos_labor_codes_view.xml',
     # non-FOTON Servicing
     'views/nonf_menus_view.xml',
@@ -63,6 +64,7 @@
     'views/nonf_ro_view.xml',
     'views/nonf_sales_service_view.xml',
     'views/fos_calc_view.xml',
+    'views/fos_productivity_losses_view.xml',
     #'wizards/nonf_cancel_ro_view.xml',
     # Parts Online Order
     'views/fos_parts_po_view.xml',

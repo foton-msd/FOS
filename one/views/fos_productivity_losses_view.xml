@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="fos_loss_form_tree">
+            <field name="name">Productivity Losses</field>
+            <field name="model">fos.productivity.losses</field>
+            <field name="arch" type="xml">
+                <tree string="Service Technicians" delete="false">
+                    <field name="name"/>
+                    <field name="loss_type"/>
+                    <field name="manual"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="fos_loss_form_view" model="ir.ui.view">
+            <field name="name">Productivity Losses</field>
+            <field name="model">fos.productivity.losses</field>
+            <field name="arch" type="xml">
+                <form string="Workcenter Productivity Loss">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="loss_type"/>
+                        </group><group>
+                            <field name="manual"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        
+        <record id="fos_productivity_losses_act_window" model="ir.actions.act_window">
+            <field name="name">Productivity Losses</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fos.productivity.losses</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="fos_productivity_losses_menu" 
+            name="Productivity Losses" 
+            action="fos_productivity_losses_act_window" 
+            parent="one.fos_service_maintenance_menu" 
+            sequence="11"
+        />
+    </data>
+</odoo>

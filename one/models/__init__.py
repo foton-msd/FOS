@@ -50,6 +50,7 @@ from . import fos_calc_less
 from . import fos_sale_executive
 from . import fos_su_source_of_awareness
 from . import fos_su_source_of_sales
+from . import fos_productivity_losses
 #from . import fos_labor_codes
 from . import fos_acctg_reports
 from . import fos_parts_po
@@ -57,3 +58,4 @@ from . import fmpi_parts_so
 from . import sync_parts_master
 from . import sync_labor_codes
 from . import sync_warranty_codes
+from . import fos_service_technician
