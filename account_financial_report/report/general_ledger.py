@@ -93,7 +93,7 @@ class GeneralLedgerReportAccount(models.TransientModel):
         'account.account',
         index=True
     )
-
+    
     # Data fields, used for report display
     code = fields.Char()
     name = fields.Char()

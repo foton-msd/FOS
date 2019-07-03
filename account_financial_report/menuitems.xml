@@ -4,7 +4,7 @@
     <menuitem
         parent="account.menu_finance_reports"
         id="menu_oca_reports"
-        name="OCA accounting reports"
+        name="FOS Custom Reports"
         groups="account.group_account_manager,account.group_account_user"
         />
 
@@ -97,5 +97,11 @@
         parent="account.menu_finance_legal_statement"
         groups="base.group_erp_manager"
         />
-
+        
+    <menuitem
+        parent="account.menu_finance_reports"
+        id="menu_fos_analysis_reports"
+        name="FOS Custom Analysis"
+        groups="account.group_account_manager,account.group_account_user"
+        />
 </odoo>

@@ -72,9 +72,9 @@
                                             attrs="{'invisible': ['|',('service_status','in',('start','finish','cancel'))]}" force_save="1"/>
                                         <button name="service_finish" string="Done" type="object" class="btn-success oe_edit_only"
                                             attrs="{'invisible': ['|',('service_status','in',('finish','cancel','pause')),('service_status','=',False)]}"/>
-                                        <button name="service_pause" string="Pause" type="object" class="btn-warning oe_edit_only"
+                                        <button name="%(service_takttime_pause_action)d" string="Pause" type="action" class="btn-warning oe_edit_only"
                                             attrs="{'invisible': ['|',('service_status','in',('finish','cancel','pause')),('service_status','=',False)]}"/>
-                                         <button name="service_cancel" string="Cancel" type="object" class="btn-danger oe_edit_only"
+                                         <button name="%(service_takttime_cancel_action)d" string="Cancel" type="action" class="btn-danger oe_edit_only"
                                             attrs="{'invisible': ['|', ('service_status','in',('finish','cancel','pause')),('service_status','=',False)]}"/>
                                         <field name="service_status" widget="statusbar"/>
                                     </header>
@@ -113,6 +113,9 @@
                                                 </group>
                                             </form>
                                         </field>
+                                    </group>
+                                    <group string="Service Status Logs" attrs="{'invisible':[('service_status_logs','=',False)]}">
+                                        <field name="service_status_logs" readonly="1" nolabel="1"/>
                                     </group>
                                 </sheet>
                             </page>

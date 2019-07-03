@@ -1706,7 +1706,7 @@ msgstr "Meer dan één huidige jaarwinst rekening"
 
 #. module: account_financial_report
 #: model:ir.ui.menu,name:account_financial_report.menu_oca_reports
-msgid "OCA accounting reports"
+msgid "FOS Custom Reports"
 msgstr "OCA boekhoudkundige rapporten"
 
 #. module: account_financial_report

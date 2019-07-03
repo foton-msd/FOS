@@ -5,4 +5,6 @@ from . import fmpi_vqir_dis
 from . import fmpi_vqir_pre
 from . import fmpi_vqir_dec
 from . import fmpi_vqir_pd
+from . import fos_service_takttime_pause
+from . import fos_service_takttime_cancel
 #from . import nonf_cancel_ro

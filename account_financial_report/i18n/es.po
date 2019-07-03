@@ -1691,7 +1691,7 @@ msgstr "No solo una cuenta de ganancias no afectadas"
 
 #. module: account_financial_report
 #: model:ir.ui.menu,name:account_financial_report.menu_oca_reports
-msgid "OCA accounting reports"
+msgid "FOS Custom Reports"
 msgstr "Informes de contabilidad OCA"
 
 #. module: account_financial_report

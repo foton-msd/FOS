@@ -35,6 +35,7 @@
         'report/templates/open_items.xml',
         'report/templates/trial_balance.xml',
         'report/templates/vat_report.xml',
+        'view/account_entries_report_view.xml',
         'view/account_view.xml',
         'view/report_template.xml',
         'view/report_general_ledger.xml',

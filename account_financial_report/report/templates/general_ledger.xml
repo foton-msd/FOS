@@ -358,7 +358,8 @@
                                t-att-data-res-model="res_model"
                                class="o_account_financial_reports_web_action"
                                style="color: black;">
-                                <t t-raw="line.account"/></a>
+                                <t t-raw="line.move_line_id.account_id.code"/>-
+                                <t t-raw="line.move_line_id.account_id.name"/></a>
                         </span>
                     </div>
                     <!--## taxes-->

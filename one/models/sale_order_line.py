@@ -35,6 +35,7 @@ class FasSaleOrderLine(models.Model):
       ('cancel', 'Cancelled'),
       ('finish', 'Finished')])
   service_time_ids = fields.One2many('sale.order.line.takt', 'order_line_id')
+  service_status_logs = fields.Text(string="Service Status Logs", readonly=True)
 
   @api.one
   @api.depends('service_time_ids.duration')

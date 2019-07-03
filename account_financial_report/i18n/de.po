@@ -1696,7 +1696,7 @@ msgstr "Mehr als ein unberührtes Überschußkonto"
 
 #. module: account_financial_report
 #: model:ir.ui.menu,name:account_financial_report.menu_oca_reports
-msgid "OCA accounting reports"
+msgid "FOS Custom Reports"
 msgstr "OCA Finanzberichte"
 
 #. module: account_financial_report
