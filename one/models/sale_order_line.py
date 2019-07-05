@@ -63,9 +63,10 @@ class FasSaleOrderLine(models.Model):
               'date_start': datetime.now(),
               'user_id': self.env.user.id
           })
-      return self.write({'service_status': 'start',
-                  'date_start': datetime.now(), 'service_start_date': datetime.now(),
-      })
+      if self.service_start_date:
+        return self.write({'service_status': 'start'})
+      else:
+        return self.write({'service_status': 'start', 'service_start_date': datetime.now(),})
 
   @api.multi
   def service_pause(self):
