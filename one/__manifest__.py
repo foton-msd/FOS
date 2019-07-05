@@ -53,7 +53,6 @@
     'views/fos_payment_modes_view.xml',
     'views/fos_account_payment_view.xml',
     'views/fos_serial_view.xml',
-    'views/fos_acctg_reports.xml',
     'views/fos_account_internal_xfer_view.xml',
     'views/stock_backorder_confirmation_view.xml',
     'views/fos_service_technician_view.xml',
