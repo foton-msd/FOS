@@ -22,10 +22,5 @@
         <record id="group_blank" model="res.groups">
             <field name="name">Blank</field>
         </record>
-        <delete id="account.menu_general_ledger" model="ir.ui.menu"/>
-        <delete id="account.menu_general_Balance_report" model="ir.ui.menu"/>
-        <delete id="account.menu_aged_trial_balance" model="ir.ui.menu"/>
-        <delete id="account.menu_account_report" model="ir.ui.menu"/>
-        <delete id="account.menu_print_journal" model="ir.ui.menu"/>
     </data>
 </odoo>
