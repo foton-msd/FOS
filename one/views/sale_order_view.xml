@@ -220,6 +220,8 @@
               <field name="layout_category_id" groups="sale.group_sale_layout"/>
               <field name="name"/>
               <field name="service_status" attrs="{'column_invisible': ['|',('parent.state','not in',['sale','done']), ('parent.so_type','not in',['service','service2'])]}"/>
+              <field name="service_technicians" widget="many2many_tags" 
+                attrs="{'column_invisible': ['|',('parent.state','not in',['sale','done']), ('parent.so_type','not in',['service','service2'])]}"/>
               <field name="service_duration" widget="float_time" attrs="{'column_invisible': ['|',('parent.state','not in',['sale','done']), ('parent.so_type','not in',['service','service2'])]}"/>
               <field name="product_uom_qty" string="Ordered Qty"
                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"/>

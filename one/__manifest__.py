@@ -8,8 +8,8 @@
   'website': "https://one.fotonphils.net/",
   'category': 'Uncategorized',
   'version': '0.1',
-  'depends': ['base', 'stock', 'purchase', 'mail', 'sale_management', 'account_invoicing', 'report_xlsx',
-     'web_sheet_full_width', 'base_vat', 'backend_theme','web_tree_dynamic_colored_field','account_financial_report'],
+  'depends': ['base', 'stock', 'purchase', 'mail', 'sale_management', 'account_invoicing', 'report_xlsx', 'web_sheet_full_width', 
+    'base_vat', 'backend_theme','web_tree_dynamic_colored_field','account_financial_report', 'bank_reconciliation', 'skit_bank_reconcil'],
   'data': [
     # Jun Salinga
     # odoo native (inherited) views

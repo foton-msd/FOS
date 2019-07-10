@@ -82,7 +82,9 @@
                                         <group>
                                             <field name="service_status" invisible="1"/>
                                             <field name="parts_and_job_sub_type" invisible="1"/>
-                                            <field name="service_technicians" widget="many2many_tags" attrs="{'required': [('parts_and_job_sub_type','=','labor'),('parent.state','in',['sale','done'])]}"/>
+                                            <field name="service_technicians" widget="many2many_tags" 
+                                                domain="[('order_line_id','=',False)]"
+                                                attrs="{'required': [('parts_and_job_sub_type','=','labor'),('parent.state','in',['sale','done'])]}"/>
                                             <field name="service_start_date" readonly="1"/>
                                             <field name="service_end_date" readonly="1"/>
                                         </group>
