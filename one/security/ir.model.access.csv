@@ -20,3 +20,11 @@ access_fos_calc_banks,access_fos_calc_banks,model_fos_calc_banks,base.group_user
 access_fos_service_technician,access_fos_service_technician,model_fos_service_technician,base.group_user,1,0,0,0
 access_fos_productivity_losses,access_fos_productivity_losses,model_fos_productivity_losses,base.group_user,1,0,0,0
 access_sale_order_line_takt,access_sale_order_line_takt,model_sale_order_line_takt,base.group_user,1,0,0,0
+access_one_local_names,access_one_local_names,model_one_local_names,base.group_user,1,0,0,0
+access_ams_service_records,access_ams_service_records,model_ams_service_records,base.group_user,1,0,0,0
+access_fmpi_vqir,access_fmpi_vqir,model_fmpi_vqir,base.group_user,1,0,0,0
+access_fmpi_vqir_images,access_fmpi_vqir_images,model_fmpi_vqir_images,base.group_user,1,0,0,0
+access_fmpi_vqir_parts_and_jobs,access_fmpi_vqir_parts_and_jobs,model_fmpi_vqir_parts_and_jobs,base.group_user,1,0,0,0
+access_fas_area,access_fas_area,model_fas_area,base.group_user,1,0,0,0
+access_fos_parts_po,access_fos_parts_po,model_fos_parts_po,base.group_user,1,0,0,0
+access_fos_parts_po_line,access_fos_parts_po_line,model_fos_parts_po_line,base.group_user,1,0,0,0

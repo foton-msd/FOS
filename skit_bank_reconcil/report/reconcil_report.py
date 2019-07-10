@@ -5,8 +5,6 @@ from odoo import api, models, fields
 class SkitBankReconcilReport(models.AbstractModel):
     _name = "report.skit_bank_reconcil.reconcil_report"
 
-
-
     @api.model
     def get_report_values(self, docids, data=None):
         data = data if data is not None else {}

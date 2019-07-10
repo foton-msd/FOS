@@ -8,7 +8,7 @@ class AccountMoveLine(models.Model):
     bank_statement_id = fields.Many2one('bank.statement', 'Bank Statement', copy=False)
     statement_date = fields.Date('Bank.St Date', copy=False)
 
-    @api.multi
+    @api.one
     def write(self, vals):
         if not vals.get("statement_date"):
             vals.update({"reconciled": False})
