@@ -21,7 +21,7 @@ class FasSaleOrderLine(models.Model):
   discount_amount = fields.Float(string="Discount (Amount)", digits=dp.get_precision('Discount'))
   part_number = fields.Many2one(string="Part Number", comodel_name="product.product")
   parts_and_jobs = fields.Many2one(string="Parts & Labor", comodel_name="product.product")
-  parts_and_job_sub_type = fields.Selection(string="Sub-type", selection=[('units','Units'),('parts','Parts'),('supplies','Supplies'),('labor','Labor'),('merchandise','Merchandise'),('addons','Addons')], related="parts_and_jobs.product_tmpl_id.sub_type")
+  parts_and_job_sub_type = fields.Selection(string="Sub-type", selection=[('units','Units'),('parts','Parts'),('supplies','Supplies'),('labor','Labor'),('merchandise','Merchandise'),('warranty','Warranty'),('addons','Addons')], related="parts_and_jobs.product_tmpl_id.sub_type")
   units_and_addons = fields.Many2one(string="Units & Addons", comodel_name="product.product")
   part_desc = fields.Text(string="Parts Description", related="product_id.product_tmpl_id.description_sale", readonly=True)
   service_technicians = fields.One2many(string="Technicians", comodel_name="fos.service.technician", inverse_name="order_line_id")
