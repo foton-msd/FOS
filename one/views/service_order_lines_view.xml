@@ -75,7 +75,7 @@
                                         <button name="%(service_takttime_pause_action)d" string="Pause" type="action" class="btn-warning oe_edit_only"
                                             attrs="{'invisible': ['|',('service_status','in',('finish','cancel','pause')),('service_status','=',False)]}"/>
                                          <button name="%(service_takttime_cancel_action)d" string="Cancel" type="action" class="btn-danger oe_edit_only"
-                                            attrs="{'invisible': ['|', ('service_status','in',('finish','cancel','pause')),('service_status','=',False)]}"/>
+                                            attrs="{'invisible': ['|', ('service_status','in',('finish','cancel')),('service_status','=',False)]}"/>
                                         <field name="service_status" widget="statusbar"/>
                                     </header>
                                     <group>
@@ -84,7 +84,7 @@
                                             <field name="parts_and_job_sub_type" invisible="1"/>
                                             <field name="service_technicians" widget="many2many_tags" 
                                                 domain="[('order_line_id','=',False)]"
-                                                attrs="{'required': [('parts_and_job_sub_type','=','labor'),('parent.state','in',['sale','done'])]}"/>
+                                                attrs="{'readonly': [('service_status','in',('start','finish','cancel'))]}"/>
                                             <field name="service_start_date" readonly="1"/>
                                             <field name="service_end_date" readonly="1"/>
                                         </group>
@@ -99,7 +99,8 @@
                                                 <field name="date_end"/>
                                                 <field name="duration" widget="float_time" sum="Total duration"/>
                                                 <field name="user_id"/>
-                                                <field name="loss_id" string="Efficiency"/>
+                                                <field name="service_status"/>
+                                                <field name="assigned_technicians" widget="many2many_tags"/>
                                             </tree>
                                             <form>
                                                 <group>

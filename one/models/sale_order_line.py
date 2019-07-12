@@ -3,6 +3,7 @@
 from odoo import models, fields, api, _
 from datetime import datetime
 from odoo.addons import decimal_precision as dp
+from odoo.exceptions import ValidationError
 import logging
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,16 @@ class FasSaleOrderLine(models.Model):
   service_time_ids = fields.One2many('sale.order.line.takt', 'order_line_id')
   service_status_logs = fields.Text(string="Service Status Logs", readonly=True)
 
+  @api.onchange("service_technicians")
+  def ServiceTechniciansOnChanged(self):
+    if self._origin.service_technicians:
+      for o in self._origin.service_technicians:
+        logger.info("Removing Technician #" + str(o.id))
+        obj1 = self.env['fos.service.technician'].browse([o.id])
+        obj1.write({'order_line_id': False})
+    if self.service_technicians:
+      logger.info("Current Technicians: " + str(self.service_technicians) )
+
   @api.one
   @api.depends('service_time_ids.duration')
   def _compute_duration(self):
@@ -44,33 +55,52 @@ class FasSaleOrderLine(models.Model):
 
   @api.multi
   def service_start(self):
+    if self.service_technicians:
       self.ensure_one()
       # Need a loss in case of the real time exceeding the expected
       timeline = self.env['sale.order.line.takt']
       if self.service_duration <= 0:
-          loss_id = self.env['fos.productivity.losses'].search([('loss_type','=','productive')], limit=1)
-          if not len(loss_id):
-              raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        loss_id = self.env['fos.productivity.losses'].search([('loss_type','=','productive')], limit=1)
+        if not len(loss_id):
+          raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
       else:
-          loss_id = self.env['fos.productivity.losses'].search([('loss_type','=','performance')], limit=1)
-          if not len(loss_id):
-              raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        loss_id = self.env['fos.productivity.losses'].search([('loss_type','=','performance')], limit=1)
+        if not len(loss_id):
+          raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
       for workorder in self:
-          timeline.create({
-              'order_line_id': workorder.id,
-              'description': _('Time Tracking: ')+self.env.user.name,
-              'loss_id': loss_id[0].id,
-              'date_start': datetime.now(),
-              'user_id': self.env.user.id
+        tID = timeline.create({
+          'order_line_id': workorder.id,
+          'description': _('Time Tracking: ')+self.env.user.name,
+          'loss_id': loss_id[0].id,
+          'date_start': datetime.now(),
+          'user_id': self.env.user.id,
+          'service_status': 'start'
           })
+        if tID:
+          assigned_technicians_obj = self.env["fos.assigned.service.technician"]
+          for tech in self.service_technicians:
+            assigned_technicians_obj.create({
+              'fos_service_technician_id': tech.id,
+              'order_line_takt_id': tID.id
+            })
       if self.service_start_date:
         return self.write({'service_status': 'start'})
       else:
         return self.write({'service_status': 'start', 'service_start_date': datetime.now(),})
+    else:
+      raise ValidationError(_("You must assign at least on Technician to do the job"))
 
   @api.multi
   def service_pause(self):
-    self.end_previous()
+    not_productive_timelines = self.end_previous()
+    if not_productive_timelines:
+      assigned_technicians_obj = self.env["fos.assigned.service.technician"]
+      for tech in self.service_technicians:
+        assigned_technicians_obj.create({
+          'fos_service_technician_id': tech.id,
+          'order_line_takt_id': not_productive_timelines.id
+        })
+      not_productive_timelines.write({'service_status': 'pause'})
     return self.write({'service_status': 'pause'})
 
   @api.multi
@@ -93,17 +123,73 @@ class FasSaleOrderLine(models.Model):
           if not len(loss_id):
               raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
           not_productive_timelines.write({'loss_id': loss_id.id})
-      return True
+      return not_productive_timelines
 
   @api.multi
   def service_cancel(self):
+    not_productive_timelines = self.end_previous()
+    
+    # save to log all technicians assigned to this job line before cancelling
+    assigned_technicians_obj = self.env["fos.assigned.service.technician"]
+    if not_productive_timelines:
+      for tech in self.service_technicians:
+        assigned_technicians_obj.create({
+          'fos_service_technician_id': tech.id,
+          'order_line_takt_id': not_productive_timelines.id
+        })
+      not_productive_timelines.write({'service_status': 'cancel'})
+    else: # no previous log to end
+      self.ensure_one()
+      timeline = self.env['sale.order.line.takt']
+      if self.service_duration <= 0:
+        loss_id = self.env['fos.productivity.losses'].search([('loss_type','=','productive')], limit=1)
+        if not len(loss_id):
+          raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+      else:
+        loss_id = self.env['fos.productivity.losses'].search([('loss_type','=','performance')], limit=1)
+        if not len(loss_id):
+          raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+      for workorder in self:
+        tID = timeline.create({
+          'order_line_id': workorder.id,
+          'description': _('Time Tracking: ')+self.env.user.name,
+          'loss_id': loss_id[0].id,
+          'date_start': datetime.now(),
+          'user_id': self.env.user.id,
+          'service_status': 'cancel'
+          })
+        if tID:
+          assigned_technicians_obj = self.env["fos.assigned.service.technician"]
+          for tech in self.service_technicians:
+            assigned_technicians_obj.create({
+              'fos_service_technician_id': tech.id,
+              'order_line_takt_id': tID.id
+            })
+
+    # free-up all assigned technicians on this job line
+    for assigned_tech in self.service_technicians:
+      assigned_tech.write({'order_line_id': False})
+
     return self.write({'service_status': 'cancel'})
 
   @api.one
   def service_finish(self):
-    self.end_previous()
+    not_productive_timelines = self.end_previous()
+    # save to log all technicians assigned to this job line before cancelling
+    assigned_technicians_obj = self.env["fos.assigned.service.technician"]
+    if not_productive_timelines:
+      for tech in self.service_technicians:
+        assigned_technicians_obj.create({
+          'fos_service_technician_id': tech.id,
+          'order_line_takt_id': not_productive_timelines.id
+        })
+      not_productive_timelines.write({'service_status': 'finish'})
+
     self.service_status = "finish"
     self.service_end_date = datetime.now()
+    # free-up all assigned technicians on this job line
+    for assigned_tech in self.service_technicians:
+      assigned_tech.write({'order_line_id': False})
 
   @api.onchange("discount_amount")  
   def DiscountAmountChanged(self):    
@@ -160,7 +246,12 @@ class FosTaktTime(models.Model):
     date_start = fields.Datetime('Start Date', default=fields.Datetime.now, required=True)
     date_end = fields.Datetime('End Date')
     duration = fields.Float('Duration', compute='_compute_duration', store=False)
-
+    assigned_technicians = fields.One2many(string="Assigned Technicians", comodel_name="fos.assigned.service.technician", inverse_name="order_line_takt_id")
+    service_status = fields.Selection(string="Action", readonly=True, copy=False, selection=[
+      ('start', 'Started'),
+      ('pause', 'Paused'),
+      ('cancel', 'Cancelled'),
+      ('finish', 'Finished')])
     @api.depends('date_end', 'date_start')
     def _compute_duration(self):
         for blocktime in self:
@@ -172,3 +263,13 @@ class FosTaktTime(models.Model):
             else:
                 blocktime.duration = 0.0
 FosTaktTime()
+
+class AssignedServiceTechnician(models.Model):
+  _name = "fos.assigned.service.technician"
+  _description = "Assigned Service Technician"
+ 
+  fos_service_technician_id = fields.Many2one(string='Technician Name', comodel_name="fos.service.technician")
+  name = fields.Char(string="Name", related="fos_service_technician_id.name", readonly=True)
+  order_line_takt_id = fields.Many2one(string="Takt Time", comodel_name="sale.order.line.takt")
+
+AssignedServiceTechnician()
