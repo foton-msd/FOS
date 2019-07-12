@@ -3,6 +3,7 @@ import psycopg2
 import datetime
 import socket
 from odoo import models, fields, api
+from xmlrpc import client as xmlrpclib
 import logging
 logger = logging.getLogger(__name__)
 
@@ -10,7 +11,7 @@ class FosVqir(models.Model):
   _name = 'fos.vqir'
 
   name = fields.Char(string="VQIR", required=True, default='Auto-generated', readonly=True, copy=False)
-  vqir_date = fields.Date(string="Date", required=True)
+  vqir_date = fields.Datetime(string="Date", required=True)
   preapproved_date = fields.Date(string="Pre-Approved Date", readonly=True)
   preclaim_number = fields.Char(string="Pre-Claim Reference", copy=False)
   payment_receipt = fields.Char(string="PR Reference", copy=False)
@@ -139,6 +140,140 @@ class FosVqir(models.Model):
     for line in self.fos_vqir_parts_and_jobs_line:
       pj_approved_total += line.approved_amount
     self.pj_approved_total = pj_approved_total
+  
+  @api.multi
+  def action_submit_api(self):
+    # 1. make connection to FMPI
+    dealer_id = self.company_id.dealer_id.id
+    # FMPI's API Connection Parameters
+    url = self.company_id.fmpi_host.strip()
+    db = self.company_id.fmpi_pgn
+    username = self.company_id.fmpi_pgu
+    password = self.company_id.fmpi_pgp
+    # connect to FMPI
+    logger.info("Connecting to " + url)
+    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    uid = common.authenticate(db, username, password, {})
+    if not uid:
+      raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
+      return 
+    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    # 2. call fmpi.vqir model
+    cur_stamp = fields.datetime.now()
+    vqir_state_logs = "Document:" + (self.name or 'Empty Document') + "\n" + \
+      "Submitted by: " + (self.env.user.name or 'No User Name specified') + "\n" + \
+      "Submitted at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
+      "--------------------------------------------------\n"
+    self.write({'vqir_state': 'submit',
+      'vqir_state_logs': vqir_state_logs + str(self.vqir_state_logs or '')}) 
+      
+    fmpi_vqir_id = models.execute_kw(db, uid, password, 'fmpi.vqir', 'create', [{
+      'dealer_id': self.company_id.dealer_id.id,
+      'name': self.name, 
+      'vqir_date':self.vqir_date, 
+      'preapproved_date': self.preapproved_date, 
+      'payment_receipt': self.payment_receipt,
+      'vqir_type': self.vqir_type,
+      'vqir_service_type': self.vqir_service_type,
+      'vqir_state': 'submit', 
+      'date_occur': self.date_occur, 
+      'vqir_city': self.vqir_city,
+      'place_of_incident': self.place_of_incident,
+      'km_1st_trouble': self.km_1st_trouble,
+      'run_km': self.run_km,
+      'part': self.part, 
+      'person': self.person,
+      'others': self.others,
+      'trouble_explanation': self.trouble_explanation,
+      'trouble_cause_analysis': self.trouble_cause_analysis,
+      'disposal_measures': self.disposal_measures,
+      'proposal_for_improvement': self.proposal_for_improvement, 
+      'driver_name': self.driver_name,
+      'ss_name': self.ss_name, 
+      'ss_street1': self.ss_street1, 
+      'ss_street2': self.ss_street2, 
+      'ss_city': self.ss_city,
+      'ss_phone': self.ss_phone,
+      'ss_mobile': self.ss_mobile,
+      'ss_fax': self.ss_fax,
+      'ss_email': self.ss_email,
+      'users_name': self.users_name, 
+      'users_street1': self.users_street1,
+      'users_street2': self.users_street2, 
+      'users_city': self.users_city, 
+      'users_phone': self.users_phone,
+      'users_mobile': self.users_mobile,
+      'users_fax': self.users_fax, 
+      'users_email': self.users_email,
+      'date_released': self.date_released,
+      'reps_name': self.reps_name, 
+      'reps_street1': self.reps_street1,
+      'reps_street2': self.reps_street2,
+      'reps_city': self.reps_city, 
+      'reps_phone': self.reps_phone,
+      'reps_mobile': self.reps_mobile,  
+      'reps_fax': self.reps_fax,
+      'reps_email': self.reps_email, 
+      'remarks': self.remarks, 
+      'fos_fu_id': self.fos_fu_id.id, 
+      'dealer_id': dealer_id,
+      'dealer_vqir_id': self.id,
+      'dealer_host': self.company_id.dealer_host,
+      'dealer_db': self.company_id.dealer_pgn,
+      'dealer_port': self.company_id.dealer_port, 
+      'dealer_pgu': self.company_id.dealer_pgu,
+      'dealer_pgp': self.company_id.dealer_pgp,
+      'vqir_state_logs': self.vqir_state_logs,
+      'approved_date': self.approved_date,
+      'submitted_date': fields.datetime.now(),
+      'declined_date': self.declined_date,
+      'disapproved_date': self.disapproved_date,
+      'ack_date': self.ack_date,
+      'paid_date': self.paid_date,
+      'url': self.company_id.dealer_host.strip(),
+      'db' : self.company_id.dealer_pgn,
+      'username' : self.company_id.dealer_pgu,
+      'password' : self.company_id.dealer_pgp
+        }])
+        
+    if fmpi_vqir_id:
+      logger.info("VQIR ID " + str(fmpi_vqir_id))
+      # vqir jobs and parts
+      for ji in self.fos_vqir_parts_and_jobs_line:
+        fmpi_vqir_parts_and_jobs_id = models.execute_kw(db, uid, password, 'fmpi.vqir.parts.and.jobs', 'create', [{
+          'name': ji.name,
+          'fmpi_vqir_id': fmpi_vqir_id,
+          'si_number':ji.si_date, 
+          'si_date':ji.si_date, 
+          'parts_number': ji.part_id.name, 
+          'parts_desc': ji.parts_description,
+          'parts_qty': ji.parts_qty,
+          'part_cost': ji.part_cost,
+          'parts_with_fee': ji.parts_with_fee,
+          'parts_total': ji.parts_total, 
+          'job_code': ji.job_code, 
+          'job_code_desc': ji.job_code_desc, 
+          'job_qty': ji.job_qty,
+          'job_cost': ji.job_cost, 
+          'approved_amount': ji.approved_amount,
+          'dealer_pj_id': ji.id }])
+      # vqir images
+      for img in self.fos_vqir_images_line:
+        fmpi_vqir_images_id = models.execute_kw(db, uid, password, 'fmpi.vqir.images', 'create', [{
+          'name': img.name, 
+          'fmpi_vqir_id': fmpi_vqir_id, 
+        #  'image_variant': codecs.encode(img.image_variant, 'base64'), 
+          'image': img.image,
+          'image_medium': img.image_medium,
+          'image_small': img.image_small,
+          'image_remarks': img.image_remarks or '',
+          }])
+        #logger.info("Image Variant:" +str(img.image_variant) + "\n\n\n\n\n")
+        #logger.info("Image:" +str(img.image) + "\n\n\n\n\n")
+        #logger.info("Image Medium:" +str(img.image_medium) + "\n\n\n\n\n")
+        #logger.info("Image Small:" +str(img.image_small) + "\n\n\n\n\n")
+      self.write({"submitted_date":cur_stamp})
+              
 
   @api.multi
   def action_submit(self):
@@ -257,7 +392,7 @@ class FosVqir(models.Model):
       self.disapproved_date or None,
       self.ack_date or None,
       self.paid_date or None))
-    self.write({'submitted_date': cur_stamp}) 
+    self.write({'submitted_date': fields.datetime.now()}) 
     
       #vqir_state_logs) VALUES (
     # vqir jobs and parts
