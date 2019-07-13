@@ -1,6 +1,8 @@
-import psycopg2
+# -*- coding: utf-8 -*-
 import socket
+import datetime
 from odoo import models, fields, api
+from xmlrpc import client as xmlrpclib
 import logging
 logger = logging.getLogger(__name__)
 
@@ -9,7 +11,7 @@ class FMPIVqir(models.Model):
   _description = 'FMPI VQIR'
 
   name = fields.Char(string="VQIR", readonly=True)
-  vqir_date = fields.Date(string="Date", readonly=True)
+  vqir_date = fields.Datetime(string="Date", readonly=True)
   preapproved_date = fields.Date(string="Pre-Approved Date", readonly=True)
   preclaim_number = fields.Char(string="Pre-Claim Reference", readonly=True)
   payment_receipt = fields.Char(string="PR Reference", readonly=True)
@@ -91,6 +93,7 @@ class FMPIVqir(models.Model):
   # images
   fmpi_vqir_images_line = fields.One2many(string="Images", comodel_name="fmpi.vqir.images", inverse_name="fmpi_vqir_id", readonly=True, ondelete="cascade")
   # dealer info
+  company_id = fields.Many2one(string="Company", comodel_name="res.company", required=False)
   dealer_id = fields.Many2one(string="Dealer Name", comodel_name="one.dealers", required=True)
   dealer_vqir_id = fields.Integer(string="VQIR ID", required=True)
   dealer_host = fields.Char(string="Host Name", required=True)
@@ -101,105 +104,171 @@ class FMPIVqir(models.Model):
   # date
   approved_date = fields.Datetime(string="Approved Date")
   submitted_date = fields.Datetime(string="Submitted Date")
-  declined_date = fields.Datetime(string="Declined Date")
+  declined_date = fields.Datetime(string="Returned Date")
   disapproved_date = fields.Datetime(string="Disapproved Date")
   ack_date = fields.Datetime(string="Acknowledge Date")
   paid_date = fields.Datetime(string="Paid Date")
-  
-  @api.multi
-  def action_ack_log(self):
-    # set connection parameters to FMPI
-    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
-    conn_string = "host='" + dealer_ip + \
-      "' dbname='"+ self.dealer_db + \
-      "' user='odoo' password='OneOdoo'"
-    logger.info("connecting to the database\n ->%s"%(conn_string))
-    conn = psycopg2.connect(conn_string)
-    cursor = conn.cursor()
-    cur_stamp = fields.datetime.now()
-    cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'ack', ack_date = %s WHERE id = %s;
-    """,(self.vqir_state_logs, cur_stamp, str(self.dealer_vqir_id)))
-    conn.commit()
-    conn.close()
-    self.write({"ack_date":cur_stamp})
+  url = fields.Char(string="URL", readonly=True, required=True)
+  db = fields.Char(string="Database", readonly=True, required=True)
+  username = fields.Char(string="User Name", readonly=True, required=True)
+  password = fields.Char(string="Password", readonly=True, required=True)  
+  company_id = fields.Many2one(string="Company", comodel_name="res.company", required=False)
+
 
   @api.multi
-  def action_app_log(self):
-    # set connection parameters to FMPI
-    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
-    conn_string = "host='" + dealer_ip + \
-      "' dbname='"+ self.dealer_db + \
-      "' user='odoo' password='OneOdoo'"
-    logger.info("connecting to the database\n ->%s"%(conn_string))
-    conn = psycopg2.connect(conn_string)
-    cursor = conn.cursor()
+  def action_ack_api(self):
+   # 1. make connection to Dealer
+    dealer_vqir_id = self.dealer_vqir_id
+    db = self.db
+    url = self.url
+    username = self.username
+    password = self.password
+   # attempt to connect
+    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    uid = common.authenticate(db, username, password, {})
+    if not uid:
+      raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
+      return 
+    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    vqir_state_logs = "Document:" + self.name + "\n" + \
+      "Acknowledged by: " + self.env.user.name + "\n" + \
+      "Acknowledged at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
+      "Acknowledgement notes: " + (self.name or '') + "\n" + \
+      "--------------------------------------------------\n"
+    self.write({'vqir_state': 'ack',
+      'vqir_state_logs': str(self.vqir_state_logs or '')}) 
     cur_stamp = fields.datetime.now()
-    cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'approved', approved_date = %s WHERE id = %s;
-    """,(self.vqir_state_logs, cur_stamp, str(self.dealer_vqir_id)))
-    for line in self.fmpi_vqir_parts_and_jobs_line:
-      cursor.execute("""
-        UPDATE fos_vqir_parts_and_jobs SET approved_amount = %s
-        WHERE id = %s;
-      """,(line.approved_amount, line.dealer_pj_id))
-    conn.commit()
-    conn.close()
-    self.write({"approved_date":cur_stamp})
+    if models:
+      logger.info("Models: " + str(models))
+      mod_out = models.execute_kw(db, uid, password, 'fos.vqir', 'write', 
+        [[self.dealer_vqir_id,], {'vqir_state': 'ack','vqir_state_logs': str(self.vqir_state_logs or ''),
+        "ack_date":cur_stamp}])
+      for line in self.fmpi_vqir_parts_and_jobs_line:
+        pj_approved_amount = models.execute_kw(db, uid, password, 'fos.vqir.parts.and.jobs', 'write', 
+        [[line.dealer_pj_id,], {'parts_approved_amount': line.parts_approved_amount,
+        'job_approved_amount': line.job_approved_amount}])
+    self.write({'vqir_state': 'ack', "ack_date":cur_stamp})
 
   @api.multi
-  def action_dis_log(self):
-    # set connection parameters to FMPI
-    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
-    conn_string = "host='" + dealer_ip + \
-      "' dbname='"+ self.dealer_db + \
-      "' user='odoo' password='OneOdoo'"
-    logger.info("connecting to the database\n ->%s"%(conn_string))
-    conn = psycopg2.connect(conn_string)
-    cursor = conn.cursor()
+  def action_app_api(self):
+   # 1. make connection to Dealer
+    dealer_vqir_id = self.dealer_vqir_id
+    db = self.db
+    url = self.url
+    username = self.username
+    password = self.password
+   # attempt to connect
+    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    uid = common.authenticate(db, username, password, {})
+    if not uid:
+      raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
+      return 
+    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    vqir_state_logs = "Document:" + self.name + "\n" + \
+      "Approved by: " + self.env.user.name + "\n" + \
+      "Approved at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
+      "Approved notes: " + (self.name or '') + "\n" + \
+      "--------------------------------------------------\n"
+    self.write({'vqir_state': 'approved',
+      'vqir_state_logs': str(self.vqir_state_logs or '')}) 
     cur_stamp = fields.datetime.now()
-    cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'disapproved', disapproved_date = %s WHERE id = %s;
-    """,(self.vqir_state_logs, cur_stamp, str(self.dealer_vqir_id)))
-    conn.commit()
-    conn.close()
-    self.write({"disapproved_date":cur_stamp})
-    
-  @api.multi
-  def action_dec_log(self):
-    # set connection parameters to FMPI
-    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
-    conn_string = "host='" + dealer_ip + \
-      "' dbname='"+ self.dealer_db + \
-      "' user='odoo' password='OneOdoo'"
-    logger.info("connecting to the database\n ->%s"%(conn_string))
-    conn = psycopg2.connect(conn_string)
-    cursor = conn.cursor()
-    cur_stamp = fields.datetime.now()
-    cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'declined', declined_date = %s WHERE id = %s;
-    """,(self.vqir_state_logs, cur_stamp, str(self.dealer_vqir_id)))
-    conn.commit()
-    conn.close()
-    self.write({"declined_date":cur_stamp})
+    if models:
+      logger.info("Models: " + str(models))
+      mod_out = models.execute_kw(db, uid, password, 'fos.vqir', 'write', 
+        [[self.dealer_vqir_id,], {'vqir_state': 'approved','vqir_state_logs': str(self.vqir_state_logs or ''),
+        "approved_date":cur_stamp}])
+    self.write({'vqir_state': 'approved', "approved_date":cur_stamp})
 
   @api.multi
-  def action_pd_log(self):
-    # set connection parameters to FMPI
-    dealer_ip = socket.gethostbyname(str(self.dealer_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
-    conn_string = "host='" + dealer_ip + \
-      "' dbname='"+ self.dealer_db + \
-      "' user='odoo' password='OneOdoo'"
-    logger.info("connecting to the database\n ->%s"%(conn_string))
-    conn = psycopg2.connect(conn_string)
-    cursor = conn.cursor()
+  def action_dis_api(self):
+   # 1. make connection to Dealer
+    dealer_vqir_id = self.dealer_vqir_id
+    db = self.db
+    url = self.url
+    username = self.username
+    password = self.password
+   # attempt to connect
+    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    uid = common.authenticate(db, username, password, {})
+    if not uid:
+      raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
+      return 
+    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    vqir_state_logs = "Document:" + self.name + "\n" + \
+      "Disapproved by: " + self.env.user.name + "\n" + \
+      "Disapproved at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
+      "Disapproved notes: " + (self.name or '') + "\n" + \
+      "--------------------------------------------------\n"
+    self.write({'vqir_state': 'disapproved',
+      'vqir_state_logs': str(self.vqir_state_logs or '')}) 
     cur_stamp = fields.datetime.now()
-    cursor.execute("""
-      UPDATE fos_vqir SET vqir_state_logs = %s, vqir_state = 'paid', paid_date = %s WHERE id = %s;
-    """,(self.vqir_state_logs, fields.datetime.now(), str(self.dealer_vqir_id)))
-    conn.commit()
-    conn.close()
-    self.write({"paid_date":cur_stamp})
+    if models:
+      logger.info("Models: " + str(models))
+      mod_out = models.execute_kw(db, uid, password, 'fos.vqir', 'write', 
+        [[self.dealer_vqir_id,], {'vqir_state': 'disapproved','vqir_state_logs': str(self.vqir_state_logs or ''),
+        "disapproved_date":cur_stamp}])
+    self.write({'vqir_state': 'disapproved', "disapproved_date":cur_stamp})
+
+  @api.multi
+  def action_dec_api(self):
+   # 1. make connection to Dealer
+    dealer_vqir_id = self.dealer_vqir_id
+    db = self.db
+    url = self.url
+    username = self.username
+    password = self.password
+   # attempt to connect
+    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    uid = common.authenticate(db, username, password, {})
+    if not uid:
+      raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
+      return 
+    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    vqir_state_logs = "Document:" + self.name + "\n" + \
+      "Returned by: " + self.env.user.name + "\n" + \
+      "Returned at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
+      "Returned notes: " + (self.name or '') + "\n" + \
+      "--------------------------------------------------\n"
+    self.write({'vqir_state': 'declined',
+      'vqir_state_logs': str(self.vqir_state_logs or '')}) 
+    cur_stamp = fields.datetime.now()
+    if models:
+      logger.info("Models: " + str(models))
+      mod_out = models.execute_kw(db, uid, password, 'fos.vqir', 'write', 
+        [[self.dealer_vqir_id,], {'vqir_state': 'declined','vqir_state_logs': str(self.vqir_state_logs or ''),
+        "declined_date":cur_stamp}])
+    self.write({'vqir_state': 'declined', "declined_date":cur_stamp})
+
+  @api.multi
+  def action_pd_api(self):
+   # 1. make connection to Dealer
+    dealer_vqir_id = self.dealer_vqir_id
+    db = self.db
+    url = self.url
+    username = self.username
+    password = self.password
+   # attempt to connect
+    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    uid = common.authenticate(db, username, password, {})
+    if not uid:
+      raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
+      return 
+    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    vqir_state_logs = "Document:" + self.name + "\n" + \
+      "Paid by: " + self.env.user.name + "\n" + \
+      "Paid at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
+      "Paid notes: " + (self.name or '') + "\n" + \
+      "--------------------------------------------------\n"
+    self.write({'vqir_state': 'paid',
+      'vqir_state_logs': str(self.vqir_state_logs or '')}) 
+    cur_stamp = fields.datetime.now()
+    if models:
+      logger.info("Models: " + str(models))
+      mod_out = models.execute_kw(db, uid, password, 'fos.vqir', 'write', 
+        [[self.dealer_vqir_id,], {'vqir_state': 'paid','vqir_state_logs': str(self.vqir_state_logs or ''),
+        "paid_date":cur_stamp}])
+    self.write({'vqir_state': 'paid', "paid_date":cur_stamp})
+
 
   @api.one
   def _getPJTotal(self):

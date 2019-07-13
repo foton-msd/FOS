@@ -24,7 +24,7 @@ class FmpiVqirAck(models.TransientModel):
                 "--------------------------------------------------\n"
             fmpi_vqir_obj.write({'vqir_state': 'ack',
                 'vqir_state_logs': vqir_state_logs + (fmpi_vqir_obj.vqir_state_logs or '')})
-            fmpi_vqir_obj.action_ack_log()
+            fmpi_vqir_obj.action_ack_api()
         else:
             raise UserError(_("You cannot acknowledge this VQIR in this state"))
         return act_close

@@ -24,7 +24,7 @@ class FmpiVqirDis(models.TransientModel):
                 "--------------------------------------------------\n"
             fmpi_vqir_obj.write({'vqir_state': 'disapproved',
                 'vqir_state_logs': vqir_state_logs + (fmpi_vqir_obj.vqir_state_logs or '')})
-            fmpi_vqir_obj.action_dis_log()
+            fmpi_vqir_obj.action_dis_api()
         else:
             raise UserError(_("You cannot disapproved this VQIR in this state"))
         return act_close

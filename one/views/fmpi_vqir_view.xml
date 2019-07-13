@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
         <record model="ir.ui.view" id="fmpi_view_vqir_tree">
@@ -39,7 +40,7 @@
                     <button name="%(fmpi_vqir_disapprove_action)d" string="Disapprove" 
                         type="action" vqir_state="ack" class="oe_highlight"
                         attrs="{'invisible': [('vqir_state', '!=', 'ack')]}"/>   
-                    <button name="%(fmpi_vqir_dec_action)d" string="Decline" 
+                    <button name="%(fmpi_vqir_dec_action)d" string="Return" 
                         type="action" vqir_state="ack" class="oe_highlight"
                         attrs="{'invisible': [('vqir_state', '!=', 'ack')]}"/>   
                     <button name="%(fmpi_vqir_pd_action)d" string="Set as Paid" 
@@ -138,19 +139,19 @@
                  <tree mode="tree" editable="bottom">
                    <field name="si_number"/>
                    <field name="si_date"/>
-                   <field name="parts_number"/>
+                   <field name="part_id"/>
                    <field name="parts_desc"/>
                    <field name="parts_qty"/>
                    <field name="parts_cost"/>
                    <field name="parts_with_fee"/>
+                   <field name="parts_approved_amount"/>
                    <field name="parts_total"/>
-                   <field name="job_code"/>
+                   <field name="job_id"/>
                    <field name="job_code_desc"/>
                    <field name="job_qty"/>
                    <field name="job_cost"/>
                    <field name="job_total"/>
-                   <field name="approved_amount" 
-                    attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel'])], 'readonly': [('parent.vqir_state', 'in', ['approved','draft','cancel','declined','disapproved'])]}"/>
+                   <field name="job_approved_amount"/>
                    <field name="job_parts_total"/>
                  </tree>
                  <form string="Trouble Parts and Jobs">
@@ -160,20 +161,21 @@
                        <group>
                          <field name="si_number"/>
                          <field name="si_date"/>
-                         <field name="parts_number"/>
+                         <field name="part_id"/>
                          <field name="parts_desc"/>
                          <field name="parts_qty"/>
                          <field name="parts_cost"/>
                          <field name="parts_with_fee"/>
+                         <field name="parts_approved_amount"/>
                        </group>
                        <group>
                          <field name="parts_total"/>
-                         <field name="job_code"/>                         
+                         <field name="job_id"/>                         
                          <field name="job_code_desc"/>
                          <field name="job_qty"/>
                          <field name="job_cost"/>
                          <field name="job_total"/>
-                        <field name="approved_amount"/>
+                         <field name="job_approved_amount"/> 
                          <field name="job_parts_total"/>
                        </group>
                      </group>

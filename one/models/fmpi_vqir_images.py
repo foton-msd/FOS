@@ -6,7 +6,7 @@ class FMPIVqirImages(models.Model):
   _name = 'fmpi.vqir.images'
   _description = 'VQIR - Images'
 
-  name = fields.Char(string="ID", required=True, readonly=True, default='auto-generated')
+  name = fields.Char(string="ID", readonly=True)
   fmpi_vqir_id = fields.Many2one(string="V.Q.I.R.", comodel_name="fmpi.vqir", readonly=True)
   image_variant = fields.Binary(string="Variant Image", attachment=False,
     help="This field holds the image used as image for the product variant, limited to 1024x1024px.")

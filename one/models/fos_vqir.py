@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import psycopg2
 import datetime
 import socket
 from odoo import models, fields, api
@@ -28,7 +27,7 @@ class FosVqir(models.Model):
       ('declined','Returned'),
       ('paid','Paid')
     ], default='draft', readonly=True)
-  vqir_state_logs = fields.Text(string="Status Logs", readonly=True)
+  vqir_state_logs = fields.Text(string="Status Logs", readonly=True, copy=False)
 
   date_occur = fields.Date(string="Date of occurence", required=True)
   #one_vqir_city_id = fields.Many2one(string="City", comodel_name="one.vqir.cities", required=True)
@@ -92,12 +91,12 @@ class FosVqir(models.Model):
   # parts and jobs
   fos_vqir_parts_and_jobs_line = fields.One2many(string="Parts & Jobs", comodel_name="fos.vqir.parts.and.jobs", inverse_name="fos_vqir_id", ondelete="cascade")
   # images
-  fos_vqir_images_line = fields.One2many(string="Images", comodel_name="fos.vqir.images", inverse_name="fos_vqir_id", ondelete="cascade")  
+  fos_vqir_images_line = fields.One2many(string="Images", comodel_name="fos.vqir.images", inverse_name="fos_vqir_id", ondelete="cascade")
   company_id = fields.Many2one(string="Company", comodel_name="res.company", required=False)
-  # date 
+  # date
   approved_date = fields.Datetime(string="Approved Date")
   submitted_date = fields.Datetime(string="Submitted Date")
-  declined_date = fields.Datetime(string="Declined Date")
+  declined_date = fields.Datetime(string="Returned Date")
   disapproved_date = fields.Datetime(string="Disapproved Date")
   ack_date = fields.Datetime(string="Acknowledge Date")
   paid_date = fields.Datetime(string="Paid Date")
@@ -108,11 +107,11 @@ class FosVqir(models.Model):
     vals['name'] = self.env['ir.sequence'].next_by_code('fos.vqir.seq')
     result = super(FosVqir, self).create(vals)
     return result
-    
+
   @api.multi
   def action_cancel(self):
     self.write({'vqir_state': 'cancel'})
-        
+
   @api.one
   def _getPJTotal(self):
     pj_total = 0
@@ -140,296 +139,243 @@ class FosVqir(models.Model):
     for line in self.fos_vqir_parts_and_jobs_line:
       pj_approved_total += line.approved_amount
     self.pj_approved_total = pj_approved_total
-  
+
   @api.multi
   def action_submit_api(self):
     # 1. make connection to FMPI
     dealer_id = self.company_id.dealer_id.id
+
     # FMPI's API Connection Parameters
     url = self.company_id.fmpi_host.strip()
     db = self.company_id.fmpi_pgn
     username = self.company_id.fmpi_pgu
     password = self.company_id.fmpi_pgp
+    vqir_number = self.name
+
     # connect to FMPI
     logger.info("Connecting to " + url)
     common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
     uid = common.authenticate(db, username, password, {})
     if not uid:
       raise exceptions.except_orm(_('Remote Authentication Failed'), _(url + " failed to authenticate " + username))
-      return 
+      return
     models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
-    # 2. call fmpi.vqir model
     cur_stamp = fields.datetime.now()
-    vqir_state_logs = "Document:" + (self.name or 'Empty Document') + "\n" + \
-      "Submitted by: " + (self.env.user.name or 'No User Name specified') + "\n" + \
-      "Submitted at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
-      "--------------------------------------------------\n"
-    self.write({'vqir_state': 'submit',
-      'vqir_state_logs': vqir_state_logs + str(self.vqir_state_logs or '')}) 
-      
-    fmpi_vqir_id = models.execute_kw(db, uid, password, 'fmpi.vqir', 'create', [{
-      'dealer_id': self.company_id.dealer_id.id,
-      'name': self.name, 
-      'vqir_date':self.vqir_date, 
-      'preapproved_date': self.preapproved_date, 
-      'payment_receipt': self.payment_receipt,
-      'vqir_type': self.vqir_type,
-      'vqir_service_type': self.vqir_service_type,
-      'vqir_state': 'submit', 
-      'date_occur': self.date_occur, 
-      'vqir_city': self.vqir_city,
-      'place_of_incident': self.place_of_incident,
-      'km_1st_trouble': self.km_1st_trouble,
-      'run_km': self.run_km,
-      'part': self.part, 
-      'person': self.person,
-      'others': self.others,
-      'trouble_explanation': self.trouble_explanation,
-      'trouble_cause_analysis': self.trouble_cause_analysis,
-      'disposal_measures': self.disposal_measures,
-      'proposal_for_improvement': self.proposal_for_improvement, 
-      'driver_name': self.driver_name,
-      'ss_name': self.ss_name, 
-      'ss_street1': self.ss_street1, 
-      'ss_street2': self.ss_street2, 
-      'ss_city': self.ss_city,
-      'ss_phone': self.ss_phone,
-      'ss_mobile': self.ss_mobile,
-      'ss_fax': self.ss_fax,
-      'ss_email': self.ss_email,
-      'users_name': self.users_name, 
-      'users_street1': self.users_street1,
-      'users_street2': self.users_street2, 
-      'users_city': self.users_city, 
-      'users_phone': self.users_phone,
-      'users_mobile': self.users_mobile,
-      'users_fax': self.users_fax, 
-      'users_email': self.users_email,
-      'date_released': self.date_released,
-      'reps_name': self.reps_name, 
-      'reps_street1': self.reps_street1,
-      'reps_street2': self.reps_street2,
-      'reps_city': self.reps_city, 
-      'reps_phone': self.reps_phone,
-      'reps_mobile': self.reps_mobile,  
-      'reps_fax': self.reps_fax,
-      'reps_email': self.reps_email, 
-      'remarks': self.remarks, 
-      'fos_fu_id': self.fos_fu_id.id, 
-      'dealer_id': dealer_id,
-      'dealer_vqir_id': self.id,
-      'dealer_host': self.company_id.dealer_host,
-      'dealer_db': self.company_id.dealer_pgn,
-      'dealer_port': self.company_id.dealer_port, 
-      'dealer_pgu': self.company_id.dealer_pgu,
-      'dealer_pgp': self.company_id.dealer_pgp,
-      'vqir_state_logs': self.vqir_state_logs,
-      'approved_date': self.approved_date,
-      'submitted_date': fields.datetime.now(),
-      'declined_date': self.declined_date,
-      'disapproved_date': self.disapproved_date,
-      'ack_date': self.ack_date,
-      'paid_date': self.paid_date,
-      'url': self.company_id.dealer_host.strip(),
-      'db' : self.company_id.dealer_pgn,
-      'username' : self.company_id.dealer_pgu,
-      'password' : self.company_id.dealer_pgp
-        }])
-        
-    if fmpi_vqir_id:
-      logger.info("VQIR ID " + str(fmpi_vqir_id))
-      # vqir jobs and parts
-      for ji in self.fos_vqir_parts_and_jobs_line:
-        fmpi_vqir_parts_and_jobs_id = models.execute_kw(db, uid, password, 'fmpi.vqir.parts.and.jobs', 'create', [{
-          'name': ji.name,
-          'fmpi_vqir_id': fmpi_vqir_id,
-          'si_number':ji.si_date, 
-          'si_date':ji.si_date, 
-          'parts_number': ji.part_id.name, 
-          'parts_desc': ji.parts_description,
-          'parts_qty': ji.parts_qty,
-          'part_cost': ji.part_cost,
-          'parts_with_fee': ji.parts_with_fee,
-          'parts_total': ji.parts_total, 
-          'job_code': ji.job_code, 
-          'job_code_desc': ji.job_code_desc, 
-          'job_qty': ji.job_qty,
-          'job_cost': ji.job_cost, 
-          'approved_amount': ji.approved_amount,
-          'dealer_pj_id': ji.id }])
-      # vqir images
-      for img in self.fos_vqir_images_line:
-        fmpi_vqir_images_id = models.execute_kw(db, uid, password, 'fmpi.vqir.images', 'create', [{
-          'name': img.name, 
-          'fmpi_vqir_id': fmpi_vqir_id, 
-        #  'image_variant': codecs.encode(img.image_variant, 'base64'), 
-          'image': img.image,
-          'image_medium': img.image_medium,
-          'image_small': img.image_small,
-          'image_remarks': img.image_remarks or '',
+
+    # Query existence of dealer's VQIR from FMPI Database
+    fmpi_existing_vqir = models.execute_kw(db, uid, password,
+        'fmpi.vqir', 'search',
+        [[['name', '=', vqir_number], ['dealer_id', '=', dealer_id]]])
+    if fmpi_existing_vqir:
+      vqir_state_logs = "Document:" + (self.name or 'Empty Document') + "\n" + \
+        "Re-submitted by: " + (self.env.user.name or 'No User Name specified') + "\n" + \
+        "Re-submitted at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
+        "--------------------------------------------------\n"
+      self.write({'vqir_state': 'submit',
+        'vqir_state_logs': vqir_state_logs + str(self.vqir_state_logs or ''),
+        "submitted_date":cur_stamp})
+
+      for existingID in fmpi_existing_vqir:
+        fmpi_vqir_id = models.execute_kw(db, uid, password, 'fmpi.vqir', 'write', [[existingID], {
+          'vqir_state': 'submit',
+          'date_occur': self.date_occur,
+          'vqir_city': self.vqir_city,
+          'place_of_incident': self.place_of_incident,
+          'km_1st_trouble': self.km_1st_trouble,
+          'run_km': self.run_km,
+          'person': self.person,
+          'others': self.others,
+          'trouble_explanation': self.trouble_explanation,
+          'trouble_cause_analysis': self.trouble_cause_analysis,
+          'disposal_measures': self.disposal_measures,
+          'proposal_for_improvement': self.proposal_for_improvement,
+          'driver_name': self.driver_name,
+          'ss_name': self.ss_name,
+          'ss_street1': self.ss_street1,
+          'ss_street2': self.ss_street2,
+          'ss_city': self.ss_city,
+          'ss_phone': self.ss_phone,
+          'ss_mobile': self.ss_mobile,
+          'ss_fax': self.ss_fax,
+          'ss_email': self.ss_email,
+          'users_name': self.users_name,
+          'users_street1': self.users_street1,
+          'users_street2': self.users_street2,
+          'users_city': self.users_city,
+          'users_phone': self.users_phone,
+          'users_mobile': self.users_mobile,
+          'users_fax': self.users_fax,
+          'users_email': self.users_email,
+          'reps_name': self.reps_name,
+          'reps_street1': self.reps_street1,
+          'reps_street2': self.reps_street2,
+          'reps_city': self.reps_city,
+          'reps_phone': self.reps_phone,
+          'reps_mobile': self.reps_mobile,
+          'reps_fax': self.reps_fax,
+          'reps_email': self.reps_email,
+          'remarks': self.remarks,
+          'fos_fu_id': self.fos_fu_id.id,
+          'vqir_state_logs': self.vqir_state_logs,
+          'submitted_date': fields.datetime.now(),
+          'declined_date': self.declined_date,
+          'disapproved_date': self.disapproved_date,
+          'ack_date': self.ack_date,
+          'paid_date': self.paid_date,
+          'url': self.company_id.dealer_host.strip(),
+          'db' : self.company_id.dealer_pgn,
+          'username' : self.company_id.dealer_pgu,
+          'password' : self.company_id.dealer_pgp}])
+        # query IDs of parts and jobs from FMPI Database
+        fmpi_existing_vqir_pj_ids = models.execute_kw(db, uid, password,
+          'fmpi.vqir.parts.and.jobs', 'search', 
+            [[['fmpi_vqir_id', '=', existingID]]])
+        # delete parts and jobs from FMPI Database
+        models.execute_kw(db, uid, password, 'fmpi.vqir.parts.and.jobs', 'unlink', [fmpi_existing_vqir_pj_ids])
+        # re-create parts and jobs record based on Dealer's Database
+        for ji in self.fos_vqir_parts_and_jobs_line:
+          models.execute_kw(db, uid, password, 'fmpi.vqir.parts.and.jobs', 'create', [{
+            'name': ji.name,
+            'fmpi_vqir_id': existingID,
+            'si_number':ji.si_date,
+            'si_date':ji.si_date,
+            'parts_number': ji.part_id.name,
+            'parts_desc': ji.parts_desc,
+            'parts_qty': ji.parts_qty,
+            'parts_cost': ji.parts_cost,
+            'parts_with_fee': ji.parts_with_fee,
+            'parts_total': ji.parts_total,
+            'job_code': ji.job_code,
+            'job_code_desc': ji.job_code_desc,
+            'job_qty': ji.job_qty,
+            'job_cost': ji.job_cost,
+            'dealer_pj_id': ji.id }])
+        # query IDs of VQIR Images from FMPI Database
+        fmpi_existing_vqir_images_ids = models.execute_kw(db, uid, password,
+          'fmpi.vqir.images', 'search', 
+            [[['fmpi_vqir_id', '=', existingID]]])
+        # delete VQIR Images from FMPI Database
+        models.execute_kw(db, uid, password, 'fmpi.vqir.images', 'unlink', [fmpi_existing_vqir_images_ids])
+        # re-create VQIR Images record based on Dealer's Database
+        for img in self.fos_vqir_images_line:
+          models.execute_kw(db, uid, password, 'fmpi.vqir.images', 'create', [{
+            'name': img.name,
+            'fmpi_vqir_id': existingID,
+            'image': img.image,
+            'image_medium': img.image_medium,
+            'image_small': img.image_small,
+            'image_remarks': img.image_remarks,
+            }])
+    else:
+      # 2. call fmpi.vqir model
+      vqir_state_logs = "Document:" + (self.name or 'Empty Document') + "\n" + \
+        "Submitted by: " + (self.env.user.name or 'No User Name specified') + "\n" + \
+        "Submitted at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
+        "--------------------------------------------------\n"
+      self.write({'vqir_state': 'submit',
+        'vqir_state_logs': vqir_state_logs + str(self.vqir_state_logs or ''),
+        "submitted_date":cur_stamp})
+      fmpi_vqir_id = models.execute_kw(db, uid, password, 'fmpi.vqir', 'create', [{
+        'dealer_id': self.company_id.dealer_id.id,
+        'name': self.name,
+        'vqir_date':self.vqir_date,
+        'preapproved_date': self.preapproved_date,
+        'payment_receipt': self.payment_receipt,
+        'vqir_type': self.vqir_type,
+        'vqir_service_type': self.vqir_service_type,
+        'vqir_state': 'submit',
+        'date_occur': self.date_occur,
+        'vqir_city': self.vqir_city,
+        'place_of_incident': self.place_of_incident,
+        'km_1st_trouble': self.km_1st_trouble,
+        'run_km': self.run_km,
+        'part': self.part,
+        'person': self.person,
+        'others': self.others,
+        'trouble_explanation': self.trouble_explanation,
+        'trouble_cause_analysis': self.trouble_cause_analysis,
+        'disposal_measures': self.disposal_measures,
+        'proposal_for_improvement': self.proposal_for_improvement,
+        'driver_name': self.driver_name,
+        'ss_name': self.ss_name,
+        'ss_street1': self.ss_street1,
+        'ss_street2': self.ss_street2,
+        'ss_city': self.ss_city,
+        'ss_phone': self.ss_phone,
+        'ss_mobile': self.ss_mobile,
+        'ss_fax': self.ss_fax,
+        'ss_email': self.ss_email,
+        'users_name': self.users_name,
+        'users_street1': self.users_street1,
+        'users_street2': self.users_street2,
+        'users_city': self.users_city,
+        'users_phone': self.users_phone,
+        'users_mobile': self.users_mobile,
+        'users_fax': self.users_fax,
+        'users_email': self.users_email,
+        'date_released': self.date_released,
+        'reps_name': self.reps_name,
+        'reps_street1': self.reps_street1,
+        'reps_street2': self.reps_street2,
+        'reps_city': self.reps_city,
+        'reps_phone': self.reps_phone,
+        'reps_mobile': self.reps_mobile,
+        'reps_fax': self.reps_fax,
+        'reps_email': self.reps_email,
+        'remarks': self.remarks,
+        'fos_fu_id': self.fos_fu_id.id,
+        'dealer_id': dealer_id,
+        'dealer_vqir_id': self.id,
+        'dealer_host': self.company_id.dealer_host,
+        'dealer_db': self.company_id.dealer_pgn,
+        'dealer_port': self.company_id.dealer_port,
+        'dealer_pgu': self.company_id.dealer_pgu,
+        'dealer_pgp': self.company_id.dealer_pgp,
+        'vqir_state_logs': self.vqir_state_logs,
+        'approved_date': self.approved_date,
+        'submitted_date': fields.datetime.now(),
+        'declined_date': self.declined_date,
+        'disapproved_date': self.disapproved_date,
+        'ack_date': self.ack_date,
+        'paid_date': self.paid_date,
+        'url': self.company_id.dealer_host.strip(),
+        'db' : self.company_id.dealer_pgn,
+        'username' : self.company_id.dealer_pgu,
+        'password' : self.company_id.dealer_pgp
           }])
-        #logger.info("Image Variant:" +str(img.image_variant) + "\n\n\n\n\n")
-        #logger.info("Image:" +str(img.image) + "\n\n\n\n\n")
-        #logger.info("Image Medium:" +str(img.image_medium) + "\n\n\n\n\n")
-        #logger.info("Image Small:" +str(img.image_small) + "\n\n\n\n\n")
-      self.write({"submitted_date":cur_stamp})
-              
 
-  @api.multi
-  def action_submit(self):
-    fmpi_ip = socket.gethostbyname(str(self.company_id.fmpi_host).replace(':8069','').replace("https://","").replace("http://","").replace("/",""))
-    
-    vqir_state_logs = "Document:" + (self.name or 'Empty Document') + "\n" + \
-      "Submitted by: " + (self.env.user.name or 'No User Name specified') + "\n" + \
-      "Submitted at: " + datetime.datetime.now().strftime("%m/%d/%Y") + "\n" + \
-      "--------------------------------------------------\n"    
-    self.write({'vqir_state': 'submit',
-      'vqir_state_logs': vqir_state_logs + str(self.vqir_state_logs or '')})  
-    logger.info("State Logs:" + vqir_state_logs + str(self.vqir_state_logs or ''))
-    # set connection parameters to FMPI
-    conn_string = "host='" + fmpi_ip + \
-      "' dbname='"+ self.company_id.fmpi_pgn + \
-      "' user='odoo' password='OneOdoo'"
-    logger.info("connecting to the database\n ->%s"%(conn_string))
-    conn = psycopg2.connect(conn_string)
-    cursor = conn.cursor()
-    xdealer_id = -1
-    if not self.company_id.is_fmpi:
-      xdealer_id = self.company_id.dealer_id.id or -1, 
-    # set upload string (SQL)
-    cur_stamp = fields.datetime.now()
-    cursor.execute("""INSERT INTO fmpi_vqir (
-      name, vqir_date, preapproved_date, preclaim_number, payment_receipt, 
-      vqir_type, vqir_service_type, vqir_state, date_occur, vqir_city, 
-      place_of_incident, km_1st_trouble, run_km, part, person, 
-      others, trouble_explanation, trouble_cause_analysis, disposal_measures, proposal_for_improvement, 
-      driver_name, ss_name, ss_street1, ss_street2, ss_city, 
-      ss_phone, ss_mobile, ss_fax, ss_email, users_name, 
-      users_street1, users_street2, users_city, users_phone, users_mobile, 
-      users_fax, users_email, date_released, reps_name, reps_street1, 
-      reps_street2, reps_city, reps_phone, reps_mobile, reps_fax, 
-      reps_email, remarks, fos_fu_id, dealer_id, dealer_vqir_id, 
-      dealer_host, dealer_db, dealer_port, dealer_pgu, dealer_pgp, 
-      vqir_state_logs, approved_date, submitted_date, declined_date,
-      disapproved_date, ack_date, paid_date) VALUES (
-      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-      %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-      %s,%s);
-      """,(
-      self.name or None, # name, vqir_date, preapproved_date, preclaim_number, payment_receipt,
-      self.vqir_date or None, 
-      self.preapproved_date or None, 
-      self.preclaim_number or None, 
-      self.payment_receipt or None,
+      if fmpi_vqir_id:
+        logger.info("VQIR ID " + str(fmpi_vqir_id))
+        # vqir jobs and parts
+        for ji in self.fos_vqir_parts_and_jobs_line:
+          fmpi_vqir_parts_and_jobs_id = models.execute_kw(db, uid, password, 'fmpi.vqir.parts.and.jobs', 'create', [{
+            'name': ji.name,
+            'fmpi_vqir_id': fmpi_vqir_id,
+            'si_number':ji.si_date,
+            'si_date':ji.si_date,
+            'parts_number': ji.part_id.name,
+            'parts_desc': ji.parts_desc,
+            'parts_qty': ji.parts_qty,
+            'parts_cost': ji.parts_cost,
+            'parts_with_fee': ji.parts_with_fee,
+            'parts_total': ji.parts_total,
+            'job_code': ji.job_code,
+            'job_code_desc': ji.job_code_desc,
+            'job_qty': ji.job_qty,
+            'job_cost': ji.job_cost,
+            'approved_amount': ji.approved_amount,
+            'dealer_pj_id': ji.id }])
 
-      self.vqir_type or None, #vqir_type, vqir_service_type, vqir_state, date_occur, vqir_city, 
-      self.vqir_service_type or None,
-      'submit', 
-      self.date_occur or None, 
-      self.vqir_city or None, 
+        # vqir images
+        for img in self.fos_vqir_images_line:
+          fmpi_vqir_images_id = models.execute_kw(db, uid, password, 'fmpi.vqir.images', 'create', [{
+            'name': img.name,
+            'fmpi_vqir_id': fmpi_vqir_id,
+            'image': img.image,
+            'image_medium': img.image_medium,
+            'image_small': img.image_small,
+            'image_remarks': img.image_remarks,
+            }])
 
-      self.place_of_incident or None, # place_of_incident, km_1st_trouble, run_km, part, person, 
-      self.km_1st_trouble or None, 
-      self.run_km or None, 
-      self.part or None, 
-      self.person or None, 
 
-      self.others or None, # others, trouble_explanation, trouble_cause_analysis, disposal_measures, proposal_for_improvement, 
-      self.trouble_explanation or None, 
-      self.trouble_cause_analysis or None,
-      self.disposal_measures or None, 
-      self.proposal_for_improvement or None, 
-
-      self.driver_name or None, #driver_name, ss_name, ss_street1, ss_street2, ss_city, 
-      self.ss_name or None, 
-      self.ss_street1 or None, 
-      self.ss_street2 or None, 
-      self.ss_city or None, 
-
-      self.ss_phone or None, #ss_phone, ss_mobile, ss_fax, ss_email, users_name, 
-      self.ss_mobile or None, 
-      self.ss_fax or None, 
-      self.ss_email or None, 
-      self.users_name or None, 
-
-      self.users_street1 or None, #users_street1, users_street2, users_city, users_phone, users_mobile, 
-      self.users_street2 or None, 
-      self.users_city or None, 
-      self.users_phone or None, 
-      self.users_mobile or None, 
-
-      self.users_fax or None, # users_fax, users_email, date_released, reps_name, reps_street1, 
-      self.users_email or None, 
-      self.date_released or None, 
-      self.reps_name or None, 
-      self.reps_street1 or None, 
-
-      self.reps_street2 or None, # reps_street2, reps_city, reps_phone, reps_mobile, reps_fax, 
-      self.reps_city or None, 
-      self.reps_phone or None, 
-      self.reps_mobile or None, 
-      self.reps_fax or None,
-
-      self.reps_email or None, # reps_email, remarks, fos_fu_id, dealer_id, dealer_vqir_id, 
-      self.remarks or None,      
-      self.fos_fu_id.id or None, 
-      xdealer_id,
-      self.id,  
-
-      self.company_id.dealer_host, # dealer_host, dealer_db, dealer_port, dealer_pgu, dealer_pgp, 
-      self.company_id.dealer_pgn, 
-      self.company_id.dealer_port, 
-      self.company_id.dealer_pgu, 
-      self.company_id.dealer_pgp, 
-      self.vqir_state_logs,
-      self.approved_date or None,
-      cur_stamp,
-      self.declined_date or None,
-      self.disapproved_date or None,
-      self.ack_date or None,
-      self.paid_date or None))
-    self.write({'submitted_date': fields.datetime.now()}) 
-    
-      #vqir_state_logs) VALUES (
-    # vqir jobs and parts
-    for ji in self.fos_vqir_parts_and_jobs_line:
-      cursor.execute("""INSERT INTO fmpi_vqir_parts_and_jobs (
-        name, fmpi_vqir_id, si_number, si_date, parts_number, 
-        parts_desc, parts_qty, parts_cost, parts_with_fee, parts_total, 
-        job_code, job_code_desc, job_qty, job_cost, approved_amount,dealer_pj_id) 
-        VALUES (%s,(SELECT id FROM fmpi_vqir ORDER BY id DESC LIMIT 1),
-        %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);""",
-        (ji.name or None, 
-        ji.si_number or None, 
-        ji.si_date or None, 
-        ji.parts_number or None, 
-        ji.parts_desc or None, 
-        ji.parts_qty or None, 
-        ji.parts_cost or None, 
-        ji.parts_with_fee or None, 
-        ji.parts_total or None, 
-        ji.job_code or None, 
-        ji.job_code_desc or None, 
-        ji.job_qty or None, 
-        ji.job_cost or None,
-        ji.approved_amount or None,
-        ji.id))
-    for img in self.fos_vqir_images_line:
-      cursor.execute("""
-          INSERT INTO fmpi_vqir_images (
-            name, fmpi_vqir_id, image_variant, image, image_medium, 
-            image_small, image_remarks) VALUES (
-              %s, (SELECT id FROM fmpi_vqir ORDER BY id DESC LIMIT 1),
-              %s, %s, %s, %s, %s);
-        """,(
-          img.name or None, img.image_variant or None, 
-          img.image or None, img.image_medium or None,
-          img.image_small or None, img.image_remarks or None
-        ))
-    conn.commit()
-    conn.close()
 FosVqir()

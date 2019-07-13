@@ -10,6 +10,7 @@
                     <field name="vqir_date"/>
                     <field name="ss_name"/>
                     <field name="reps_name"/>
+                    <field name="users_name"/>
                     <field name="fos_fu_id"/>
                     <field name="fu_local_name"/>
                     <field name="fu_chassis_number"/>
@@ -32,7 +33,7 @@
                     <button name="action_cancel" vqir_state="draft"  type="object" string="Cancel"
                         attrs="{'invisible': [('vqir_state', 'not in', ('declined','draft'))]}"
                         confirm="Are you sure to Cancel?"/>
-                    <button name="action_submit" vqir_state="submit" type="object" string="Submit"
+                    <button name="action_submit_api" vqir_state="submit" type="object" string="Submit"
                         attrs="{'invisible': [('vqir_state', 'not in', ('declined','draft'))]}"
                         confirm="Are you sure to Submit?"/>
                 </header>
@@ -125,22 +126,25 @@
                 </group>
 
            <group string="Parts &amp; Jobs">
-              <field name="fos_vqir_parts_and_jobs_line" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}">
-                 <tree mode="tree,kanban">
+              <field name="fos_vqir_parts_and_jobs_line" nolabel="1">
+                 <tree mode="tree" editable="bottom">
                    <field name="si_number"/>
                    <field name="si_date"/>
-                   <field name="parts_number"/>
+                   <field name="part_id" domain="[('sub_type','=','parts')]"
+                        options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                    <field name="parts_desc"/>
                    <field name="parts_qty"/>
                    <field name="parts_cost"/>
                    <field name="parts_with_fee"/>
+                   <field name="parts_approved_amount" attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel'])]}"/>
                    <field name="parts_total"/>
-                   <field name="job_code"/>
+                   <field name="job_id" domain="[('sub_type','in',('labor','warranty'))]"
+                        options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                    <field name="job_code_desc"/>
                    <field name="job_qty"/>
                    <field name="job_cost"/>
                    <field name="job_total"/>
-                   <field name="approved_amount" attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel'])]}"/>
+                   <field name="job_approved_amount" attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel'])]}"/>
                    <field name="job_parts_total"/>
                  </tree>
                  <form string="Trouble Parts and Jobs">
@@ -150,20 +154,21 @@
                        <group>
                          <field name="si_number"/>
                          <field name="si_date"/>
-                         <field name="parts_number"/>
+                         <field name="part_id"/>
                          <field name="parts_desc"/>
                          <field name="parts_qty"/>
                          <field name="parts_cost"/>
                          <field name="parts_with_fee"/>
+                         <field name="parts_approved_amount"/>
                        </group>
                        <group>
                          <field name="parts_total"/>
-                         <field name="job_code"/>                         
+                         <field name="job_id"/>                         
                          <field name="job_code_desc"/>
                          <field name="job_qty"/>
                          <field name="job_cost"/>
                          <field name="job_total"/>
-                         <field name="approved_amount"/>                         
+                         <field name="job_approved_amount"/>                         
                          <field name="job_parts_total"/>
                        </group>
                      </group>

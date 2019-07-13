@@ -24,7 +24,7 @@ class FmpiVqirApp(models.TransientModel):
                 "--------------------------------------------------\n"
             fmpi_vqir_obj.write({'vqir_state': 'approved',
                 'vqir_state_logs': vqir_state_logs + (fmpi_vqir_obj.vqir_state_logs or '')})
-            fmpi_vqir_obj.action_app_log()
+            fmpi_vqir_obj.action_app_api()
         else:
             raise UserError(_("You cannot approved this VQIR in this state"))
         return act_close
