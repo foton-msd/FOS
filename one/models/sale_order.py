@@ -147,7 +147,8 @@ class FasSaleOrder(models.Model):
             'users_mobile': self.partner_id.mobile,
             'users_phone': self.partner_id.phone,
             'run_km': self.run_km,
-            'company_id': self.company_id.id
+            'company_id': self.company_id.id,
+            'remarks': self.name
             })
           if new_vqir_id:
             pj_obj = self.env['fos.vqir.parts.and.jobs']
@@ -156,15 +157,15 @@ class FasSaleOrder(models.Model):
                 if line.product_id.type == "product":
                   pj_obj.create({
                     'fos_vqir_id': new_vqir_id.id,
-                    'parts_number': line.product_id.name,
+                    'part_id': line.product_id.id,
                     'parts_desc': line.name,
                     'parts_qty': line.product_uom_qty,
-                    'parts_cost': line.price_unit
+                    'parts_cost': line.product_id.standard_price
                   })
                 else:
                   pj_obj.create({
                     'fos_vqir_id': new_vqir_id.id,
-                    'job_code': line.product_id.name,
+                    'job_id': line.product_id.id,
                     'job_code_desc': line.name,
                     'job_qty': line.product_uom_qty,
                     'job_cost': line.price_unit
