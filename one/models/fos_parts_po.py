@@ -52,7 +52,8 @@ class FOSPartsPO(models.Model):
                 'partner_id': partner_id,
                 'po_type': 'parts',
                 'date_planned': fields.datetime.now(),
-                'notes': self.name
+                'notes': self.name,
+                'origin': self.name
             })
             if po_id:
                 for line in self.order_line:
@@ -62,7 +63,7 @@ class FOSPartsPO(models.Model):
                             'fu_id': line.fu_id.id,
                             'product_id': line.assigned_product_id,
                             'name': line.assigned_description,
-                            'product_qty': line.assigned_order_qty,
+                            'product_qty': line.order_qty,
                             'price_unit': line.assigned_price_unit,
                             'date_planned': fields.datetime.now(),
                             'product_uom': line.product_id.product_tmpl_id.uom_po_id.id,
@@ -112,7 +113,8 @@ class FOSPartsPO(models.Model):
                 so_id = models.execute_kw(db, uid, password, 'sale.order', 'create', [{
                     'partner_id': fmpi_partner_id,
                     'so_type': 'parts',
-                    'note': self.name
+                    'note': self.name,
+                    'origin': self.name
                 }])
                 logger.info("Sale Order ID: " + str(so_id))
                 if so_id:
@@ -129,7 +131,7 @@ class FOSPartsPO(models.Model):
                                 'part_number': (fmpi_parts_so_lines[0]['assigned_product_id'][0]),
                                 'product_id':  (fmpi_parts_so_lines[0]['assigned_product_id'][0]),
                                 'name':  (fmpi_parts_so_lines[0]['assigned_description']),
-                                'product_uom_qty': (fmpi_parts_so_lines[0]['assigned_order_qty']),
+                                'product_uom_qty': (fmpi_parts_so_lines[0]['order_qty']),
                                 'price_unit':  (fmpi_parts_so_lines[0]['assigned_price_unit']),
                                 'fu_id':  (fmpi_parts_so_lines[0]['fu_id'][0] if fmpi_parts_so_lines[0]['fu_id'] else 0)
                             }
