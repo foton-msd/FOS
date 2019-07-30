@@ -9,6 +9,7 @@
       <field name="arch" type="xml">
         <xpath expr="//field[@name='confirmation_date']" position="replace">
           <field name="date_order" widget="date"/>
+          <field name="origin"/>
         </xpath>
         
       </field>
