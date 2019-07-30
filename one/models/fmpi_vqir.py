@@ -124,6 +124,7 @@ class FMPIVqir(models.Model):
     username = self.username
     password = self.password
    # attempt to connect
+    logger.info("URL: " + url)
     common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
     uid = common.authenticate(db, username, password, {})
     if not uid:
@@ -145,7 +146,7 @@ class FMPIVqir(models.Model):
         "ack_date":cur_stamp}])
       for line in self.fmpi_vqir_parts_and_jobs_line:
         pj_approved_amount = models.execute_kw(db, uid, password, 'fos.vqir.parts.and.jobs', 'write', 
-        [[line.dealer_pj_id,], {'parts_approved_amount': line.parts_approved_amount,
+        [[line.dealer_pj_id,], {'approved_amount': line.approved_amount,
         'job_approved_amount': line.job_approved_amount}])
     self.write({'vqir_state': 'ack', "ack_date":cur_stamp})
 
@@ -177,6 +178,10 @@ class FMPIVqir(models.Model):
       mod_out = models.execute_kw(db, uid, password, 'fos.vqir', 'write', 
         [[self.dealer_vqir_id,], {'vqir_state': 'approved','vqir_state_logs': str(self.vqir_state_logs or ''),
         "approved_date":cur_stamp}])
+      for line in self.fmpi_vqir_parts_and_jobs_line:
+            pj_approved_amount = models.execute_kw(db, uid, password, 'fos.vqir.parts.and.jobs', 'write', 
+        [[line.dealer_pj_id,], {'approved_amount': line.approved_amount,
+        'job_approved_amount': line.job_approved_amount}])
     self.write({'vqir_state': 'approved', "approved_date":cur_stamp})
 
   @api.multi
@@ -295,7 +300,7 @@ class FMPIVqir(models.Model):
   def _getApprovedTotal(self):
     pj_approved_total = 0
     for line in self.fmpi_vqir_parts_and_jobs_line:
-      pj_approved_total += line.approved_amount
+      pj_approved_total += line.job_parts_approved_total
     self.pj_approved_total = pj_approved_total
 
 FMPIVqir()

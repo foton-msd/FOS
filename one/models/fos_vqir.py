@@ -137,7 +137,7 @@ class FosVqir(models.Model):
   def _getApprovedTotal(self):
     pj_approved_total = 0
     for line in self.fos_vqir_parts_and_jobs_line:
-      pj_approved_total += line.approved_amount
+      pj_approved_total += line.job_parts_approved_total
     self.pj_approved_total = pj_approved_total
 
   @api.multi
@@ -165,7 +165,7 @@ class FosVqir(models.Model):
     # Query existence of dealer's VQIR from FMPI Database
     fmpi_existing_vqir = models.execute_kw(db, uid, password,
         'fmpi.vqir', 'search',
-        [[['name', '=', vqir_number], ['dealer_id', '=', dealer_id]]])
+        [[['name', '=', vqir_number], ['dealer_id', '=', dealer_id], ['vqir_date', '=', self.vqir_date]]])
     if fmpi_existing_vqir:
       vqir_state_logs = "Document:" + (self.name or 'Empty Document') + "\n" + \
         "Re-submitted by: " + (self.env.user.name or 'No User Name specified') + "\n" + \
