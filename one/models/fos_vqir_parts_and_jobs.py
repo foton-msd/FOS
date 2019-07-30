@@ -27,9 +27,9 @@ class FasPartsandJobs(models.Model):
   job_cost = fields.Float(string="Job Cost", digits=dp.get_precision('Product Price'))
   job_total = fields.Float(string="Job Total", compute="_getJobTotal", readonly=True)
   job_parts_total = fields.Float(string="Total", compute="_getJobPartsTotal", readonly=True)
-  parts_approved_amount = fields.Float(string="Approved Amount")
-  job_approved_amount = fields.Float(string="Approved Amount")
-  approved_amount = fields.Float(string="Approved Amount", readonly=True)
+  job_approved_amount = fields.Float(string="Job Approved Amount")
+  job_parts_approved_total = fields.Float(string="Total", compute="_getJobPartsApprovedTotal", readonly=True)
+  approved_amount = fields.Float(string="Parts Approved Amount", readonly=True)
   
   @api.onchange("job_qty","job_cost")
   def job_total_changed(self):
@@ -48,6 +48,10 @@ class FasPartsandJobs(models.Model):
   @api.one
   def _getJobPartsTotal(self):
     self.job_parts_total = (self.job_total or 0) + (self.parts_total or 0)
+
+  @api.one
+  def _getJobPartsApprovedTotal(self):
+    self.job_parts_approved_total = (self.approved_amount or 0) + (self.job_approved_amount or 0)
 
   @api.one
   def _getPartsTotal(self):

@@ -25,11 +25,11 @@ class FMPIPartsandJobs(models.Model):
   job_cost = fields.Float(string="Job Cost", digits=dp.get_precision('Product Price'), readonly=True)
   job_total = fields.Float(string="Job Total", compute="_getJobTotal", readonly=True)
   job_parts_total = fields.Float(string="Total", compute="_getJobPartsTotal", readonly=True)
-  approved_amount = fields.Float(string="Approved Amount")
+  approved_amount = fields.Float(string="Parts Approved Amount")
   part_id = fields.Many2one(string="Part Number", comodel_name="product.product", readonly=True)
   job_id = fields.Many2one(string="Job Code", comodel_name="product.product", readonly=True)
-  parts_approved_amount = fields.Float(string="Approved Amount")
-  job_approved_amount = fields.Float(string="Approved Amount")
+  job_approved_amount = fields.Float(string="Job Approved Amount")
+  job_parts_approved_total = fields.Float(string="Total", compute="_getJobPartsApprovedTotal", readonly=True)
   dealer_pj_id = fields.Integer(string="Dealer PJ ID")
 
   @api.onchange("job_qty","job_cost")
@@ -54,6 +54,10 @@ class FMPIPartsandJobs(models.Model):
   @api.one
   def _getJobPartsTotal(self):
     self.job_parts_total = (self.job_total or 0) + (self.parts_total or 0)
+
+  @api.one
+  def _getJobPartsApprovedTotal(self):
+    self.job_parts_approved_total = (self.approved_amount or 0) + (self.job_approved_amount or 0)
 
   @api.one
   def _getPartsTotal(self):
