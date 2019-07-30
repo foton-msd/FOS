@@ -144,7 +144,7 @@
                    <field name="parts_qty"/>
                    <field name="parts_cost"/>
                    <field name="parts_with_fee"/>
-                   <field name="parts_approved_amount"/>
+                   <field name="approved_amount"/>
                    <field name="parts_total"/>
                    <field name="job_id"/>
                    <field name="job_code_desc"/>
@@ -166,7 +166,7 @@
                          <field name="parts_qty"/>
                          <field name="parts_cost"/>
                          <field name="parts_with_fee"/>
-                         <field name="parts_approved_amount"/>
+                         <field name="approved_amount"/>
                        </group>
                        <group>
                          <field name="parts_total"/>

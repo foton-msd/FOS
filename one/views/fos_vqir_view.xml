@@ -136,7 +136,7 @@
                    <field name="parts_qty"/>
                    <field name="parts_cost"/>
                    <field name="parts_with_fee"/>
-                   <field name="parts_approved_amount" attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel'])]}"/>
+                   <field name="approved_amount" attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel','ack','declined','submit'])]}"/>
                    <field name="parts_total"/>
                    <field name="job_id" domain="[('sub_type','in',('labor','warranty'))]"
                         options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
@@ -144,7 +144,7 @@
                    <field name="job_qty"/>
                    <field name="job_cost"/>
                    <field name="job_total"/>
-                   <field name="job_approved_amount" attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel'])]}"/>
+                   <field name="job_approved_amount" attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel','ack','declined','submit'])]}"/>
                    <field name="job_parts_total"/>
                  </tree>
                  <form string="Trouble Parts and Jobs">
@@ -159,7 +159,7 @@
                          <field name="parts_qty"/>
                          <field name="parts_cost"/>
                          <field name="parts_with_fee"/>
-                         <field name="parts_approved_amount"/>
+                         <field name="approved_amount"/>
                        </group>
                        <group>
                          <field name="parts_total"/>
