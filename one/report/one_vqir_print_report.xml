@@ -97,6 +97,7 @@
               <th class="text-center">Parts Quantity</th>
               <th class="text-center">Unit PricePrice</th>
               <th class="text-center">W/ 10% HF</th>
+              <th t-if="o.vqir_state in ['approved','paid']" class="text-center">Approved Amount</th>
               <th class="text-center">Parts Total</th>
                 <t t-foreach="docs.fos_vqir_parts_and_jobs_line" t-as="pj">
                   <tr t-if="pj.parts_number">
@@ -106,6 +107,7 @@
                       <td class="text-right"><span t-field="pj.parts_qty"/></td>
                       <td class="text-right"><span t-field="pj.parts_cost"/></td>
                       <td class="text-right"><span t-field="pj.parts_hf_amount"/></td>
+                      <td t-if="o.vqir_state in ['approved','paid']" class="text-right"><span t-field="pj.approved_amount"/></td>
                       <td class="text-right"><span t-field="pj.parts_total"/></td>
                   </tr>
                   </t>
@@ -134,6 +136,7 @@
               <th>Job Description</th>
               <th class="text-center">Job Qty</th>
               <th class="text-center">Job Cost</th>
+              <th t-if="o.vqir_state in ['approved','paid']" class="text-center">Approved Amount</th>
               <th class="text-center">Job Total</th>
                 <t t-foreach="docs.fos_vqir_parts_and_jobs_line" t-as="pj">
                   <tr t-if="pj.job_code">
@@ -141,6 +144,7 @@
                       <td><span t-field="pj.job_code_desc"/></td>
                       <td class="text-right"><span t-field="pj.job_qty"/></td>
                       <td class="text-right"><span t-field="pj.job_cost"/></td>
+                      <td t-if="o.vqir_state in ['approved','paid']" class="text-right"><span t-field="pj.job_approved_amount"/></td>
                       <td class="text-right"><span t-field="pj.job_total"/></td>
                   </tr>
                   </t>
@@ -175,6 +179,12 @@
                     <td><strong>Grand Total</strong></td>
                     <td class="text-right">
                       <span style="font-size: 150%" t-field="o.pj_total"/>
+                    </td>
+                  </tr>
+                  <tr t-if="o.pj_approved_total" class="border-black">
+                    <td><strong>Approved Amount</strong></td>
+                    <td class="text-right">
+                      <span style="font-size: 150%" t-field="o.pj_approved_total"/>
                     </td>
                   </tr>
                 </table>
