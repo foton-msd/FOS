@@ -61,7 +61,7 @@ class FasPurchaseOrder(models.Model):
         'view_type': 'form',
         'view_mode': 'form',
         'res_id': new.id,
-        'view_id': self.env.ref('fas11.fas_purchase_order_line_import_form',False).id,
+        'view_id': self.env.ref('one.fos_purchase_order_line_import_form',False).id,
         'target': 'new',
     }
 FasPurchaseOrder()
