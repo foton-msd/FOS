@@ -59,6 +59,13 @@
                   confirm="Are you sure to Sync Warranty Codes from FMPI?"
                 />
               </group>
+              <group string="Units">
+                <field name="units_categ_id"/>
+                <button name="sync_units"
+                  type="object" string="Sync Units"
+                  confirm="Are you sure to sync Units from FMPI?"
+                />
+              </group>
               <group string="Service History">
                 <button name="action_sync_service_history"
                   type="object" string="Sync Service History"

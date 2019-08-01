@@ -33,6 +33,7 @@ class FasResCompany(models.Model):
   parts_categ_id = fields.Many2one(string="Parts Category", comodel_name="product.category")
   service_categ_id = fields.Many2one(string="Service Category", comodel_name="product.category")
   warranty_categ_id = fields.Many2one(string="Warranty Category", comodel_name="product.category")
+  units_categ_id = fields.Many2one(string="Units Category", comodel_name="product.category")
 
   @api.multi
   def action_sync_local_names(self):

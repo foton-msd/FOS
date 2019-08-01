@@ -58,4 +58,5 @@ from . import fmpi_parts_so
 from . import sync_parts_master
 from . import sync_labor_codes
 from . import sync_warranty_codes
+from . import sync_units
 from . import fos_service_technician
