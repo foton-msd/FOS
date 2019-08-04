@@ -23,4 +23,10 @@ class Dealers(models.Model):
   fmpi_dealer_stamp = fields.Char(string="FMPI Dealer Stamp", readonly=True, invisible=True)
   type = fields.Char(string="Type")
   is_servicing = fields.Boolean(string="Servicing Dealer")
+  fos_active = fields.Boolean(string="FOS Active")
+  fos_ip_host = fields.Char(string="IP or Host")
+  fos_db = fields.Char(string="Database Name")
+  fos_uname = fields.Char(string="Admin Account")
+  fos_passwd = fields.Char(string="Password")
+  
 Dealers()

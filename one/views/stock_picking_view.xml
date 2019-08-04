@@ -8,16 +8,12 @@
         <xpath expr="//button[@name='action_cancel']" position="attributes">
           <attribute name="groups">one.group_inventory_cancel</attribute>
         </xpath> 
-<!--        <xpath expr="//button[@name='button_validate']" position="replace">
-            <button name="j_validate2" attrs="{'invisible': [('show_validate', '=', False)]}" 
-            string="Validate2" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-        </xpath> -->
         <xpath expr="//form" position="attributes">
            <attribute name="delete">false</attribute>
         </xpath>
-  <!--      <xpath expr="//notebook/page[@name='extra']/group/group/field[@name='picking_type_id']" position="attributes">
-           <attribute name="domain">[('picking_type_code','=','internal')]</attribute>
-        </xpath> -->
+        <xpath expr="//notebook/page[2]/field/tree/field[@name='product_id']" position="after">
+          <field name="description" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('has_move_lines', '=', True)]}"/> 
+        </xpath>
       </field>
     </record>
 

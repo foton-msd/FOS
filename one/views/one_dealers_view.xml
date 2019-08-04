@@ -5,7 +5,7 @@
       <field name="name">Dealers List</field>
       <field name="model">one.dealers</field>
       <field name="arch" type="xml">
-        <tree create="false" edit="false" delete="false">
+        <tree create="false" delete="false">
           <field name="code"/>
           <field name="name"/>
           <field name="street1"/>
@@ -32,7 +32,7 @@
             <h3><field name="code"/></h3>
 	    <notebook>
               <page string="Contact Information">
-	        <group>
+	              <group>
                   <field name="street1"/>
                   <field name="street2" string=""/>
                   <field name="city"/>
@@ -43,7 +43,18 @@
                   <field name="mobile"/>
                   <field name="email"/>
                 </group>
-	      </page>	      
+	            </page>	      
+              <page string="FOS Server Info">
+                <group>
+                  <group>
+                    <field name="fos_active"/>
+                    <field name="fos_ip_host" attrs="{'readonly': [('fos_active','=',False)], 'required': [('fos_active','=',True)]}"/>
+                    <field name="fos_db" attrs="{'readonly': [('fos_active','=',False)], 'required': [('fos_active','=',True)]}"/>
+                    <field name="fos_uname" attrs="{'readonly': [('fos_active','=',False)], 'required': [('fos_active','=',True)]}"/>
+                    <field name="fos_passwd" password="True" attrs="{'readonly': [('fos_active','=',False)], 'required': [('fos_active','=',True)]}"/>
+                  </group>
+                </group>
+              </page>
             </notebook>
           </sheet>
         </form>
