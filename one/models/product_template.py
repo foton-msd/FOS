@@ -20,7 +20,7 @@ class FASProduct(models.Model):
   fob_php = fields.Float(string="FOB PHP")
   fob_usd = fields.Float(string="FOB USD")
   fob_rmb = fields.Float(string="FOB RMB")
-  dnp = fields.Float(string="DNP (Dealer's SRP)")
+  dnp = fields.Float(string="Dealer's SRP")
   loc1 = fields.Char(string="Location 1")
   loc2 = fields.Char(string="Location 2")
   loc3 = fields.Char(string="Location 3")
