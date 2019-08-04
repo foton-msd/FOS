@@ -88,7 +88,7 @@
                         </group>   
                         
                         <field name="notes" class="oe_inline" 
-                            readonly="[('state','!=','draft')]"
+                            attrs="{'readonly':[('state','!=','draft')]}"
                             placeholder="Define your terms and conditions ..."/>
                         <div class="oe_clear"/>
                     </sheet>   
