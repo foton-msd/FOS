@@ -2,7 +2,7 @@
 <odoo>
 	<record id="view_fos_vqir_report_search" model="ir.ui.view">
 		<field name="name">view.fos.vqir.report.search</field>
-		<field name="model">view.fos.vqir.report1</field>
+		<field name="model">view.fos.vqir.report</field>
 		<field name="arch" type="xml">
 			<search string="VQIR Report">
 				<field name="vqir_date"/>
@@ -19,38 +19,43 @@
 
 	<record model="ir.ui.view" id="view_one_vqir_report_1_tree">
 		<field name="name">view.one.vqir.report.tree</field>
-		<field name="model">view.fos.vqir.report1</field>
+		<field name="model">view.fos.vqir.report</field>
 		<field name="arch" type="xml">
 			<tree string="VQIR Analysis" create="false" edit="false" delete="false">
 				<field name="name"/>
-					<field name="name"/>
-					<field name="fmpi_vqir_id"/> 
-					<field name="si_number"/>
-					<field name="si_date"/>
-					<field name="parts_number"/>
-					<field name="parts_desc"/>
-					<field name="parts_qty"/>
-					<field name="parts_cost"/>
-					<field name="parts_hf_amount"/>
-					<field name="parts_total"/>
-					<field name="job_code"/>
-					<field name="job_code_desc"/>
-					<field name="job_qty"/>
-					<field name="job_cost"/>
-					<field name="approved_amount"/>
-					<field name="part_id"/>
-					<field name="job_id"/>
-					<field name="job_approved_amount"/>
-					<field name="dealer_pj_id"/>
-					<field name="dealer_id"/>
-					<field name="vqir_state"/>
+				<field name="vqir_date"/>
+				<field name="dealer_id"/>
+				<field name="fos_fu_id"/>
+        		<field name="fu_chassis_number"/>
+        		<field name="fu_engine_number"/>
+        		<field name="users_name"/>
+        		<field name="users_mobile"/>
+        		<field name="km_1st_trouble"/>
+        		<field name="run_km"/>
+        		<field name="date_occur"/>
+        		<field name="trouble_cause_analysis"/>
+        		<field name="disposal_measures"/>
+        		<field name="parts_number"/>
+        		<field name="parts_desc"/>
+        		<field name="parts_qty"/>
+        		<field name="parts_cost"/>
+        		<field name="parts_hf_amount"/>
+        		<field name="parts_total"/>
+        		<field name="job_code"/>
+	    		<field name="job_code_desc"/>
+        		<field name="job_qty"/>        		
+				<field name="job_cost"/>
+        		<field name="job_total"/>
+	       		<field name="job_parts_total"/>
+        		<field name="vqir_state"/>
+        		<field name="remarks"/>
  			</tree>
 		</field>
 	</record> 
     	<!-- actions opening views on models -->
     	<record model="ir.actions.act_window" id="view_fos_vqir_report_1_action_window">
       		<field name="name">VQIR Report</field>
-      		<field name="res_model">view.fos.vqir.report1</field>
+      		<field name="res_model">view.fos.vqir.report</field>
       		<field name="view_mode">tree</field>
 		<field name="view_type">form</field>
 		<field name="search_view_id" ref="view_fos_vqir_report_search"/>
