@@ -52,7 +52,7 @@ class FOSPartsPO(models.Model):
                 'partner_id': partner_id,
                 'po_type': 'parts',
                 'date_planned': fields.datetime.now(),
-                'notes': self.name,
+                'notes': self.name + "\n" + (self.notes or ""),
                 'origin': self.name
             })
             if po_id:
@@ -113,7 +113,7 @@ class FOSPartsPO(models.Model):
                 so_id = models.execute_kw(db, uid, password, 'sale.order', 'create', [{
                     'partner_id': fmpi_partner_id,
                     'so_type': 'parts',
-                    'note': self.name,
+                    'note': self.name + "\n" + (self.notes or ""), 
                     'origin': self.name
                 }])
                 logger.info("Sale Order ID: " + str(so_id))
