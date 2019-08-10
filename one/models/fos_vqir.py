@@ -237,7 +237,7 @@ class FosVqir(models.Model):
           models.execute_kw(db, uid, password, 'fmpi.vqir.parts.and.jobs', 'create', [{
             'name': ji.name,
             'fmpi_vqir_id': existingID,
-            'si_number':ji.si_date,
+            'si_number':ji.si_number,
             'si_date':ji.si_date,
             'parts_number': ji.part_id.name,
             'parts_desc': ji.parts_desc,
@@ -351,7 +351,7 @@ class FosVqir(models.Model):
           fmpi_vqir_parts_and_jobs_id = models.execute_kw(db, uid, password, 'fmpi.vqir.parts.and.jobs', 'create', [{
             'name': ji.name,
             'fmpi_vqir_id': fmpi_vqir_id,
-            'si_number':ji.si_date,
+            'si_number':ji.si_number,
             'si_date':ji.si_date,
             'parts_number': ji.part_id.name,
             'parts_desc': ji.parts_desc,
