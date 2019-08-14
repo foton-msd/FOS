@@ -97,6 +97,7 @@
     'report/fos_sale_calculator_report.xml',
     'report/fos_nf_sales_parts_report.xml',
     'report/fos_nf_sales_service_report.xml',
+    'report/parts_backorders1_view.xml',
     'views/service_order_lines_view.xml',
     'security/ir.model.access.csv',
     ],
