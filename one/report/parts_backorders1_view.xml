@@ -23,8 +23,11 @@
             <tree string="Parts Backorders Report - 1" create="false">
                 <field name="partner_id"/>
                 <field name="order_id"/>
+                <field name="polo_number"/>
+                <field name="date_order"/>
                 <field name="source_code"/>
                 <field name="product_id"/>
+                <field name="description"/>
                 <field name="order_qty"/>
                 <field name="qty_delivered"/>
                 <field name="backorder"/>

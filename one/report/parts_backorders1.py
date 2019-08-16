@@ -8,8 +8,10 @@ class PartsBackOrders1(models.Model):
   _auto = False
 
   product_id = fields.Many2one(string="Part Number", comodel_name="product.product", readonly=True)
+  description = fields.Char(string="Description", readonly=True)
   partner_id = fields.Many2one(string="Customer", comodel_name="res.partner", readonly=True)
   order_id = fields.Many2one(String="S.O. Number", comodel_name="sale.order", readonly=True)
+  polo_number = fields.Char(String="POLO Number", readonly=True)
   date_order = fields.Date(string="Order Date", readonly=True)
   source_code = fields.Char(string="SC", readonly=True)
   order_qty = fields.Float(string="Ordered Qty", readonly=True)
@@ -21,9 +23,9 @@ class PartsBackOrders1(models.Model):
     tools.drop_view_if_exists(self.env.cr, "view_parts_backorders1")
     self.env.cr.execute("""
       CREATE OR REPLACE VIEW view_parts_backorders1 AS
-        select e.name as source_code, c.name as part_number, a.product_uom_qty as order_qty,
+        select e.name as source_code, c.name as part_number, c.description as description, a.product_uom_qty as order_qty,
         a.qty_delivered, (a.product_uom_qty - a.qty_delivered) as backorder,
-        f.name as so_number, f.date_order::date as date_order, g.name as customer_name,
+        f.name as so_number, f.origin as polo_number, f.date_order::date as date_order, g.name as customer_name,
         a.id, a.product_id, f.id as order_id, g.id as partner_id
         from sale_order_line a
         left join product_product b on a.product_id = b.id
