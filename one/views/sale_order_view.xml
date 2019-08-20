@@ -138,8 +138,7 @@
           </group>                            
           <group string="Sales Info" attrs="{'invisible': ['|',('so_type','!=','units'),('state','in',['draft','sent'])]}">
             <field name="date_released"/>
-            <field name="sales_executive_id" string="Sales Executive" attrs="{'readonly': [('state','!=','sale')]}"
-              options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"/>
+            <field name="sales_executive_id" string="Sales Executive" attrs="{'readonly': [('state','!=','sale')]}"/>
             <field name="source_of_awareness_id" attrs="{'readonly': [('state','!=','sale')]}"/>
             <field name="venue_of_marketing_activity" attrs="{'readonly': [('state','!=','sale')]}"/>
             <field name="source_of_sale_id" attrs="{'readonly': [('state','!=','sale')]}"/>
@@ -208,6 +207,9 @@
                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"/>
               <!-- product for parts sales -->
               <field name="part_number" 
+                attrs="{'column_invisible': [('parent.so_type','!=','parts')], 'required': [('parent.so_type','=','parts')]}"
+                domain="[('sub_type','in',('parts','supplies'))]"/>
+              <field name="pick_location_id"
                 attrs="{'column_invisible': [('parent.so_type','!=','parts')], 'required': [('parent.so_type','=','parts')]}"
                 domain="[('sub_type','in',('parts','supplies'))]"/>
               <!-- product for servicing sales -->
