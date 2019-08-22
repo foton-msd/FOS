@@ -209,9 +209,6 @@
               <field name="part_number" 
                 attrs="{'column_invisible': [('parent.so_type','!=','parts')], 'required': [('parent.so_type','=','parts')]}"
                 domain="[('sub_type','in',('parts','supplies'))]"/>
-              <field name="pick_location_id"
-                attrs="{'column_invisible': [('parent.so_type','!=','parts')], 'required': [('parent.so_type','=','parts')]}"
-                domain="[('sub_type','in',('parts','supplies'))]"/>
               <!-- product for servicing sales -->
               <field name="parts_and_jobs" 
                 attrs="{'column_invisible': [('parent.so_type','not in',['service','service2'])], 'required': [('parent.so_type','in',['service','service2'])]}"
