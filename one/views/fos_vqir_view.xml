@@ -131,7 +131,8 @@
                    <field name="si_number"/>
                    <field name="si_date"/>
                    <field name="part_id" domain="[('sub_type','=','parts')]"
-                        options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                        attrs="{'required':[('job_id','=', False)]}"/>
                    <field name="parts_desc"/>
                    <field name="parts_qty"/>
                    <field name="parts_cost"/>
@@ -139,7 +140,8 @@
                    <field name="approved_amount" attrs="{'column_invisible': [('parent.vqir_state','in', ['draft','cancel','ack','declined','submit'])]}"/>
                    <field name="parts_total"/>
                    <field name="job_id" domain="[('sub_type','in',('labor','warranty'))]"
-                        options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                        options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"
+                        attrs="{'required':[('part_id','=', False)]}"/>
                    <field name="job_code_desc"/>
                    <field name="job_qty"/>
                    <field name="job_cost"/>
@@ -216,7 +218,7 @@
                      <form>
                       <sheet>
                         <h1><field name="name"/></h1>
-                        <field name="image" widget="image"/>
+                        <field name="image" widget="image" required="1"/>
                         <field name="image_remarks" nolabel="1"/>
                       </sheet>
                      </form>

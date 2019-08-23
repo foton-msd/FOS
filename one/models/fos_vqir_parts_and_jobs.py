@@ -41,6 +41,24 @@ class FasPartsandJobs(models.Model):
     self._getPartsTotal()
     self._getJobPartsTotal()
 
+  @api.onchange("part_id")
+  def onchange_part_id(self):
+    if self.part_id:
+      self.job_id = False
+      self.job_code_desc = False
+      self.job_cost = False
+      self.job_qty = False
+
+  @api.onchange("job_id")
+  def onchange_job_id(self):
+    if self.job_id:
+      self.part_id = False
+      self.parts_desc = False
+      self.parts_qty = False
+      self.parts_cost = False
+      self.parts_with_fee = False
+  
+
   @api.one
   def _getJobTotal(self):
     self.job_total = (self.job_qty or 0) * (self.job_cost or 0)
