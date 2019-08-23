@@ -134,25 +134,14 @@ class FOSSaleCalculator(models.Model):
         self.write({'state': 'cancel'})
 
     @api.multi
-    def print_sale_calculator(self):
-        inet_host = self.env.user.company_id.inet_url
-        dbname = self.env.user.company_id.dealer_pgn
-        report_url = inet_host + "?report=/" + dbname + \
-            "/fos_sales_calculator_quotation.rpt&prompt0=" + str(self.id)
-        return {
-            'type': 'ir.actions.act_url',
-            'url': report_url,
-            'target': 'new'
-        }
-
-    @api.multi
     def action_confirm(self):
         so_obj = self.env['sale.order']
         self.ensure_one()
         new_so = so_obj.create({
             'partner_id': self.customer_id.id,
             'date_order': fields.datetime.now(),
-            'so_type': 'units'})
+            'so_type': 'units',
+            'sales_executive_id': self.sale_executive_id.id})
         if new_so:
             so_line = self.env['sale.order.line']
             # Create unit line
