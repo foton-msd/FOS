@@ -55,7 +55,7 @@ class FasSaleOrder(models.Model):
   fos_payment_mode_id = fields.Many2one(string="Mode of Payment", comodel_name="fos.payment.modes")
   payment_mode_name = fields.Char(string="Payment Mode Name", related="fos_payment_mode_id.name", readonly=True)
   unit_si_amount = fields.Float(string="S.I. Amount", readonly=True, compute="getInvoiceAmount")
-  unit_si_date = fields.Date(string="S.I. Date", readonly=True)
+  unit_si_date = fields.Char(string="S.I. Dates", compute="_get_invoice_dates", readonly=True)
   date_released = fields.Date(string="Date Released", readonly=True)
   dp_percentage = fields.Float(string="D/P (%)")
   dp_amount = fields.Float(string="D/P (amount)")
@@ -91,6 +91,20 @@ class FasSaleOrder(models.Model):
       for l in self.order_line:
         si_amount += l.amt_invoiced
     self.unit_si_amount = si_amount
+    
+  @api.depends('order_line.invoice_lines.invoice_id.state', 'order_line.invoice_lines.quantity')
+  def _get_invoice_dates(self):
+    invoice_dates = " "
+    for line in self.order_line:
+        
+      for invoice_line in line.invoice_lines:
+        if invoice_line.invoice_id.state != 'cancel':
+          if invoice_line.invoice_id.type == 'out_invoice':
+            invoice_dates += str(invoice_line.invoice_id.date_invoice) + " "
+                   # elif invoice_line.invoice_id.type == 'out_refund':
+                    #    qty_invoiced -= invoice_line.uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+    self.unit_si_date = invoice_dates
+    return invoice_dates
 
   @api.multi  
   def action_cancel2(self):
