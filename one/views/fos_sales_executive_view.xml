@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="fos_sales_executive_tree">
+            <field name="name">Sales Executive</field>
+            <field name="model">fos.sale.executive</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Executive">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="fos_sales_executive_form">
+            <field name="name">Sales Executive</field>
+            <field name="model">fos.sale.executive</field>
+            <field name="arch" type="xml">
+                <form string="Sales Executive" delete="false">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="fos_sales_executive_act_window" model="ir.actions.act_window">
+            <field name="name">Sales Executive</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fos.sale.executive</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="fos_sales_executive_menu" 
+            name="Sales Executive" 
+            action="fos_sales_executive_act_window" 
+            parent="fos_sales_units_maintenance_menu" 
+            sequence="3"
+        />
+    </data>
+</odoo>
