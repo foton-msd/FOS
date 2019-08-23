@@ -138,7 +138,8 @@
           </group>                            
           <group string="Sales Info" attrs="{'invisible': ['|',('so_type','!=','units'),('state','in',['draft','sent'])]}">
             <field name="date_released"/>
-            <field name="sales_executive_id" string="Sales Executive" attrs="{'readonly': [('state','!=','sale')]}"/>
+            <field name="sales_executive_id" string="Sales Executive" attrs="{'readonly': [('state','!=','sale')]}"
+            domain="[('active','=', True)]"/>
             <field name="source_of_awareness_id" attrs="{'readonly': [('state','!=','sale')]}"/>
             <field name="venue_of_marketing_activity" attrs="{'readonly': [('state','!=','sale')]}"/>
             <field name="source_of_sale_id" attrs="{'readonly': [('state','!=','sale')]}"/>
