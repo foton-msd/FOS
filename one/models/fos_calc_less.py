@@ -9,7 +9,7 @@ class FOSCalcLess(models.Model):
   _sql_constraints = [('calc_less_unique', 'unique (fos_calc_id, product_id)','Discount line already existing!')]
 
   fos_calc_id = fields.Many2one(string="FOS Calculator", comodel_name="fos.calc")
-  product_id = fields.Many2one(string='Less', comodel_name='product.product')
+  product_id = fields.Many2one(string='Less', comodel_name='product.product', required=True)
   description = fields.Text(string='Description', related="product_id.product_tmpl_id.description", readonly=True)
   amount_less = fields.Float('Amount', digits=dp.get_precision('Product Price'), default=0.0)
 
