@@ -65,7 +65,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Time Tracking" attrs="{'invisible': ['|','&amp;', ('parent.so_type','not in',['service','service2']), ('parts_and_job_sub_type','!=','labor'),('parent.state','not in',['sale','done'])]}">
+                            <page string="Time Tracking" attrs="{'invisible': ['|','&amp;', ('parent.so_type','not in',['service','service2']), ('parent.state','not in',['sale','done']), ('parts_and_job_sub_type','!=','labor')]}">
                                 <sheet>
                                     <header>
                                         <button name="service_start" string="Start Working" type="object" class="btn-success oe_edit_only"
