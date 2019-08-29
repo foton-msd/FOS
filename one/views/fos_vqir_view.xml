@@ -126,7 +126,7 @@
                 </group>
 
            <group string="Parts &amp; Jobs">
-              <field name="fos_vqir_parts_and_jobs_line" nolabel="1">
+              <field name="fos_vqir_parts_and_jobs_line" nolabel="1" attrs="{'readonly':[('vqir_state','not in',('draft','declined'))]}">
                  <tree mode="tree" editable="bottom">
                    <field name="si_number"/>
                    <field name="si_date"/>
