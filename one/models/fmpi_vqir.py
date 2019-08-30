@@ -9,6 +9,8 @@ logger = logging.getLogger(__name__)
 class FMPIVqir(models.Model):
   _name = 'fmpi.vqir'
   _description = 'FMPI VQIR'
+  _sql_constraints = [
+  ('vqir_record_unique', 'unique(name,dealer_id)','VQIR Number already exists!')]
 
   name = fields.Char(string="VQIR", readonly=True)
   vqir_date = fields.Datetime(string="Date", readonly=True)

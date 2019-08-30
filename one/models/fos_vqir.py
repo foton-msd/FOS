@@ -8,6 +8,8 @@ logger = logging.getLogger(__name__)
 
 class FosVqir(models.Model):
   _name = 'fos.vqir'
+  _sql_constraints = [
+  ('vqir_number_unique', 'unique(name)','VQIR Number already exists!')]
 
   name = fields.Char(string="VQIR", required=True, default='Auto-generated', readonly=True, copy=False)
   vqir_date = fields.Datetime(string="Date", required=True)
