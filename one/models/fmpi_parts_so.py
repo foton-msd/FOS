@@ -9,6 +9,8 @@ class FMPIPartsSO(models.Model):
     _description = "Parts Online Order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _order = 'date desc, id desc'
+    _sql_constraints = [
+    ('polo_unique', 'unique(name,dealer_id)','POLO Number already exists!')]
 
     dealer_id = fields.Many2one(string="Dealer ID", comodel_name="one.dealers", readonly=True)
     name = fields.Char(string="Order Number", readonly=True)

@@ -9,6 +9,8 @@ class FOSPartsPO(models.Model):
     _description = "Parts Online Order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _order = 'date desc, id desc'
+    _sql_constraints = [
+    ('polo_number_unique', 'unique(name)','POLO Number already exists!')]
 
     name = fields.Char(string="Order Number", readonly=True, default="auto-generated")
     date = fields.Datetime(string="Date", required=True, default=lambda self: fields.datetime.now())
