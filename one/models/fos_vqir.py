@@ -179,6 +179,7 @@ class FosVqir(models.Model):
         fmpi_vqir_id = models.execute_kw(db, uid, password, 'fmpi.vqir', 'write', [[existingID], {
           'vqir_state': 'submit',
           'date_occur': self.date_occur,
+          'vqir_type': self.vqir_type,
           'vqir_city': self.vqir_city,
           'place_of_incident': self.place_of_incident,
           'km_1st_trouble': self.km_1st_trouble,
