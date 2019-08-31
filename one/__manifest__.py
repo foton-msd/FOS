@@ -89,6 +89,7 @@
     'report/fas_report_picking_operation_view.xml',
     'report/fas_report_delivery_document.xml',
     'report/fos_picking_list.xml',
+    'report/fos_stock_picking_list.xml',
     #'report/fas_report_payment_receipt_document.xml',
     'report/fas_report_purchase_order.xml',
     'report/parts_sales_report_1_view.xml',

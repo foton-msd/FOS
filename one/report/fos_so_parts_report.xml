@@ -122,6 +122,7 @@
                         </t>
                     </tbody>
                 </table>
+                <h5 align="center"><span><strong>Total Quantity: <span t-field="doc.total_product_qty"/></strong></span></h5><br/>
             </t>
            <div class="clearfix">
                 <div class="row" name="total">

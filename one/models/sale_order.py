@@ -2,6 +2,7 @@
 from xmlrpc import client as xmlrpclib
 from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo import models, fields, api, exceptions, _
 import logging
@@ -82,6 +83,7 @@ class FasSaleOrder(models.Model):
   nonf_unit_id = fields.Many2one(string="Non-FOTON Units", comodel_name="nonf.units", copy=False)
   promised_date = fields.Datetime(string="Promised Date")
   sales_executive_id = fields.Many2one(string="Sales Executive", comodel_name="fos.sale.executive")
+  total_product_qty = fields.Float(string="Total Qty", compute="_getTotalQty", digits=dp.get_precision('Product Unit of Measure'))
   
   @api.model
   @api.multi
@@ -412,6 +414,11 @@ class FasSaleOrder(models.Model):
       'url':report_url,
       'target': 'new'
     }
+
+  @api.one
+  def _getTotalQty(self):
+    for line in self.order_line:
+       self.total_product_qty += line.product_uom_qty
 
   @api.model
   def create(self, vals):

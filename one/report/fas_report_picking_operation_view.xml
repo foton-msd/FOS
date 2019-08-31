@@ -18,6 +18,9 @@
       <xpath expr="//tr/th[4]" position="replace">
           <th><strong>Released Date</strong></th>
       </xpath>
+      <xpath expr="//table[3]" position="after">
+         <span><strong>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Total Quantity: <span t-field="o.total_product_qty"/></strong></span><br/>
+      </xpath>
       <xpath expr="//div" position="after">
         <div class="footer">
             <table width="100%">
