@@ -22,8 +22,8 @@ class PurchaseOrderLineImport(models.TransientModel):
     vals = []
     for s in wb.sheets():
       for row in range(s.nrows):
-        variant_name = s.cell(row,0).value
-        product_name = s.cell(row,1).value
+        variant_name = str(s.cell(row,0).value)
+        product_name = str(s.cell(row,1).value)
         product_description = s.cell(row,2).value or ''
         product_qty = s.cell(row,3).value or 1
         price_unit = s.cell(row,4).value or 0

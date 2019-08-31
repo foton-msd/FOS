@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <span>Please select MS Excel (XLS) file to read...</span>
+                    <span>Please select MS Excel (XLSX) file to read...</span>
                 </group>
                 <group>
                     <field name="xlsfile" widget="file" filename="filename" required="1"/>
