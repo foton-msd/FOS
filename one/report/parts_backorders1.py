@@ -23,19 +23,29 @@ class PartsBackOrders1(models.Model):
     tools.drop_view_if_exists(self.env.cr, "view_parts_backorders1")
     self.env.cr.execute("""
       CREATE OR REPLACE VIEW view_parts_backorders1 AS
-        select e.name as source_code, c.name as part_number, c.description as description, a.product_uom_qty as order_qty,
-        a.qty_delivered, (a.product_uom_qty - a.qty_delivered) as backorder,
-        f.name as so_number, f.origin as polo_number, f.date_order::date as date_order, g.name as customer_name,
-        a.id, a.product_id, f.id as order_id, g.id as partner_id
-        from sale_order_line a
-        left join product_product b on a.product_id = b.id
-        left join product_template c on b.product_tmpl_id = c.id
-        left join product_attribute_value_product_product_rel d on d.product_product_id = b.id
-        left join product_attribute_value e on d.product_attribute_value_id = e.id
-        left join sale_order f on a.order_id = f.id
-        left join res_partner g on f.partner_id = g.id
-        where c.sub_type = 'parts' and f.state in ('sale','done') and 
-            (a.product_uom_qty - a.qty_delivered) > 0;
-      """)
+      SELECT e.name AS source_code,
+        c.name AS part_number,
+        c.description,
+        a.product_uom_qty AS order_qty,
+        a.qty_delivered,
+        a.product_uom_qty - a.qty_delivered AS backorder,
+        f.name AS so_number,
+        f.origin AS polo_number,
+        f.date_order::date AS date_order,
+        g.name AS customer_name,
+        a.id,
+        a.product_id,
+        f.id AS order_id,
+        g.id AS partner_id
+      FROM sale_order_line a
+        LEFT JOIN product_product b ON a.product_id = b.id
+        LEFT JOIN product_template c ON b.product_tmpl_id = c.id
+        LEFT JOIN product_attribute_value_product_product_rel d ON d.product_product_id = b.id
+        LEFT JOIN product_attribute_value e ON d.product_attribute_value_id = e.id
+        LEFT JOIN sale_order f ON a.order_id = f.id
+        LEFT JOIN res_partner g ON f.partner_id = g.id
+      WHERE c.sub_type::text = 'parts'::text AND (f.state::text = ANY (ARRAY['sale'::character varying, 'done'::character varying]::text[])) AND (a.product_uom_qty - a.qty_delivered) > 0::numeric
+      AND (SELECT COUNT(*) from stock_picking WHERE state != 'done' AND state != 'cancel' AND sale_id = f.id) > 0;
+          """)
 
 PartsBackOrders1()
