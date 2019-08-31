@@ -48,7 +48,7 @@
                             <thead>
                                 <tr>
                                     <th t-if="o.origin"><strong>Order (Origin)</strong></th>
-                                    <th><strong>State</strong></th>
+                                    <th t-if="o.sale_id.origin"><strong>POLO Ref.</strong></th>
                                     <th><strong>Order Date</strong></th>
                                     <th><strong>Released Date</strong></th>
                                 </tr>
@@ -58,8 +58,8 @@
                                     <td t-if="o.origin">
                                         <span t-field="o.origin"/>
                                     </td>
-                                    <td>
-                                        <span t-field="o.state"/>
+                                    <td t-if="o.sale_id.origin">
+                                        <span t-field="o.sale_id.origin"/>
                                     </td>
                                     <td>
                                         <span t-field="o.date"/>
