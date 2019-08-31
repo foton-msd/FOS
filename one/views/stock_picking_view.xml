@@ -7,6 +7,11 @@
       <field name="arch" type="xml">
         <xpath expr="//button[@name='action_cancel']" position="attributes">
           <attribute name="groups">one.group_inventory_cancel</attribute>
+        </xpath>
+        <xpath expr="//button[@name='action_toggle_is_locked']" position="after">
+          <button name="print_picking_list" class="oe_highlight"
+            attrs="{'invisible':[('state','not in',('draft','waiting','assigned','confirmed'))]}"
+            string="Print Picking List" type="object"/>
         </xpath> 
         <xpath expr="//form" position="attributes">
            <attribute name="delete">false</attribute>
