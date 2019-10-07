@@ -195,7 +195,7 @@
           <p><strong>Remarks</strong></p>
             <p t-field="o.remarks" />
 
-	 <div class="footer">
+	 <div>
 	 <table width="100%">
 		<tr>
 		   <td>___________________</td>
@@ -207,7 +207,18 @@
     </tr>
 	 </table>
 	 </div>
-     </t>
+   <div style="page-break-before: always;">
+      <table width="100%">
+            <tr>
+              <t t-foreach="docs.fos_vqir_images_line" t-as="pi">
+                <tr>
+                  <span t-field="pi.image" t-field-options='{"widget": "image"}'/>
+                </tr>
+              </t>
+            </tr>
+        </table>
+    </div>
+      </t>
     </t>
    </t>
    </template>
