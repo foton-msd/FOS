@@ -3,7 +3,7 @@ from odoo import tools
 from odoo import api, fields, models
 
 class VqirReport1(models.Model):
-  _name = 'view.fos.vqir.report' 
+  _name = 'view.fos.vqir.report.1' 
   _description = 'VQIR Report'
   _auto = False
 
@@ -34,33 +34,38 @@ class VqirReport1(models.Model):
   job_parts_total = fields.Float(string="Total")
   remarks = fields.Char(string="Remarks")
   dealer_id = fields.Many2one(string="Dealer", comodel_name="one.dealers")
-  vqir_state = fields.Selection(string="Status", 
-    selection=[('draft', 'Draft'),('cancel', 'Cancelled'),('submit', 'Submitted'),
+  vqir_state = fields.Selection(string="Status", selection=[('draft', 'Draft'),('cancel', 'Cancelled'),('submit', 'Submitted'),
     ('ack', 'Acknowledged'),('approved', 'Approved'),('declined', 'Returned'),('disapproved', 'Disapproved'),('paid', 'Paid')])
 
-  @api.model_cr
-  def init(self):
-      tools.drop_view_if_exists(self.env.cr, "fmpi_vqir_report")
-      self.env.cr.execute("""
-            CREATE OR REPLACE VIEW view_fos_vqir_report AS
-            SELECT a.id, a.name, a.vqir_date, a.fos_fu_id,
-                          b.chassis_number, b.engine_number, a.users_name,
-                          a.users_mobile, a.km_1st_trouble, a.run_km, a.date_occur,
-                          a.trouble_cause_analysis, a.disposal_measures, d.job_code_desc, d.job_code,
-                          d.parts_number, d.parts_desc, d.parts_with_fee, d.parts_qty, d.parts_cost,
-                          ((d.parts_qty * d.parts_cost) * case when d.parts_with_fee then 1.1 else 1 end)::float as parts_total,
-                          ((d.parts_cost * d.parts_qty) * 0.1)::float as parts_hf_amount,
-                          d.job_qty, d.job_cost, (d.job_qty * d.job_cost)::float as job_total, 
-    
-              (((d.parts_qty * d.parts_cost) * case when d.parts_with_fee then 1.1 else 1 end)::float +
-              (d.job_qty * d.job_cost)::float)::float as job_parts_total,
+@api.model
+def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+  return super(VqirReport1, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=True)
 
-                          b.fmpi_fu_local_name_id, a.remarks,
-                          a.ss_name, a.dealer_id, a.vqir_state,
-                          c.id AS one_fu_local_name_id, d.id AS ovpj_id
-                          FROM fmpi_vqir a
-                          LEFT JOIN one_fu b ON a.fos_fu_id = b.id
-                          LEFT JOIN one_local_names c ON b.fmpi_fu_local_name_id = c.id
-                          LEFT JOIN fmpi_vqir_parts_and_jobs d on a.id = d.fmpi_vqir_id;
-               """)
+
+@api.model_cr
+def init(self):
+  tools.drop_view_if_exists(self.env.cr, "fmpi_vqir_report_1")
+  self.env.cr.execute("""
+    CREATE OR REPLACE VIEW view_fos_vqir_report_1 AS
+    SELECT d.id, a.name, a.vqir_date, a.fos_fu_id,
+        b.chassis_number, b.engine_number, a.users_name,
+        a.users_mobile, a.km_1st_trouble, a.run_km, a.date_occur,
+        a.trouble_cause_analysis, a.disposal_measures, d.job_code_desc, d.job_code,
+        d.parts_number, d.parts_desc, d.parts_with_fee, d.parts_qty, d.parts_cost,
+        ((d.parts_qty * d.parts_cost) * case when d.parts_with_fee then 1.1 else 1 end)::float as parts_total,
+        ((d.parts_cost * d.parts_qty) * 0.1)::float as parts_hf_amount,
+        d.job_qty, d.job_cost, (d.job_qty * d.job_cost)::float as job_total, 
+        (((d.parts_qty * d.parts_cost) * case when d.parts_with_fee then 1.1 else 1 end)::float +
+        (d.job_qty * d.job_cost)::float)::float as job_parts_total,
+        b.fmpi_fu_local_name_id, a.remarks,
+        a.ss_name, a.dealer_id, a.vqir_state,
+        c.id AS one_fu_local_name_id, d.id AS ovpj_id
+
+
+    FROM fmpi_vqir_parts_and_jobs d
+	  LEFT JOIN  fmpi_vqir a ON a.id = d.fmpi_vqir_id
+    LEFT JOIN one_fu b ON a.fos_fu_id = b.id
+    LEFT JOIN one_local_names c ON b.fmpi_fu_local_name_id = c.id
+    WHERE NOT a.id IS NULL
+    """)
 VqirReport1()

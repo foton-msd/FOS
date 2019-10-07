@@ -10,7 +10,8 @@ class FasPurchaseOrder(models.Model):
   _inherit = 'purchase.order'
 
   po_type = fields.Selection(string="P.O. Type", required=True, readonly=True, states={'draft': [('readonly', False)]},
-    selection=[('units','Units'),('parts','Parts'),('supplies','Supplies'),('labor','Labor')])
+    selection=[('units','Units'),('parts','Parts'),('supplies','Supplies'),('labor','Labor')],
+    default='parts')
   contract_date = fields.Date(string="Contract Date", readonly=True, states={'draft': [('readonly', False)]})
   contract_number = fields.Char(string="Contract Number", readonly=True, states={'draft': [('readonly', False)]})
 
