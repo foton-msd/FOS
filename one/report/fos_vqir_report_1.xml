@@ -29,6 +29,8 @@
 			<tree string="VQIR Analysis" create="false" edit="false" delete="false">
 				<field name="name"/>
 				<field name="vqir_date"/>
+				<field name="ack_date"/>
+				<field name="approved_date"/>
 				<field name="dealer_id"/>
 				<field name="fos_fu_id"/>
         		<field name="fu_chassis_number"/>
@@ -46,14 +48,16 @@
         		<field name="parts_cost"/>
         		<field name="parts_hf_amount"/>
         		<field name="parts_total"/>
+        		<field name="approved_amount"/>
         		<field name="job_code"/>
 	    		<field name="job_code_desc"/>
         		<field name="job_qty"/>        		
 				<field name="job_cost"/>
         		<field name="job_total"/>
+				<field name="job_approved_amount"/>
 	       		<field name="job_parts_total"/>
+				<field name="pj_approved_amount"/>
         		<field name="vqir_state"/>
-        		<field name="remarks"/>
  			</tree>
 		</field>
 	</record> 

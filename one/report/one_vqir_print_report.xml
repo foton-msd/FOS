@@ -213,6 +213,7 @@
               <t t-foreach="docs.fos_vqir_images_line" t-as="pi">
                 <tr>
                   <span t-field="pi.image" t-field-options='{"widget": "image"}'/>
+                  <center><strong><span t-field="pi.image_remarks"/></strong></center>
                 </tr>
               </t>
             </tr>
