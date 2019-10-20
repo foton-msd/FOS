@@ -109,7 +109,7 @@
                     <filter string="Order Number" domain="[('name','ilike',self)]"/>
                     <separator/>
                     <filter string="Today's Activities" name="orders_today"
-                        domain="[('date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]"/>
+                        domain="[('date_received', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]"/>
                     <filter string="All Received" name="received" domain="[('state', '=', 'received')]"/>                    
                     <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
                     <filter string="Processing" name="ack" domain="[('state', '=', 'ack')]"/>
