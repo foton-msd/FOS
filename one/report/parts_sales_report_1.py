@@ -19,6 +19,11 @@ class PartsSalesReport1(models.Model):
   qty_delivered = fields.Float(string="Qty Delivered", readonly=True)
   price_unit = fields.Float(string="Unit Price", readonly=True)
   price_total = fields.Float(string="Order Total", readonly=True)
+  invoice_status = fields.Selection(string="Invoice Status", required=True,
+    selection=[('upselling','Upselling Opportunity'),
+      ('to invoice','To Invoice'),
+      ('invoiced','Invoiced'),
+      ('no','Nothing to Invoice')])
   charged_to = fields.Selection(string="Charged to", required=True,
     selection=[('warranty','Warranty'),
       ('customer','Customer'),
@@ -38,6 +43,7 @@ class PartsSalesReport1(models.Model):
         a.product_uom_qty - a.qty_delivered AS qty_unserved,
         f.name AS so_number,
         f.origin AS polo_number,
+        f.invoice_status,
         f.confirmation_date,
         g.name AS customer_name,
         a.charged_to,

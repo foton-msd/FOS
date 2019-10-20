@@ -33,6 +33,7 @@
                 <field name="qty_unserved"/>
                 <field name="price_unit"/>
                 <field name="price_total"/>
+                <field name="invoice_status"/>
             </tree>
         </field>
     </record>
